@@ -149,8 +149,16 @@
     padding:0;
   }
 
+  /* 卡片直向堆疊，讓帶有備援按鈕的那張仍與其他張等高 */
+  .links > li{
+    display:flex;
+    flex-direction:column;
+    gap:.5rem;
+  }
+
   .link{
     position:relative;
+    flex:1;
     display:flex;
     align-items:center;
     gap:1rem;
@@ -209,6 +217,52 @@
   }
 
   .link:hover .link__arrow{transform:translateX(.25rem);}
+
+  /* 複製連結備援（App 內建瀏覽器擋掉跳轉時使用） */
+  .copybtn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:.4rem;
+    width:100%;
+    padding:.5rem .75rem;
+    border:2px dashed var(--line);
+    border-radius:999px;
+    background:transparent;
+    color:var(--ink-soft);
+    font-family:inherit;
+    font-size:.82rem;
+    font-weight:700;
+    cursor:pointer;
+    transition:color .18s ease, border-color .18s ease, background .18s ease;
+  }
+
+  .copybtn:hover{
+    color:var(--green-dark);
+    border-color:var(--green);
+    background:rgba(169,206,59,.08);
+  }
+
+  .copybtn:focus-visible{outline:3px solid var(--ink);outline-offset:2px;}
+
+  .copybtn svg{width:1rem;height:1rem;fill:currentColor;flex:none;}
+
+  .copybtn.is-done{
+    color:var(--green-dark);
+    border-style:solid;
+    border-color:var(--green);
+    background:rgba(169,206,59,.14);
+  }
+
+  .inapp-note{
+    margin:1rem 0 0;
+    padding:.85rem 1.1rem;
+    border-radius:1rem;
+    border:2px solid rgba(242,167,44,.45);
+    background:rgba(242,167,44,.12);
+    font-size:.88rem;
+    color:var(--ink);
+  }
 
   /* ---------- 活動報名卡 ---------- */
   .events{
@@ -364,23 +418,10 @@
 
   .calendar__caption{
     margin:.9rem .25rem .25rem;
-    display:flex;
-    flex-wrap:wrap;
-    align-items:center;
-    justify-content:space-between;
-    gap:.5rem;
+    text-align:center;
     font-size:.88rem;
     color:var(--ink-soft);
   }
-
-  .calendar__caption a{
-    color:var(--green-dark);
-    font-weight:700;
-    text-decoration:none;
-    border-bottom:2px solid rgba(169,206,59,.55);
-  }
-
-  .calendar__caption a:hover{color:var(--ink);}
 
   /* ---------- 頁尾 ---------- */
   .foot{
@@ -453,7 +494,9 @@
       </li>
 
       <li>
-        <a class="link" style="--brand:#06C755" href="https://line.me/ti/g2/zovx0m_zdGqe-VDGrtJxYPafrxfIt5JM9Z3n2g?utm_source=invitation&amp;utm_medium=link_copy&amp;utm_campaign=default" target="_blank" rel="noopener noreferrer">
+        <!-- 不加 target="_blank"：App 內建瀏覽器（Messenger／IG）會把新分頁攔在 webview 裡，
+             導致 line.me 的 universal link 無法交棒給 Line App。同頁跳轉成功率較高。 -->
+        <a class="link" style="--brand:#06C755" href="https://line.me/ti/g2/zovx0m_zdGqe-VDGrtJxYPafrxfIt5JM9Z3n2g?utm_source=invitation&amp;utm_medium=link_copy&amp;utm_campaign=default">
           <span class="link__icon" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M24 10.3C24 4.94 18.62.58 12 .58S0 4.94 0 10.3c0 4.8 4.26 8.82 10.02 9.58.39.09.92.26 1.06.59.12.3.08.77.04 1.08l-.17 1.03c-.05.3-.24 1.19 1.05.65 1.29-.55 6.93-4.08 9.46-6.99C23.1 14.33 24 12.43 24 10.3ZM7.75 13.4H5.36a.63.63 0 0 1-.63-.63V7.99a.63.63 0 0 1 1.26 0v4.15h1.76a.63.63 0 0 1 0 1.26Zm2.47-.63a.63.63 0 0 1-1.26 0V7.99a.63.63 0 0 1 1.26 0v4.78Zm5.75 0a.63.63 0 0 1-1.13.38l-2.45-3.33v2.95a.63.63 0 0 1-1.26 0V7.99a.63.63 0 0 1 1.13-.38l2.45 3.34V7.99a.63.63 0 0 1 1.26 0v4.78Zm3.86-3.02a.63.63 0 0 1 0 1.26h-1.76v1.13h1.76a.63.63 0 0 1 0 1.26h-2.39a.63.63 0 0 1-.63-.63V7.99a.63.63 0 0 1 .63-.63h2.39a.63.63 0 0 1 0 1.26h-1.76v1.13h1.76Z"/></svg>
           </span>
@@ -463,21 +506,19 @@
           </span>
           <span class="link__arrow" aria-hidden="true">→</span>
         </a>
+        <button class="copybtn" type="button"
+                data-copy="https://line.me/ti/g2/zovx0m_zdGqe-VDGrtJxYPafrxfIt5JM9Z3n2g?utm_source=invitation&amp;utm_medium=link_copy&amp;utm_campaign=default">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1Zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2Zm0 16H8V7h11v14Z"/></svg>
+          <span class="copybtn__label">跳轉失敗？複製連結</span>
+        </button>
       </li>
 
-      <li>
-        <a class="link" style="--brand:var(--green-dark)" href="#signup-title">
-          <span class="link__icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Zm0 2.5L17.5 8H14V4.5ZM8 12h8v1.5H8V12Zm0 4h8v1.5H8V16Zm0-8h4v1.5H8V8Z"/></svg>
-          </span>
-          <span class="link__text">
-            <span class="link__name">活動報名</span>
-            <span class="link__note">看看近期開放報名的活動</span>
-          </span>
-          <span class="link__arrow" aria-hidden="true">↓</span>
-        </a>
-      </li>
     </ul>
+
+    <p class="inapp-note" id="inapp-note" hidden>
+      你正在 App 內建瀏覽器中瀏覽，Line 連結可能無法跳轉。
+      請點右上角選單的「在瀏覽器開啟」，或按上方的「複製連結」貼到 Safari／Chrome。
+    </p>
   </section>
 
   <section class="section" aria-labelledby="signup-title">
@@ -544,12 +585,9 @@
     </div>
 
     <figure class="calendar">
-      <a href="assets/calendar.webp" target="_blank" rel="noopener noreferrer">
-        <img src="assets/calendar.webp" alt="台科大崇德志工社 115 學年行事曆，列出九月至十二月各項活動的日期、名稱與地點。" loading="lazy">
-      </a>
+      <img src="assets/calendar.webp" alt="台科大崇德志工社 115 學年行事曆，列出九月至十二月各項活動的日期、名稱與地點。" loading="lazy">
       <figcaption class="calendar__caption">
-        <span>每週三 18:30 溫馨開伙・$50 蔬食吃到飽</span>
-        <a href="assets/calendar.webp" target="_blank" rel="noopener noreferrer">開啟大圖 →</a>
+        每週三 18:30 溫馨開伙・$50 蔬食吃到飽
       </figcaption>
     </figure>
   </section>
@@ -560,5 +598,62 @@
   </footer>
 
 </main>
+
+<script>
+(function () {
+  "use strict";
+
+  // Messenger / IG / FB 的 App 內建瀏覽器會擋掉 line.me 交棒給 Line App
+  var ua = navigator.userAgent || "";
+  if (/FBAN|FBAV|FB_IAB|Instagram|Messenger|Twitter|MicroMessenger/i.test(ua)) {
+    var note = document.getElementById("inapp-note");
+    if (note) note.hidden = false;
+  }
+
+  function legacyCopy(text) {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    ta.setSelectionRange(0, text.length); // iOS Safari 需要明確設定選取範圍
+    var ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll("[data-copy]"), function (btn) {
+    var label = btn.querySelector(".copybtn__label");
+    var original = label ? label.textContent : "";
+    var timer;
+
+    function feedback(ok) {
+      if (!label) return;
+      btn.classList.toggle("is-done", ok);
+      label.textContent = ok ? "已複製，貼到瀏覽器開啟" : "複製失敗，請長按連結";
+      clearTimeout(timer);
+      timer = setTimeout(function () {
+        label.textContent = original;
+        btn.classList.remove("is-done");
+      }, 2600);
+    }
+
+    btn.addEventListener("click", function () {
+      var url = btn.getAttribute("data-copy");
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(
+          function () { feedback(true); },
+          function () { feedback(legacyCopy(url)); }
+        );
+      } else {
+        feedback(legacyCopy(url));
+      }
+    });
+  });
+})();
+</script>
 </body>
 </html>
