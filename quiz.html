@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>志工人格測驗 | 台科大崇德志工社</title>
+<meta name="description" content="八題測出你的志工人格，看看崇德志工社哪個活動最適合你。填寫資料還可參加 9/15 迎新茶會抽獎。">
+<link rel="icon" href="assets/logo1.webp">
+<meta name="robots" content="noindex">
+<style>
+  :root{
+    --orange:#F2A72C;
+    --orange-dark:#D98C12;
+    --green:#A9CE3B;
+    --green-dark:#82A821;
+    --ink:#333333;
+    --ink-soft:#6b6b66;
+    --cream:#FFFCF2;
+    --card:#ffffff;
+    --line:#EDE6D4;
+    --err:#C4453B;
+  }
+
+  *,*::before,*::after{box-sizing:border-box;}
+
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    z-index:-1;
+    background:
+      radial-gradient(52rem 32rem at 12% -8%, rgba(242,167,44,.20), transparent 62%),
+      radial-gradient(46rem 30rem at 92% 6%, rgba(169,206,59,.22), transparent 62%);
+  }
+
+  .wrap{
+    width:100%;
+    max-width:42rem;
+    margin:0 auto;
+    padding:2.5rem 1.25rem 4rem;
+  }
+
+  [hidden]{display:none!important;}
+
+  /* ---------- 共用 ---------- */
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:.45rem;
+    padding:.8rem 1.6rem;
+    border:none;
+    border-radius:999px;
+    background:linear-gradient(135deg,var(--orange),var(--orange-dark));
+    color:#fff;
+    font-family:inherit;
+    font-size:1.02rem;
+    font-weight:900;
+    letter-spacing:.04em;
+    cursor:pointer;
+    text-decoration:none;
+    box-shadow:0 .3rem .7rem rgba(217,140,18,.35);
+    transition:transform .18s ease, box-shadow .18s ease, filter .18s ease;
+  }
+
+  .btn:hover{transform:translateY(-.15rem);box-shadow:0 .5rem 1rem rgba(217,140,18,.4);}
+  .btn:focus-visible{outline:3px solid var(--ink);outline-offset:3px;}
+  .btn[disabled]{filter:grayscale(.6);opacity:.65;cursor:progress;transform:none;}
+
+  .btn--ghost{
+    background:transparent;
+    color:var(--ink-soft);
+    border:2px solid var(--line);
+    box-shadow:none;
+    font-weight:700;
+    font-size:.9rem;
+    padding:.6rem 1.2rem;
+  }
+
+  .btn--ghost:hover{color:var(--ink);border-color:var(--ink-soft);box-shadow:none;}
+
+  .card{
+    background:var(--card);
+    border:2px solid var(--line);
+    border-radius:1.5rem;
+    padding:1.5rem;
+    box-shadow:0 .35rem 0 rgba(51,51,51,.06);
+  }
+
+  /* ---------- 開場 ---------- */
+  .intro{text-align:center;}
+
+  .intro__logo{
+    width:min(11rem,44vw);
+    height:auto;
+    display:block;
+    margin:0 auto .75rem;
+    filter:drop-shadow(0 .5rem 1.25rem rgba(51,51,51,.10));
+  }
+
+  .intro__title{
+    margin:.25rem 0 .5rem;
+    font-size:clamp(1.7rem,5.6vw,2.5rem);
+    font-weight:900;
+  }
+
+  .intro__title em{
+    font-style:normal;
+    background:linear-gradient(180deg,transparent 62%,rgba(169,206,59,.55) 62%);
+  }
+
+  .intro__lede{
+    margin:0 auto 1.5rem;
+    max-width:28rem;
+    color:var(--ink-soft);
+  }
+
+  .intro__meta{
+    margin:1.25rem auto 0;
+    max-width:30rem;
+    font-size:.85rem;
+    color:var(--ink-soft);
+  }
+
+  .lang{
+    display:block;
+    font-size:.85em;
+    font-weight:400;
+    color:var(--ink-soft);
+    letter-spacing:.01em;
+  }
+
+  /* ---------- 進度 ---------- */
+  .progress{margin-bottom:1.25rem;}
+
+  .progress__bar{
+    height:.6rem;
+    border-radius:999px;
+    background:#EFE8D8;
+    overflow:hidden;
+  }
+
+  .progress__fill{
+    height:100%;
+    width:0;
+    border-radius:999px;
+    background:linear-gradient(90deg,var(--orange),var(--green));
+    transition:width .3s ease;
+  }
+
+  .progress__text{
+    margin:.5rem .25rem 0;
+    font-size:.82rem;
+    font-weight:700;
+    color:var(--ink-soft);
+  }
+
+  /* ---------- 題目 ---------- */
+  .q__title{
+    margin:0 0 1.25rem;
+    font-size:1.2rem;
+    font-weight:900;
+    line-height:1.5;
+  }
+
+  .q__list{list-style:none;margin:0;padding:0;display:grid;gap:.6rem;}
+
+  .opt{
+    display:flex;
+    align-items:center;
+    gap:.75rem;
+    width:100%;
+    padding:.85rem 1rem;
+    border:2px solid var(--line);
+    border-radius:1rem;
+    background:#fff;
+    color:inherit;
+    font-family:inherit;
+    font-size:.98rem;
+    line-height:1.5;
+    text-align:left;
+    cursor:pointer;
+    transition:border-color .16s ease, background .16s ease, transform .16s ease;
+  }
+
+  .opt:hover{border-color:var(--orange);background:#FFFAF0;transform:translateX(.2rem);}
+  .opt:focus-visible{outline:3px solid var(--ink);outline-offset:2px;}
+
+  .opt__key{
+    flex:none;
+    width:1.9rem;
+    height:1.9rem;
+    display:grid;
+    place-items:center;
+    border-radius:50%;
+    background:#F4EFE0;
+    font-size:.82rem;
+    font-weight:900;
+    color:var(--ink-soft);
+  }
+
+  .opt:hover .opt__key{background:var(--orange);color:#fff;}
+
+  .q__nav{margin-top:1.25rem;text-align:center;}
+
+  /* ---------- 結果 ---------- */
+  .result__head{
+    text-align:center;
+    padding:1.75rem 1.25rem;
+    border-radius:1.5rem 1.5rem 0 0;
+    background:linear-gradient(160deg,rgba(242,167,44,.18),rgba(169,206,59,.22));
+    border:2px solid var(--line);
+    border-bottom:none;
+  }
+
+  .result__eyebrow{
+    margin:0;
+    font-size:.82rem;
+    font-weight:800;
+    letter-spacing:.14em;
+    color:var(--ink-soft);
+  }
+
+  .result__emoji{
+    display:block;
+    font-size:3.75rem;
+    line-height:1.2;
+    margin:.35rem 0;
+  }
+
+  .result__name{
+    margin:0;
+    font-size:clamp(1.5rem,5vw,2rem);
+    font-weight:900;
+  }
+
+  .result__en{
+    margin:.15rem 0 0;
+    font-size:.9rem;
+    font-weight:700;
+    color:var(--ink-soft);
+    letter-spacing:.04em;
+  }
+
+  .result__body{
+    border:2px solid var(--line);
+    border-top:none;
+    border-radius:0 0 1.5rem 1.5rem;
+    background:var(--card);
+    padding:1.5rem;
+    box-shadow:0 .35rem 0 rgba(51,51,51,.06);
+  }
+
+  .result__tagline{
+    margin:0 0 1rem;
+    padding:.75rem 1rem;
+    border-left:.3rem solid var(--green);
+    background:rgba(169,206,59,.12);
+    border-radius:.25rem .75rem .75rem .25rem;
+    font-weight:800;
+  }
+
+  .result__desc{margin:0 0 1.25rem;}
+
+  .traits{
+    display:flex;
+    flex-wrap:wrap;
+    gap:.4rem;
+    list-style:none;
+    margin:0 0 1.5rem;
+    padding:0;
+  }
+
+  .traits li{
+    padding:.25rem .8rem;
+    border-radius:999px;
+    background:#F4EFE0;
+    font-size:.85rem;
+    font-weight:700;
+    color:var(--ink-soft);
+  }
+
+  .rec__title{
+    margin:0 0 .75rem;
+    font-size:1rem;
+    font-weight:900;
+  }
+
+  .rec{list-style:none;margin:0;padding:0;display:grid;gap:.5rem;}
+
+  .rec a,.rec span{
+    display:flex;
+    align-items:center;
+    gap:.6rem;
+    padding:.7rem .9rem;
+    border:2px solid var(--line);
+    border-radius:.9rem;
+    text-decoration:none;
+    color:inherit;
+    font-weight:700;
+    font-size:.95rem;
+  }
+
+  .rec a:hover{border-color:var(--green);background:rgba(169,206,59,.1);}
+  .rec span{color:var(--ink-soft);font-weight:600;}
+  .rec .tag{margin-left:auto;font-size:.78rem;font-weight:800;color:var(--green-dark);}
+
+  .result__actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:.6rem;
+    justify-content:center;
+    margin-top:1.5rem;
+  }
+
+  /* ---------- 抽獎表單 ---------- */
+  .draw{margin-top:1.5rem;}
+
+  .draw__head{
+    display:flex;
+    align-items:center;
+    gap:.6rem;
+    margin:0 0 .35rem;
+    font-size:1.15rem;
+    font-weight:900;
+  }
+
+  .draw__note{
+    margin:0 0 1.25rem;
+    font-size:.85rem;
+    color:var(--ink-soft);
+  }
+
+  .field{margin-bottom:1.1rem;}
+
+  .field > label,
+  .field__legend{
+    display:block;
+    margin-bottom:.35rem;
+    font-size:.92rem;
+    font-weight:800;
+  }
+
+  .req{color:var(--err);font-weight:900;}
+
+  .field input[type=text],
+  .field input[type=tel],
+  .field textarea{
+    width:100%;
+    padding:.7rem .9rem;
+    border:2px solid var(--line);
+    border-radius:.85rem;
+    background:#FFFDF7;
+    font-family:inherit;
+    font-size:1rem;
+    color:inherit;
+  }
+
+  .field input:focus,
+  .field textarea:focus{
+    outline:none;
+    border-color:var(--orange);
+    background:#fff;
+  }
+
+  .field textarea{min-height:5rem;resize:vertical;}
+
+  fieldset{border:none;margin:0;padding:0;}
+
+  .checks{display:grid;gap:.4rem;}
+
+  .check{
+    display:flex;
+    align-items:flex-start;
+    gap:.6rem;
+    padding:.55rem .8rem;
+    border:2px solid var(--line);
+    border-radius:.8rem;
+    font-size:.92rem;
+    cursor:pointer;
+  }
+
+  .check:hover{border-color:var(--green);background:rgba(169,206,59,.08);}
+
+  .check input{
+    flex:none;
+    width:1.1rem;
+    height:1.1rem;
+    margin-top:.25rem;
+    accent-color:var(--green-dark);
+  }
+
+  .err{
+    display:block;
+    margin-top:.3rem;
+    font-size:.82rem;
+    font-weight:700;
+    color:var(--err);
+  }
+
+  .field.is-bad input,
+  .field.is-bad textarea{border-color:var(--err);background:#FFF6F5;}
+
+  .privacy{
+    margin:1.25rem 0;
+    padding:.85rem 1rem;
+    border-radius:.9rem;
+    background:#F8F4E8;
+    font-size:.82rem;
+    color:var(--ink-soft);
+  }
+
+  .submit-row{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;}
+
+  .status{margin:.9rem 0 0;font-size:.9rem;font-weight:700;}
+  .status--bad{color:var(--err);}
+
+  /* ---------- 完成 ---------- */
+  .done{text-align:center;}
+  .done__emoji{font-size:3.5rem;display:block;line-height:1.2;}
+  .done__title{margin:.35rem 0 .5rem;font-size:1.5rem;font-weight:900;}
+
+  .foot{
+    margin-top:2.5rem;
+    text-align:center;
+    font-size:.82rem;
+    color:var(--ink-soft);
+  }
+
+  .foot a{color:var(--green-dark);font-weight:700;}
+
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none!important;animation:none!important;}
+  }
+</style>
+</head>
+<body>
+<main class="wrap">
+
+  <!-- ===== 開場 ===== -->
+  <section class="intro" id="intro">
+    <img class="intro__logo" src="assets/logo1.webp" alt="台科大崇德志工社社徽">
+    <h1 class="intro__title">你是哪一種<em>志工人格</em>？</h1>
+    <p class="intro__lede">
+      八題，一分鐘，找出最適合你的崇德打開方式。<br>
+      <span class="lang">8 questions to find your volunteer personality.</span>
+    </p>
+    <button class="btn" type="button" id="start">開始測驗 →</button>
+    <p class="intro__meta">
+      🎁 測完填寫資料，即可參加 <strong>9/15（二）迎新茶會抽獎</strong>。
+    </p>
+  </section>
+
+  <!-- ===== 測驗 ===== -->
+  <section id="quiz" hidden>
+    <div class="progress">
+      <div class="progress__bar"><div class="progress__fill" id="bar"></div></div>
+      <p class="progress__text" id="bartext"></p>
+    </div>
+
+    <div class="card">
+      <h2 class="q__title" id="qtitle"></h2>
+      <ul class="q__list" id="qlist"></ul>
+    </div>
+
+    <div class="q__nav">
+      <button class="btn btn--ghost" type="button" id="back">← 上一題</button>
+    </div>
+  </section>
+
+  <!-- ===== 結果 ===== -->
+  <section id="result" hidden>
+    <div class="result__head">
+      <p class="result__eyebrow">你的志工人格是</p>
+      <span class="result__emoji" id="r-emoji" aria-hidden="true"></span>
+      <h2 class="result__name" id="r-name"></h2>
+      <p class="result__en" id="r-en"></p>
+    </div>
+
+    <div class="result__body">
+      <p class="result__tagline" id="r-tagline"></p>
+      <p class="result__desc" id="r-desc"></p>
+      <ul class="traits" id="r-traits"></ul>
+
+      <h3 class="rec__title">🎯 這些活動很適合你</h3>
+      <ul class="rec" id="r-rec"></ul>
+
+      <div class="result__actions">
+        <button class="btn btn--ghost" type="button" id="retry">再測一次</button>
+        <a class="btn btn--ghost" href="index.html">回首頁看全部活動</a>
+      </div>
+    </div>
+
+    <!-- 抽獎 -->
+    <form class="card draw" id="draw" novalidate>
+      <h3 class="draw__head">🎁 參加迎新茶會抽獎</h3>
+      <p class="draw__note">
+        9/15（二）崇德志工社迎新茶會現場抽獎，填寫以下資料即可參加。
+        <span class="lang">Fill in the form to join the lucky draw at our welcome party.</span>
+      </p>
+
+      <div class="field" id="f-name">
+        <label for="i-name">大名 <span class="req">*</span> <span class="lang">Name</span></label>
+        <input type="text" id="i-name" name="name" autocomplete="name" maxlength="40">
+      </div>
+
+      <div class="field" id="f-dept">
+        <label for="i-dept">系級 <span class="req">*</span> <span class="lang">Major &amp; Year（例如：四資管三）</span></label>
+        <input type="text" id="i-dept" name="dept" maxlength="40">
+      </div>
+
+      <div class="field" id="f-phone">
+        <label for="i-phone">聯絡電話 <span class="req">*</span> <span class="lang">Phone</span></label>
+        <input type="tel" id="i-phone" name="phone" inputmode="tel" autocomplete="tel" maxlength="20" placeholder="09xxxxxxxx">
+      </div>
+
+      <div class="field">
+        <label for="i-social">LINE ID 或 IG 帳號 <span class="lang">LINE ID / Instagram（選填）</span></label>
+        <input type="text" id="i-social" name="social" maxlength="60">
+      </div>
+
+      <div class="field">
+        <fieldset>
+          <legend class="field__legend">有興趣的活動 <span class="lang">Activities you're interested in（可複選、選填）</span></legend>
+          <div class="checks" id="i-interests"></div>
+        </fieldset>
+      </div>
+
+      <div class="field">
+        <label for="i-suggest">希望社團未來辦什麼活動？ <span class="lang">Any activity you'd like to see?（選填）</span></label>
+        <textarea id="i-suggest" name="suggest" maxlength="500"></textarea>
+      </div>
+
+      <p class="privacy">
+        🔒 以上個人資訊僅供活動通知、推播與抽獎聯繫使用，不會提供給第三方。
+        <span class="lang">Your personal information will only be used for activity notifications and the lucky draw.</span>
+      </p>
+
+      <div class="field" id="f-consent">
+        <label class="check">
+          <input type="checkbox" id="i-consent">
+          <span>我同意崇德志工社以上述方式使用我的資料 <span class="req">*</span></span>
+        </label>
+      </div>
+
+      <div class="submit-row">
+        <button class="btn" type="submit" id="send">送出並參加抽獎</button>
+        <button class="btn btn--ghost" type="button" id="skip">不參加抽獎</button>
+      </div>
+
+      <p class="status" id="status" hidden></p>
+    </form>
+  </section>
+
+  <!-- ===== 完成 ===== -->
+  <section id="done" hidden>
+    <div class="card done">
+      <span class="done__emoji">🎉</span>
+      <h2 class="done__title">收到你的報名了！</h2>
+      <p id="done-msg">9/15（二）迎新茶會現場抽獎，記得來喔～</p>
+      <div class="result__actions">
+        <a class="btn" href="index.html">看看近期活動</a>
+        <button class="btn btn--ghost" type="button" id="again">再測一次</button>
+      </div>
+    </div>
+  </section>
+
+  <p class="foot">
+    台科大崇德志工社 NTUST CDVC ・
+    <a href="index.html">回首頁</a>
+  </p>
+
+</main>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ============================================================
+     設定：貼上 Google Apps Script 部署後的 /exec 網址
+     ============================================================ */
+  var ENDPOINT = "";
+
+  /* ---------- 人格類型 ---------- */
+  var TYPES = {
+    chef: {
+      emoji: "🍳",
+      zh: "暖心大廚",
+      en: "The Warm Chef",
+      tagline: "「吃飽，才有力氣愛人。」",
+      desc: "你相信最實在的關心是一頓熱飯。在廚房裡你自在得像回家，切菜的節奏就是你的療癒方式；看著大家把盤子清空，比誰稱讚你都開心。崇德的每週開伙就是為你準備的舞台。",
+      traits: ["照顧型", "手很巧", "餵飽全場", "行動派"],
+      recs: ["e0902", "cook", "hotpot"]
+    },
+    eco: {
+      emoji: "🌱",
+      zh: "山海守護者",
+      en: "The Earth Guardian",
+      tagline: "「這片風景，值得被好好留下來。」",
+      desc: "你待在戶外時最有精神，也最見不得美好的地方被弄髒。你不太說大道理，只是默默彎腰把垃圾撿起來——而那個背影，往往就帶動了一整群人。",
+      traits: ["行動勝於言語", "體力好", "環保魂", "耐得住"],
+      recs: ["e0905", "steam"]
+    },
+    teacher: {
+      emoji: "🎓",
+      zh: "熱血引路人",
+      en: "The Passionate Mentor",
+      tagline: "「我知道的，都想教給你。」",
+      desc: "你享受把複雜的事情講到別人聽懂的那一刻。備課、設計關卡、想破頭要怎麼讓小朋友玩得開心又學得到東西——這些對你不是負擔，是成就感的來源。",
+      traits: ["有耐心", "會規劃", "喜歡分享", "抗壓性強"],
+      recs: ["steam", "kids", "e0906"]
+    },
+    listener: {
+      emoji: "💗",
+      zh: "溫柔傾聽者",
+      en: "The Gentle Listener",
+      tagline: "「我在，你慢慢說。」",
+      desc: "你是朋友圈裡那個大家都想找的人。你不急著給建議，只是安靜地陪著——而這份安靜，常常比任何話都有力量。崇德想成為學生的第二個家，靠的正是你這種人。",
+      traits: ["同理心強", "很好聊", "情緒穩定", "值得信賴"],
+      recs: ["tea", "soul", "allpass"]
+    },
+    player: {
+      emoji: "🎲",
+      zh: "歡樂揪團王",
+      en: "The Party Starter",
+      tagline: "「哪裡有人，哪裡就有我。」",
+      desc: "你是場子的開關。冷場十秒你就受不了，總能找到話題把所有人串在一起。認識新朋友對你來說不是社交壓力，是這學期最期待的事。",
+      traits: ["活力滿點", "自來熟", "氣氛製造機", "點子多"],
+      recs: ["e0902", "e0906", "hotpot"]
+    },
+    paws: {
+      emoji: "🐾",
+      zh: "毛孩守護者",
+      en: "The Paw Protector",
+      tagline: "「牠們不會說話，所以我們要在。」",
+      desc: "你對弱小的生命特別沒有抵抗力。看到浪浪會忍不住停下腳步，也願意為了牠們花時間做那些不浪漫的事——清籠子、洗毛巾、陪散步。溫柔而且很硬頸。",
+      traits: ["有愛心", "細心", "不怕髒", "默默付出"],
+      recs: ["stray", "e0905"]
+    }
+  };
+
+  var ORDER = ["chef", "eco", "teacher", "listener", "player", "paws"];
+
+  /* ---------- 推薦活動 ---------- */
+  var EVENTS = {
+    e0902:  { name: "09/02（三）開伙＋桌遊之夜", url: "https://forms.gle/ayeeMPcjQW8kj9kH6" },
+    e0905:  { name: "09/05（六）誼山移山亮晶晶", url: "https://forms.gle/JUWZN9siCupiJamc7" },
+    e0906:  { name: "09/06（日）台科 GPS",      url: "https://forms.gle/BQJiLTzUSM6UZEot9" },
+    tea:    { name: "09/15（二）崇德志工社迎新茶會" },
+    cook:   { name: "每週三 18:30 溫馨開伙" },
+    hotpot: { name: "12/05（六）黑皮：火鍋趴＋KTV" },
+    kids:   { name: "11/07-08 兒童營隊志工出隊" },
+    steam:  { name: "11/29（日）STEAM 科學營" },
+    soul:   { name: "11/25（三）開伙＋成全社課" },
+    allpass:{ name: "10/24（六）文昌祈福 AllPass" },
+    stray:  { name: "11/29 流浪貓狗之家" }
+  };
+
+  /* ---------- 題目 ---------- */
+  var QUESTIONS = [
+    {
+      zh: "你想在大學裡帶走什麼？",
+      en: "What do you want to get out of college?",
+      opts: [
+        { zh: "發現自我價值",   en: "Discover self-worth",       s: { listener: 2, teacher: 1 } },
+        { zh: "認識一群好朋友", en: "Make good friends",         s: { player: 3 } },
+        { zh: "專業能力養成",   en: "Professional development",  s: { teacher: 3 } },
+        { zh: "健身與戶外活動", en: "Fitness and the outdoors",  s: { eco: 3 } },
+        { zh: "學會照顧自己",   en: "Learn to take care of myself", s: { chef: 3 } },
+        { zh: "為別人做點什麼", en: "Do something for others",   s: { paws: 2, listener: 1 } }
+      ]
+    },
+    {
+      zh: "你的飲食習慣比較接近？",
+      en: "Which best describes your eating habits?",
+      opts: [
+        { zh: "暴龍型：無肉不歡",       en: "I can't live without meat",    s: { player: 2, chef: 1 } },
+        { zh: "螞蟻型：超喜歡吃甜的",   en: "I love sweets",                s: { listener: 2, chef: 1 } },
+        { zh: "吃貨型：只要是吃的我都不挑", en: "I'll eat anything",         s: { chef: 3 } },
+        { zh: "綿羊型：素食才是我的本命", en: "I'm a vegetarian",            s: { eco: 2, paws: 2 } }
+      ]
+    },
+    {
+      zh: "壓力大的時候，你通常會？",
+      en: "How do you usually cope with stress?",
+      opts: [
+        { zh: "去運動、往山上海邊跑", en: "Exercise or head outdoors",        s: { eco: 3 } },
+        { zh: "聽音樂、看片、打遊戲", en: "Music, movies, or games",          s: { player: 3 } },
+        { zh: "找朋友家人聊一聊",     en: "Talk with friends or family",      s: { listener: 3 } },
+        { zh: "吃一頓好的然後睡飽",   en: "Eat well and sleep it off",        s: { chef: 3 } },
+        { zh: "閱讀、冥想、寫日記",   en: "Reading, meditation, journaling",  s: { teacher: 3 } },
+        { zh: "抱一下毛小孩",         en: "Hug a furry friend",               s: { paws: 3 } }
+      ]
+    },
+    {
+      zh: "難得空下來的週末，你最想？",
+      en: "A free weekend — what do you do?",
+      opts: [
+        { zh: "在廚房研究一道新菜",   en: "Try a new recipe",              s: { chef: 3 } },
+        { zh: "上山下海走一走",       en: "Go hiking or to the beach",     s: { eco: 3 } },
+        { zh: "準備一堂想分享的課",   en: "Prepare something to teach",    s: { teacher: 3 } },
+        { zh: "找朋友聊聊近況",       en: "Catch up with a friend",        s: { listener: 3 } },
+        { zh: "揪一場桌遊或 KTV",     en: "Board games or karaoke",        s: { player: 3 } },
+        { zh: "去陪浪浪散步",         en: "Walk shelter dogs",             s: { paws: 3 } }
+      ]
+    },
+    {
+      zh: "在一個團體裡，你通常是？",
+      en: "In a group, you're usually the one who…",
+      opts: [
+        { zh: "負責張羅吃的那個",   en: "Handles the food",           s: { chef: 3 } },
+        { zh: "負責帶氣氛的那個",   en: "Keeps the energy up",        s: { player: 3 } },
+        { zh: "負責規劃流程的那個", en: "Plans how things will run",  s: { teacher: 3 } },
+        { zh: "負責聽大家說話的那個", en: "Listens to everyone",      s: { listener: 3 } },
+        { zh: "負責收尾整理的那個", en: "Cleans up afterwards",       s: { eco: 2, teacher: 1 } }
+      ]
+    },
+    {
+      zh: "志工服務裡，最吸引你的是？",
+      en: "What draws you to volunteering?",
+      opts: [
+        { zh: "看見別人因為我而笑",   en: "Seeing someone smile because of me", s: { listener: 3 } },
+        { zh: "練到帶團隊的真本事",   en: "Building real leadership skills",    s: { teacher: 3 } },
+        { zh: "讓環境變得更好一點",   en: "Leaving the place better",           s: { eco: 3 } },
+        { zh: "認識一群志同道合的人", en: "Meeting like-minded people",         s: { player: 3 } },
+        { zh: "照顧需要幫助的生命",   en: "Caring for those who need it",       s: { paws: 3 } },
+        { zh: "一起煮飯一起吃飯的感覺", en: "Cooking and eating together",      s: { chef: 3 } }
+      ]
+    },
+    {
+      zh: "如果社團要你負責一件事，你最想接？",
+      en: "Which job would you take on in the club?",
+      opts: [
+        { zh: "開伙採買掌廚",     en: "Shopping and cooking",        s: { chef: 3 } },
+        { zh: "帶新生破冰",       en: "Icebreakers for newcomers",   s: { player: 3 } },
+        { zh: "設計營隊教案",     en: "Designing camp lesson plans", s: { teacher: 3 } },
+        { zh: "當大家的樹洞",     en: "Being everyone's confidant",  s: { listener: 3 } },
+        { zh: "淨山淨灘場勘",     en: "Scouting cleanup sites",      s: { eco: 3 } },
+        { zh: "浪浪之家出隊",     en: "Animal shelter service",      s: { paws: 3 } }
+      ]
+    },
+    {
+      zh: "最後，哪句話最像你？",
+      en: "Finally — which line sounds most like you?",
+      opts: [
+        { zh: "「吃飽才有力氣愛人。」",       en: "Love runs on a full stomach.",      s: { chef: 3 } },
+        { zh: "「地球是我家。」",             en: "The earth is my home.",             s: { eco: 3 } },
+        { zh: "「我想把知道的都教給你。」",   en: "Let me teach you what I know.",     s: { teacher: 3 } },
+        { zh: "「我在，你說吧。」",           en: "I'm here — talk to me.",            s: { listener: 3 } },
+        { zh: "「哪裡有人，哪裡就有我。」",   en: "Wherever people are, I'm there.",   s: { player: 3 } },
+        { zh: "「毛孩也是家人。」",           en: "Animals are family too.",           s: { paws: 3 } }
+      ]
+    }
+  ];
+
+  /* ---------- 抽獎表單的活動清單 ---------- */
+  var INTERESTS = [
+    "每週三 18:30 溫馨開伙",
+    "09/02（三）開伙＋桌遊之夜",
+    "09/05（六）誼山移山亮晶晶",
+    "09/06（日）台科 GPS",
+    "09/15（二）迎新茶會",
+    "10/03-04 志工聯合迎新",
+    "11/07-08 兒童營隊志工出隊",
+    "11/29（日）STEAM 科學營",
+    "11/29 流浪貓狗之家",
+    "12/05（六）黑皮：火鍋趴＋KTV"
+  ];
+
+  /* ============================================================
+     狀態
+     ============================================================ */
+  var answers = [];   // 每題選到的索引
+  var current = 0;
+  var resultKey = "";
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  function show(id) {
+    ["intro", "quiz", "result", "done"].forEach(function (s) {
+      $(s).hidden = (s !== id);
+    });
+    window.scrollTo(0, 0);
+  }
+
+  /* ---------- 題目渲染 ---------- */
+  var KEYS = "ABCDEF";
+
+  function renderQuestion() {
+    var q = QUESTIONS[current];
+
+    $("bar").style.width = (current / QUESTIONS.length * 100) + "%";
+    $("bartext").textContent = "第 " + (current + 1) + " 題 / 共 " + QUESTIONS.length + " 題";
+
+    $("qtitle").innerHTML = esc(q.zh) + '<span class="lang">' + esc(q.en) + "</span>";
+    $("back").hidden = (current === 0);
+
+    var list = $("qlist");
+    list.innerHTML = "";
+
+    q.opts.forEach(function (o, i) {
+      var li = document.createElement("li");
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "opt";
+      btn.innerHTML =
+        '<span class="opt__key" aria-hidden="true">' + KEYS.charAt(i) + "</span>" +
+        "<span>" + esc(o.zh) + '<span class="lang">' + esc(o.en) + "</span></span>";
+      btn.addEventListener("click", function () { pick(i); });
+      li.appendChild(btn);
+      list.appendChild(li);
+    });
+  }
+
+  function esc(s) {
+    return String(s).replace(/[&<>"]/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+    });
+  }
+
+  function pick(i) {
+    answers[current] = i;
+    if (current < QUESTIONS.length - 1) {
+      current++;
+      renderQuestion();
+    } else {
+      finish();
+    }
+  }
+
+  /* ---------- 計分 ---------- */
+  function score() {
+    var total = {};
+    ORDER.forEach(function (k) { total[k] = 0; });
+
+    answers.forEach(function (choice, qi) {
+      var s = QUESTIONS[qi].opts[choice].s;
+      for (var k in s) { if (s.hasOwnProperty(k)) { total[k] += s[k]; } }
+    });
+
+    // 同分時依 ORDER 先後決定
+    var best = ORDER[0];
+    ORDER.forEach(function (k) { if (total[k] > total[best]) { best = k; } });
+    return best;
+  }
+
+  /* ---------- 結果 ---------- */
+  function finish() {
+    resultKey = score();
+    var t = TYPES[resultKey];
+
+    $("bar").style.width = "100%";
+    $("r-emoji").textContent = t.emoji;
+    $("r-name").textContent = t.zh;
+    $("r-en").textContent = t.en;
+    $("r-tagline").textContent = t.tagline;
+    $("r-desc").textContent = t.desc;
+
+    var traits = $("r-traits");
+    traits.innerHTML = "";
+    t.traits.forEach(function (x) {
+      var li = document.createElement("li");
+      li.textContent = x;
+      traits.appendChild(li);
+    });
+
+    var rec = $("r-rec");
+    rec.innerHTML = "";
+    t.recs.forEach(function (key) {
+      var ev = EVENTS[key];
+      if (!ev) { return; }
+      var li = document.createElement("li");
+      if (ev.url) {
+        li.innerHTML = '<a href="' + esc(ev.url) + '" target="_blank" rel="noopener noreferrer">' +
+                       "<span>" + esc(ev.name) + '</span><span class="tag">點我報名 →</span></a>';
+      } else {
+        li.innerHTML = "<span>" + esc(ev.name) + "</span>";
+      }
+      rec.appendChild(li);
+    });
+
+    show("result");
+  }
+
+  /* ---------- 抽獎表單 ---------- */
+  function buildInterests() {
+    var box = $("i-interests");
+    INTERESTS.forEach(function (name, i) {
+      var label = document.createElement("label");
+      label.className = "check";
+      label.innerHTML = '<input type="checkbox" value="' + esc(name) + '" id="int' + i + '"><span>' + esc(name) + "</span>";
+      box.appendChild(label);
+    });
+  }
+
+  function setBad(fieldId, message) {
+    var f = $(fieldId);
+    f.classList.add("is-bad");
+    if (!f.querySelector(".err")) {
+      var p = document.createElement("span");
+      p.className = "err";
+      p.textContent = message;
+      f.appendChild(p);
+    }
+  }
+
+  function clearBad() {
+    Array.prototype.forEach.call(document.querySelectorAll(".is-bad"), function (f) {
+      f.classList.remove("is-bad");
+      var e = f.querySelector(".err");
+      if (e) { e.parentNode.removeChild(e); }
+    });
+  }
+
+  function validate() {
+    clearBad();
+    var ok = true;
+
+    if (!$("i-name").value.trim()) { setBad("f-name", "請填寫大名"); ok = false; }
+    if (!$("i-dept").value.trim()) { setBad("f-dept", "請填寫系級"); ok = false; }
+
+    var phone = $("i-phone").value.replace(/[\s()-]/g, "");
+    if (!phone) {
+      setBad("f-phone", "請填寫聯絡電話");
+      ok = false;
+    } else if (!/^\+?\d{8,15}$/.test(phone)) {
+      setBad("f-phone", "電話格式看起來不太對，請確認一下");
+      ok = false;
+    }
+
+    if (!$("i-consent").checked) { setBad("f-consent", "需要勾選同意才能參加抽獎"); ok = false; }
+
+    if (!ok) {
+      var first = document.querySelector(".is-bad");
+      if (first) { first.scrollIntoView({ block: "center" }); }
+    }
+    return ok;
+  }
+
+  function collect() {
+    var picked = [];
+    Array.prototype.forEach.call($("i-interests").querySelectorAll("input:checked"), function (c) {
+      picked.push(c.value);
+    });
+
+    return {
+      submittedAt: new Date().toISOString(),
+      typeKey:  resultKey,
+      typeName: TYPES[resultKey].zh + " " + TYPES[resultKey].en,
+      name:     $("i-name").value.trim(),
+      dept:     $("i-dept").value.trim(),
+      phone:    $("i-phone").value.trim(),
+      social:   $("i-social").value.trim(),
+      interests: picked.join("、"),
+      suggest:  $("i-suggest").value.trim(),
+      answers:  answers.map(function (choice, qi) {
+        return QUESTIONS[qi].zh + " → " + QUESTIONS[qi].opts[choice].zh;
+      }).join(" | ")
+    };
+  }
+
+  function status(msg, bad) {
+    var el = $("status");
+    el.hidden = false;
+    el.textContent = msg;
+    el.className = "status" + (bad ? " status--bad" : "");
+  }
+
+  $("draw").addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (!validate()) { return; }
+
+    if (!ENDPOINT) {
+      status("表單尚未設定收件網址，請聯絡社團幹部。", true);
+      return;
+    }
+
+    var btn = $("send");
+    btn.disabled = true;
+    status("送出中…", false);
+
+    // text/plain 屬於 CORS 安全清單，可避開 Apps Script 不支援的 preflight
+    fetch(ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(collect())
+    })
+      .then(function (res) { return res.ok ? res.text() : Promise.reject(new Error(res.status)); })
+      .then(function () { show("done"); })
+      .catch(function () {
+        btn.disabled = false;
+        status("送出失敗，請檢查網路後再試一次，或直接私訊社團 IG @ntustcdvc。", true);
+      });
+  });
+
+  /* ---------- 事件綁定 ---------- */
+  $("start").addEventListener("click", function () {
+    answers = [];
+    current = 0;
+    renderQuestion();
+    show("quiz");
+  });
+
+  $("back").addEventListener("click", function () {
+    if (current > 0) { current--; renderQuestion(); }
+  });
+
+  function restart() {
+    answers = [];
+    current = 0;
+    resultKey = "";
+    $("draw").reset();
+    clearBad();
+    $("status").hidden = true;
+    $("send").disabled = false;
+    renderQuestion();
+    show("quiz");
+  }
+
+  $("retry").addEventListener("click", restart);
+  $("again").addEventListener("click", restart);
+
+  $("skip").addEventListener("click", function () {
+    $("done-msg").textContent = "隨時歡迎你來參加我們的活動，9/15（二）迎新茶會見！";
+    show("done");
+  });
+
+  buildInterests();
+})();
+</script>
+</body>
+</html>

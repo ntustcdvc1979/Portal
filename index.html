@@ -210,6 +210,61 @@
 
   .link:hover .link__arrow{transform:translateX(.25rem);}
 
+  /* ---------- 人格測驗橫幅 ---------- */
+  .quizbanner{
+    display:flex;
+    align-items:center;
+    gap:1rem;
+    padding:1.25rem 1.35rem;
+    border:2px solid rgba(169,206,59,.55);
+    border-radius:1.25rem;
+    background:linear-gradient(135deg,rgba(242,167,44,.14),rgba(169,206,59,.18));
+    text-decoration:none;
+    color:inherit;
+    box-shadow:0 .35rem 0 rgba(51,51,51,.06);
+    transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  }
+
+  .quizbanner:hover,
+  .quizbanner:focus-visible{
+    transform:translateY(-.3rem);
+    border-color:var(--green-dark);
+    box-shadow:0 .8rem 1.4rem rgba(51,51,51,.12);
+  }
+
+  .quizbanner:focus-visible{outline:3px solid var(--ink);outline-offset:3px;}
+
+  .quizbanner__emoji{font-size:2.4rem;line-height:1;flex:none;}
+
+  .quizbanner__name{
+    display:block;
+    font-size:1.1rem;
+    font-weight:900;
+  }
+
+  .quizbanner__note{
+    display:block;
+    font-size:.85rem;
+    color:var(--ink-soft);
+  }
+
+  .quizbanner__go{
+    margin-left:auto;
+    flex:none;
+    padding:.5rem 1rem;
+    border-radius:999px;
+    background:var(--green-dark);
+    color:#fff;
+    font-size:.9rem;
+    font-weight:900;
+    white-space:nowrap;
+  }
+
+  @media (max-width:32rem){
+    .quizbanner{flex-wrap:wrap;}
+    .quizbanner__go{margin-left:0;width:100%;text-align:center;}
+  }
+
   /* ---------- 活動報名卡 ---------- */
   .events{
     display:grid;
@@ -504,6 +559,22 @@
       </li>
 
     </ul>
+  </section>
+
+  <section class="section" aria-labelledby="quiz-title">
+    <div class="section__head">
+      <span class="section__dot" style="background:var(--green);box-shadow:0 0 0 .28rem rgba(169,206,59,.25)"></span>
+      <h2 id="quiz-title">志工人格測驗</h2>
+    </div>
+
+    <a class="quizbanner" href="quiz.html">
+      <span class="quizbanner__emoji" aria-hidden="true">🧭</span>
+      <span class="quizbanner__text">
+        <span class="quizbanner__name">你是哪一種志工人格？</span>
+        <span class="quizbanner__note">八題測出最適合你的活動・填資料還能參加 9/15 迎新茶會抽獎</span>
+      </span>
+      <span class="quizbanner__go">開始測驗 →</span>
+    </a>
   </section>
 
   <section class="section" aria-labelledby="signup-title">
