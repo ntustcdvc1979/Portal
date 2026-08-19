@@ -210,6 +210,118 @@
 
   .link:hover .link__arrow{transform:translateX(.25rem);}
 
+  /* ---------- 活動報名卡 ---------- */
+  .events{
+    display:grid;
+    gap:1.25rem;
+    grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));
+    list-style:none;
+    margin:0;
+    padding:0;
+  }
+
+  .event{
+    display:flex;
+    flex-direction:column;
+    height:100%;
+    background:var(--card);
+    border:2px solid var(--line);
+    border-radius:1.25rem;
+    overflow:hidden;
+    text-decoration:none;
+    color:inherit;
+    box-shadow:0 .35rem 0 rgba(51,51,51,.06);
+    transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  }
+
+  .event:hover,
+  .event:focus-visible{
+    transform:translateY(-.35rem);
+    border-color:var(--orange);
+    box-shadow:0 .9rem 1.5rem rgba(51,51,51,.14);
+  }
+
+  .event:focus-visible{outline:3px solid var(--ink);outline-offset:3px;}
+
+  .event__figure{
+    position:relative;
+    margin:0;
+    background:#f4f0e4;
+  }
+
+  .event__img{
+    display:block;
+    width:100%;
+    aspect-ratio:1/1;
+    object-fit:cover;
+    transition:transform .3s ease;
+  }
+
+  .event:hover .event__img{transform:scale(1.04);}
+
+  .event__date{
+    position:absolute;
+    top:.75rem;
+    left:.75rem;
+    padding:.25rem .7rem;
+    border-radius:999px;
+    background:rgba(51,51,51,.88);
+    color:#fff;
+    font-size:.8rem;
+    font-weight:800;
+    letter-spacing:.03em;
+    backdrop-filter:blur(2px);
+  }
+
+  .event__body{
+    display:flex;
+    flex-direction:column;
+    gap:.85rem;
+    flex:1;
+    padding:1.1rem 1.15rem 1.25rem;
+  }
+
+  .event__name{
+    margin:0;
+    font-size:1.08rem;
+    font-weight:900;
+    line-height:1.45;
+  }
+
+  .event__cta{
+    margin-top:auto;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:.45rem;
+    padding:.65rem 1rem;
+    border-radius:999px;
+    background:linear-gradient(135deg,var(--orange),var(--orange-dark));
+    color:#fff;
+    font-weight:900;
+    font-size:1rem;
+    letter-spacing:.04em;
+    box-shadow:0 .25rem .6rem rgba(217,140,18,.35);
+  }
+
+  .event:hover .event__cta{
+    background:linear-gradient(135deg,var(--green),var(--green-dark));
+    box-shadow:0 .25rem .6rem rgba(130,168,33,.4);
+  }
+
+  .event__cta svg{
+    width:1.15rem;
+    height:1.15rem;
+    fill:currentColor;
+    animation:tap 1.8s ease-in-out infinite;
+  }
+
+  @keyframes tap{
+    0%,70%,100%{transform:translate(0,0);}
+    80%{transform:translate(-.12rem,-.22rem);}
+    90%{transform:translate(0,.05rem);}
+  }
+
   /* 未開放的報名表單 */
   .link--soon{
     cursor:default;
@@ -289,7 +401,7 @@
   }
 
   @media (prefers-reduced-motion:reduce){
-    *{transition:none!important;scroll-behavior:auto!important;}
+    *{transition:none!important;animation:none!important;scroll-behavior:auto!important;}
   }
 </style>
 </head>
@@ -354,16 +466,73 @@
       </li>
 
       <li>
-        <div class="link link--soon">
+        <a class="link" style="--brand:var(--green-dark)" href="#signup-title">
           <span class="link__icon" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Zm0 2.5L17.5 8H14V4.5ZM8 12h8v1.5H8V12Zm0 4h8v1.5H8V16Zm0-8h4v1.5H8V8Z"/></svg>
           </span>
           <span class="link__text">
-            <span class="link__name">活動報名表單</span>
-            <span class="link__note">開放後於此更新，敬請期待</span>
+            <span class="link__name">活動報名</span>
+            <span class="link__note">看看近期開放報名的活動</span>
           </span>
-          <span class="badge">即將開放</span>
-        </div>
+          <span class="link__arrow" aria-hidden="true">↓</span>
+        </a>
+      </li>
+    </ul>
+  </section>
+
+  <section class="section" aria-labelledby="signup-title">
+    <div class="section__head">
+      <span class="section__dot"></span>
+      <h2 id="signup-title">活動報名</h2>
+    </div>
+
+    <ul class="events">
+      <li>
+        <a class="event" href="https://forms.gle/ayeeMPcjQW8kj9kH6" target="_blank" rel="noopener noreferrer">
+          <figure class="event__figure">
+            <img class="event__img" src="assets/sampleDM.webp" alt="開伙與桌遊之夜活動文宣">
+            <figcaption class="event__date">09/02（三）</figcaption>
+          </figure>
+          <div class="event__body">
+            <h3 class="event__name">開伙與桌遊之夜</h3>
+            <span class="event__cta">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11.5V5.75a1.75 1.75 0 0 1 3.5 0V11h.75V4a1.75 1.75 0 0 1 3.5 0v7h.75V6.5a1.75 1.75 0 0 1 3.5 0v9.25c0 3.45-2.8 6.25-6.25 6.25h-1.9a6.1 6.1 0 0 1-4.62-2.12l-3.3-3.85a1.75 1.75 0 0 1 2.5-2.44L9 15.4v-3.9Z"/></svg>
+              點我報名
+            </span>
+          </div>
+        </a>
+      </li>
+
+      <li>
+        <a class="event" href="https://forms.gle/JUWZN9siCupiJamc7" target="_blank" rel="noopener noreferrer">
+          <figure class="event__figure">
+            <img class="event__img" src="assets/sampleDM.webp" alt="誼山移山亮晶晶活動文宣" loading="lazy">
+            <figcaption class="event__date">09/05（六）</figcaption>
+          </figure>
+          <div class="event__body">
+            <h3 class="event__name">誼山移山亮晶晶</h3>
+            <span class="event__cta">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11.5V5.75a1.75 1.75 0 0 1 3.5 0V11h.75V4a1.75 1.75 0 0 1 3.5 0v7h.75V6.5a1.75 1.75 0 0 1 3.5 0v9.25c0 3.45-2.8 6.25-6.25 6.25h-1.9a6.1 6.1 0 0 1-4.62-2.12l-3.3-3.85a1.75 1.75 0 0 1 2.5-2.44L9 15.4v-3.9Z"/></svg>
+              點我報名
+            </span>
+          </div>
+        </a>
+      </li>
+
+      <li>
+        <a class="event" href="https://forms.gle/BQJiLTzUSM6UZEot9" target="_blank" rel="noopener noreferrer">
+          <figure class="event__figure">
+            <img class="event__img" src="assets/sampleDM.webp" alt="台科 GPS 活動文宣" loading="lazy">
+            <figcaption class="event__date">09/06（日）</figcaption>
+          </figure>
+          <div class="event__body">
+            <h3 class="event__name">台科 GPS</h3>
+            <span class="event__cta">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11.5V5.75a1.75 1.75 0 0 1 3.5 0V11h.75V4a1.75 1.75 0 0 1 3.5 0v7h.75V6.5a1.75 1.75 0 0 1 3.5 0v9.25c0 3.45-2.8 6.25-6.25 6.25h-1.9a6.1 6.1 0 0 1-4.62-2.12l-3.3-3.85a1.75 1.75 0 0 1 2.5-2.44L9 15.4v-3.9Z"/></svg>
+              點我報名
+            </span>
+          </div>
+        </a>
       </li>
     </ul>
   </section>
@@ -375,12 +544,12 @@
     </div>
 
     <figure class="calendar">
-      <a href="assets/calendar.png" target="_blank" rel="noopener noreferrer">
-        <img src="assets/calendar.png" alt="台科大崇德志工社 115 學年行事曆，列出九月至十二月各項活動的日期、名稱與地點。" loading="lazy">
+      <a href="assets/calendar.webp" target="_blank" rel="noopener noreferrer">
+        <img src="assets/calendar.webp" alt="台科大崇德志工社 115 學年行事曆，列出九月至十二月各項活動的日期、名稱與地點。" loading="lazy">
       </a>
       <figcaption class="calendar__caption">
         <span>每週三 18:30 溫馨開伙・$50 蔬食吃到飽</span>
-        <a href="assets/calendar.png" target="_blank" rel="noopener noreferrer">開啟大圖 →</a>
+        <a href="assets/calendar.webp" target="_blank" rel="noopener noreferrer">開啟大圖 →</a>
       </figcaption>
     </figure>
   </section>
