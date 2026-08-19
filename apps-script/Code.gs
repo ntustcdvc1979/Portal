@@ -21,6 +21,12 @@ var HEADERS = [
 ];
 
 /**
+ * 每分鐘最多接受幾筆。防的是機器人洗版，不是擋正常使用者；
+ * 茶會現場大家同時填也用不到 30 筆／分鐘。
+ */
+var RATE_PER_MIN = 30;
+
+/**
  * 網頁以 POST 送出 JSON。Content-Type 為 text/plain，
  * 屬於 CORS 安全清單，可避開 Apps Script 不支援的 preflight 請求。
  */
@@ -32,6 +38,22 @@ function doPost(e) {
     lock.waitLock(20000);
 
     var data = JSON.parse(e.postData.contents);
+
+    // 蜜罐欄位：真人看不到也填不到，有值就是機器人。
+    // 回 ok 讓對方以為成功，免得它換手法再來。
+    if (data.website) {
+      return json_({ ok: true });
+    }
+
+    if (overRateLimit_()) {
+      return json_({ ok: false, error: 'rate limited' });
+    }
+
+    var bad = validate_(data);
+    if (bad) {
+      return json_({ ok: false, error: bad });
+    }
+
     var sheet = getSheet_();
 
     sheet.appendRow([
@@ -57,9 +79,44 @@ function doPost(e) {
   }
 }
 
-/** 直接用瀏覽器開啟部署網址時的健康檢查 */
+/**
+ * 直接用瀏覽器開啟部署網址時的健康檢查。
+ * 刻意不回傳任何報名資料 —— 這支網址是公開的，讀取一律走試算表。
+ */
 function doGet() {
   return json_({ ok: true, service: 'cdvc-quiz' });
+}
+
+/** 必填欄位與長度檢查。前端擋過一次，這裡是繞過前端時的第二道。 */
+function validate_(data) {
+  if (!trim_(data.name)) { return 'name required'; }
+  if (!trim_(data.dept)) { return 'dept required'; }
+
+  var phone = trim_(data.phone).replace(/[\s()-]/g, '');
+  if (!/^\+?\d{8,15}$/.test(phone)) { return 'phone invalid'; }
+
+  // 避免有人塞超長字串把試算表撐爆（單格上限 5 萬字元）
+  var limits = { name: 40, dept: 40, phone: 20, social: 60, suggest: 500, interests: 500, answers: 2000 };
+  for (var k in limits) {
+    if (limits.hasOwnProperty(k) && trim_(data[k]).length > limits[k]) {
+      return k + ' too long';
+    }
+  }
+
+  return '';
+}
+
+/** 全站層級的簡易流量上限。Apps Script 讀不到來源 IP，只能做總量控管。 */
+function overRateLimit_() {
+  var cache = CacheService.getScriptCache();
+  var key = 'rl-' + Math.floor(Date.now() / 60000);
+  var n = Number(cache.get(key) || 0) + 1;
+  cache.put(key, String(n), 120);
+  return n > RATE_PER_MIN;
+}
+
+function trim_(v) {
+  return v == null ? '' : String(v).trim();
 }
 
 function getSheet_() {

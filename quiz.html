@@ -410,6 +410,15 @@
   .field.is-bad input,
   .field.is-bad textarea{border-color:var(--err);background:#FFF6F5;}
 
+  /* 蜜罐欄位：不能用 display:none，部分機器人會跳過看不見的欄位 */
+  .hp{
+    position:absolute;
+    left:-9999px;
+    width:1px;
+    height:1px;
+    overflow:hidden;
+  }
+
   .privacy{
     margin:1.25rem 0;
     padding:.85rem 1rem;
@@ -544,6 +553,12 @@
         🔒 以上個人資訊僅供活動通知、推播與抽獎聯繫使用，不會提供給第三方。
         <span class="lang">Your personal information will only be used for activity notifications and the lucky draw.</span>
       </p>
+
+      <!-- 蜜罐：真人看不到，機器人會填。有值就丟掉。 -->
+      <div class="hp" aria-hidden="true">
+        <label for="i-hp">Website</label>
+        <input type="text" id="i-hp" name="website" tabindex="-1" autocomplete="off">
+      </div>
 
       <div class="field" id="f-consent">
         <label class="check">
@@ -953,6 +968,7 @@
     });
 
     return {
+      website:  $("i-hp").value,   // 蜜罐，正常一定是空字串
       submittedAt: new Date().toISOString(),
       typeKey:  resultKey,
       typeName: TYPES[resultKey].zh + " " + TYPES[resultKey].en,
@@ -995,7 +1011,13 @@
       body: JSON.stringify(collect())
     })
       .then(function (res) { return res.ok ? res.text() : Promise.reject(new Error(res.status)); })
-      .then(function () { show("done"); })
+      .then(function (text) {
+        // Apps Script 就算拒絕也是回 200，成敗要看內容
+        var body = {};
+        try { body = JSON.parse(text); } catch (err) { /* 非 JSON 一律當失敗 */ }
+        if (!body.ok) { return Promise.reject(new Error(body.error || "bad response")); }
+        show("done");
+      })
       .catch(function () {
         btn.disabled = false;
         status("送出失敗，請檢查網路後再試一次，或直接私訊社團 IG @ntustcdvc。", true);
