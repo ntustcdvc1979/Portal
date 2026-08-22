@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>志工人格測驗 | 台科大崇德志工社</title>
-<meta name="description" content="八題測出你的志工人格，看看崇德志工社哪個活動最適合你。填寫資料還可參加 9/15 迎新茶會抽獎。">
+<meta name="description" content="八題測出你的志工人格，看看崇德志工社哪個活動最適合你。填寫資料還可參加 9/15 茶會抽獎。">
 <link rel="icon" href="assets/logo1.webp">
 <meta name="robots" content="noindex">
 <style>
@@ -333,22 +333,86 @@
   }
 
   /* ---------- 抽獎表單 ---------- */
-  .draw{margin-top:1.5rem;}
-
-  .draw__head{
-    display:flex;
-    align-items:center;
-    gap:.6rem;
-    margin:0 0 .35rem;
-    font-size:1.15rem;
-    font-weight:900;
+  /* 做成獎券的樣子，讓它明顯跳出白色的結果卡 */
+  .draw{
+    margin-top:2rem;
+    border:3px solid var(--orange);
+    border-radius:1.5rem;
+    background:linear-gradient(165deg,#FFF8E8,#FFFDF6);
+    box-shadow:0 .7rem 1.6rem rgba(217,140,18,.22);
+    overflow:hidden;
   }
+
+  .draw__banner{
+    position:relative;
+    padding:1.35rem 1.25rem 1.15rem;
+    text-align:center;
+    color:#fff;
+    background:linear-gradient(135deg,var(--orange),var(--orange-dark));
+  }
+
+  /* 下緣的鋸齒，撕票根的感覺 */
+  .draw__banner::after{
+    content:"";
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:-1px;
+    height:.5rem;
+    background:
+      radial-gradient(circle at .5rem 0, #FFF8E8 .32rem, transparent .33rem) repeat-x;
+    background-size:1rem .5rem;
+  }
+
+  .draw__gift{
+    display:block;
+    font-size:2.4rem;
+    line-height:1;
+    animation:shake 2.6s ease-in-out infinite;
+  }
+
+  @keyframes shake{
+    0%,88%,100%{transform:rotate(0) scale(1);}
+    91%{transform:rotate(-11deg) scale(1.09);}
+    94%{transform:rotate(9deg) scale(1.09);}
+    97%{transform:rotate(-5deg) scale(1.04);}
+  }
+
+  .draw__title{
+    display:block;
+    margin-top:.3rem;
+    font-size:1.45rem;
+    font-weight:900;
+    letter-spacing:.06em;
+  }
+
+  .draw__when{
+    display:block;
+    margin-top:.15rem;
+    font-size:.85rem;
+    font-weight:700;
+    opacity:.95;
+  }
+
+  .draw__inner{padding:1.5rem 1.35rem 1.4rem;}
 
   .draw__note{
-    margin:0 0 1.25rem;
-    font-size:.85rem;
-    color:var(--ink-soft);
+    margin:0 0 1.35rem;
+    font-size:.88rem;
+    font-weight:700;
+    color:var(--orange-dark);
   }
+
+  .btn--big{
+    width:100%;
+    padding:1rem 1.6rem;
+    font-size:1.1rem;
+  }
+
+  /* 獎券內的輸入框要比外框亮，才不會糊成一片 */
+  .draw .field input[type=text],
+  .draw .field input[type=tel],
+  .draw .field textarea{background:#fff;}
 
   .field{margin-bottom:1.1rem;}
 
@@ -470,12 +534,12 @@
     <img class="intro__logo" src="assets/logo1.webp" alt="台科大崇德志工社社徽">
     <h1 class="intro__title">你是哪一種<em>志工人格</em>？</h1>
     <p class="intro__lede">
-      十題，兩分鐘，找出最適合你的崇德打開方式。<br>
+      十題兩分鐘，找出最適合你的志工人格。<br>
       <span class="lang">10 questions to find your volunteer personality.</span>
     </p>
     <button class="btn" type="button" id="start">開始測驗 →</button>
     <p class="intro__meta">
-      🎁 測完填寫資料，即可參加 <strong>9/15（二）迎新茶會抽獎</strong>。
+      🎁 測完填寫資料，即可參加 <strong>9/15（二）茶會抽獎</strong>。
     </p>
   </section>
 
@@ -523,11 +587,17 @@
     </div>
 
     <!-- 抽獎 -->
-    <form class="card draw" id="draw" novalidate>
-      <h3 class="draw__head">🎁 參加迎新茶會抽獎</h3>
+    <form class="draw" id="draw" novalidate>
+      <div class="draw__banner">
+        <span class="draw__gift" aria-hidden="true">🎁</span>
+        <strong class="draw__title">參加茶會抽獎</strong>
+        <span class="draw__when">9/15（二）崇德志工社茶會・現場抽出好禮</span>
+      </div>
+
+      <div class="draw__inner">
       <p class="draw__note">
-        9/15（二）崇德志工社迎新茶會現場抽獎，填寫以下資料即可參加。
-        <span class="lang">Fill in the form to join the lucky draw at our welcome party.</span>
+        填好下面三欄就完成登記，當天到場就能參加抽獎。
+        <span class="lang">Fill in the three fields below to enter the lucky draw.</span>
       </p>
 
       <div class="field" id="f-name">
@@ -563,8 +633,9 @@
       </div>
 
       <p class="privacy">
-        🔒 以上個人資訊僅供活動通知、推播與抽獎聯繫使用，不會提供給第三方。
-        <span class="lang">Your personal information will only be used for activity notifications and the lucky draw.</span>
+        🔒 以上個人資訊僅供活動通知、推播與抽獎聯繫使用，不會提供給第三方。<br>
+        即使不參加抽獎，我們仍會<strong>匿名</strong>記錄你的測驗結果與活動偏好，作為未來活動規劃的參考。
+        <span class="lang">Your personal information is used only for activity notifications and the lucky draw. Quiz results are recorded anonymously to help us plan future activities.</span>
       </p>
 
       <!-- 蜜罐：真人看不到，機器人會填。有值就丟掉。 -->
@@ -581,11 +652,12 @@
       </div>
 
       <div class="submit-row">
-        <button class="btn" type="submit" id="send">送出並參加抽獎</button>
-        <button class="btn btn--ghost" type="button" id="skip">不參加抽獎</button>
+        <button class="btn btn--big" type="submit" id="send">🎁 送出並參加抽獎</button>
+        <button class="btn btn--ghost" type="button" id="skip">不參加抽獎，只送出測驗結果</button>
       </div>
 
       <p class="status" id="status" hidden></p>
+      </div>
     </form>
   </section>
 
@@ -594,7 +666,7 @@
     <div class="card done">
       <span class="done__emoji">🎉</span>
       <h2 class="done__title">收到你的報名了！</h2>
-      <p id="done-msg">9/15（二）迎新茶會現場抽獎，記得來喔～</p>
+      <p id="done-msg">9/15（二）茶會現場抽獎，記得來喔～</p>
       <div class="result__actions">
         <a class="btn" href="index.html">看看近期活動</a>
         <button class="btn btn--ghost" type="button" id="again">再測一次</button>
@@ -627,7 +699,7 @@
       tagline: "「吃飽，才有力氣愛人。」",
       desc: "你相信最實在的關心是一頓熱飯。在廚房裡你自在得像回家，切菜的節奏就是你的療癒方式；看著大家把盤子清空，比誰稱讚你都開心。崇德的每週開伙就是為你準備的舞台。",
       traits: ["照顧型", "手很巧", "餵飽全場", "行動派"],
-      recs: ["e0902", "cook", "hotpot"]
+      recs: ["e0902", "cook", "hotpot", "xmas"]
     },
     eco: {
       emoji: "🌱",
@@ -663,7 +735,7 @@
       tagline: "「哪裡有人，哪裡就有我。」",
       desc: "你是場子的開關。冷場十秒你就受不了，總能找到話題把所有人串在一起。認識新朋友對你來說不是社交壓力，是這學期最期待的事。",
       traits: ["活力滿點", "自來熟", "氣氛製造機", "點子多"],
-      recs: ["e0902", "e0906", "hotpot"]
+      recs: ["e0902", "e0906", "tea", "xmas"]
     },
     paws: {
       emoji: "🐾",
@@ -683,7 +755,8 @@
     e0902:  { name: "09/02（三）開伙＋桌遊之夜", url: "https://forms.gle/ayeeMPcjQW8kj9kH6" },
     e0905:  { name: "09/05（六）誼山移山亮晶晶", url: "https://forms.gle/JUWZN9siCupiJamc7" },
     e0906:  { name: "09/06（日）台科 GPS",      url: "https://forms.gle/BQJiLTzUSM6UZEot9" },
-    tea:    { name: "09/15（二）崇德志工社迎新茶會" },
+    tea:    { name: "09/15（二）崇德志工社茶會", url: "https://forms.gle/D88nyieC127Tknpq9" },
+    xmas:   { name: "12/24（四）聖誕期末聚餐" },
     cook:   { name: "每週三 18:30 溫馨開伙" },
     hotpot: { name: "12/05（六）黑皮：火鍋趴＋KTV" },
     kids:   { name: "11/07-08 兒童營隊志工出隊" },
@@ -828,7 +901,8 @@
     "11/07-08（六-日）兒童營隊志工出隊",
     "11/25（三）紓壓手作DIY",
     "11/29（日）STEAM 科學營",
-    "12/05（六）黑皮：火鍋趴＋KTV"
+    "12/05（六）黑皮：火鍋趴＋KTV",
+    "12/24（四）聖誕期末聚餐"
   ];
 
   /* ============================================================
@@ -848,7 +922,8 @@
   }
 
   /* ---------- 題目渲染 ---------- */
-  var KEYS = "ABCDEF";
+  // 要夠長，選項變多時才不會出現沒有字母的空圈
+  var KEYS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
   function renderQuestion() {
     var q = QUESTIONS[current];
@@ -1047,7 +1122,11 @@
     return ok;
   }
 
-  function collect() {
+  /**
+   * joinDraw 為 false 時只送測驗結果與活動偏好，不帶任何個人資料，
+   * 讓沒登記抽獎的人也能納入活動規劃的統計。
+   */
+  function collect(joinDraw) {
     var picked = [];
     Array.prototype.forEach.call($("i-interests").querySelectorAll("input:checked"), function (c) {
       picked.push(c.value);
@@ -1056,12 +1135,13 @@
     return {
       website:  $("i-hp").value,   // 蜜罐，正常一定是空字串
       submittedAt: new Date().toISOString(),
+      joinDraw: !!joinDraw,
       typeKey:  resultKey,
       typeName: TYPES[resultKey].zh + " " + TYPES[resultKey].en,
-      name:     $("i-name").value.trim(),
-      dept:     $("i-dept").value.trim(),
-      phone:    $("i-phone").value.trim(),
-      social:   $("i-social").value.trim(),
+      name:     joinDraw ? $("i-name").value.trim()   : "",
+      dept:     joinDraw ? $("i-dept").value.trim()   : "",
+      phone:    joinDraw ? $("i-phone").value.trim()  : "",
+      social:   joinDraw ? $("i-social").value.trim() : "",
       interests: picked.join("、"),
       suggest:  $("i-suggest").value.trim(),
       answers:  answers.map(function (choice, qi) {
@@ -1079,6 +1159,24 @@
     el.className = "status" + (bad ? " status--bad" : "");
   }
 
+  /** 送出到 Apps Script。text/plain 屬於 CORS 安全清單，可避開不支援的 preflight */
+  function send(joinDraw) {
+    if (!ENDPOINT) { return Promise.reject(new Error("no endpoint")); }
+
+    return fetch(ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(collect(joinDraw))
+    })
+      .then(function (res) { return res.ok ? res.text() : Promise.reject(new Error(res.status)); })
+      .then(function (text) {
+        // Apps Script 就算拒絕也是回 200，成敗要看內容
+        var body = {};
+        try { body = JSON.parse(text); } catch (err) { /* 非 JSON 一律當失敗 */ }
+        if (!body.ok) { return Promise.reject(new Error(body.error || "bad response")); }
+      });
+  }
+
   $("draw").addEventListener("submit", function (e) {
     e.preventDefault();
     if (!validate()) { return; }
@@ -1092,20 +1190,8 @@
     btn.disabled = true;
     status("送出中…", false);
 
-    // text/plain 屬於 CORS 安全清單，可避開 Apps Script 不支援的 preflight
-    fetch(ENDPOINT, {
-      method: "POST",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify(collect())
-    })
-      .then(function (res) { return res.ok ? res.text() : Promise.reject(new Error(res.status)); })
-      .then(function (text) {
-        // Apps Script 就算拒絕也是回 200，成敗要看內容
-        var body = {};
-        try { body = JSON.parse(text); } catch (err) { /* 非 JSON 一律當失敗 */ }
-        if (!body.ok) { return Promise.reject(new Error(body.error || "bad response")); }
-        show("done");
-      })
+    send(true)
+      .then(function () { show("done"); })
       .catch(function () {
         btn.disabled = false;
         status("送出失敗，請檢查網路後再試一次，或直接私訊社團 IG @ntustcdvc。", true);
@@ -1146,7 +1232,9 @@
   $("again").addEventListener("click", restart);
 
   $("skip").addEventListener("click", function () {
-    $("done-msg").textContent = "隨時歡迎你來參加我們的活動，9/15（二）迎新茶會見！";
+    // 匿名送出測驗結果供活動規劃參考；送不出去也不擋使用者離開
+    send(false)["catch"](function () { /* 純統計，失敗就算了 */ });
+    $("done-msg").textContent = "謝謝你的作答！隨時歡迎你來參加我們的活動，9/15（二）崇德志工社茶會見！";
     show("done");
   });
 

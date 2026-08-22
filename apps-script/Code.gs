@@ -8,6 +8,7 @@
 // 收件試算表的分頁名稱，不存在時會自動建立
 var SHEET_NAME = '報名資料';
 
+// 新欄位一律加在最後面：既有試算表的欄位對應才不會整排位移
 var HEADERS = [
   '送出時間',
   '人格類型',
@@ -17,7 +18,8 @@ var HEADERS = [
   'LINE / IG',
   '有興趣的活動',
   '未來活動建議',
-  '作答內容'
+  '作答內容',
+  '參加抽獎'
 ];
 
 /**
@@ -66,7 +68,8 @@ function doPost(e) {
       data.social     || '',
       data.interests  || '',
       data.suggest    || '',
-      data.answers    || ''
+      data.answers    || '',
+      data.joinDraw ? '是' : '否'
     ]);
 
     return json_({ ok: true });
@@ -87,13 +90,21 @@ function doGet() {
   return json_({ ok: true, service: 'cdvc-quiz' });
 }
 
-/** 必填欄位與長度檢查。前端擋過一次，這裡是繞過前端時的第二道。 */
+/**
+ * 必填欄位與長度檢查。前端擋過一次，這裡是繞過前端時的第二道。
+ * 沒有登記抽獎的匿名紀錄不含個人資料，只檢查長度。
+ */
 function validate_(data) {
-  if (!trim_(data.name)) { return 'name required'; }
-  if (!trim_(data.dept)) { return 'dept required'; }
+  if (data.joinDraw) {
+    if (!trim_(data.name)) { return 'name required'; }
+    if (!trim_(data.dept)) { return 'dept required'; }
 
-  var phone = trim_(data.phone).replace(/[\s()-]/g, '');
-  if (!/^\+?\d{8,15}$/.test(phone)) { return 'phone invalid'; }
+    var phone = trim_(data.phone).replace(/[\s()-]/g, '');
+    if (!/^\+?\d{8,15}$/.test(phone)) { return 'phone invalid'; }
+  } else if (!trim_(data.typeName)) {
+    // 匿名紀錄至少要有測驗結果，否則就是空白請求
+    return 'nothing to record';
+  }
 
   // 避免有人塞超長字串把試算表撐爆（單格上限 5 萬字元）
   var limits = { name: 40, dept: 40, phone: 20, social: 60, suggest: 500, interests: 500, answers: 2000 };
@@ -131,6 +142,14 @@ function getSheet_() {
     sheet.appendRow(HEADERS);
     sheet.getRange(1, 1, 1, HEADERS.length).setFontWeight('bold');
     sheet.setFrozenRows(1);
+
+  } else if (sheet.getLastColumn() < HEADERS.length) {
+    // 舊的表少了後來新增的欄位，補上標題就好，既有資料不動
+    var from = sheet.getLastColumn() + 1;
+    var missing = HEADERS.slice(from - 1);
+    sheet.getRange(1, from, 1, missing.length)
+         .setValues([missing])
+         .setFontWeight('bold');
   }
 
   return sheet;
