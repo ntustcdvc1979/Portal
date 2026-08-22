@@ -591,7 +591,7 @@
       <div class="draw__banner">
         <span class="draw__gift" aria-hidden="true">🎁</span>
         <strong class="draw__title">參加茶會抽獎</strong>
-        <span class="draw__when">9/15（二）崇德志工社茶會・現場抽出好禮</span>
+        <span class="draw__when">9/15（二）崇德志工社說明茶會・現場抽出好禮</span>
       </div>
 
       <div class="draw__inner">
@@ -699,7 +699,7 @@
       tagline: "「吃飽，才有力氣愛人。」",
       desc: "你相信最實在的關心是一頓熱飯。在廚房裡你自在得像回家，切菜的節奏就是你的療癒方式；看著大家把盤子清空，比誰稱讚你都開心。崇德的每週開伙就是為你準備的舞台。",
       traits: ["照顧型", "手很巧", "餵飽全場", "行動派"],
-      recs: ["e0902", "cook", "hotpot", "xmas"]
+      recs: ["cook", "e0909", "e0923", "xmas"]
     },
     eco: {
       emoji: "🌱",
@@ -708,7 +708,7 @@
       tagline: "「這片風景，值得被好好留下來。」",
       desc: "你待在戶外時最有精神，也最見不得美好的地方被弄髒。你不太說大道理，只是默默彎腰把垃圾撿起來——而那個背影，往往就帶動了一整群人。",
       traits: ["行動勝於言語", "體力好", "環保魂", "耐得住"],
-      recs: ["e0905", "steam"]
+      recs: ["e0905", "e1003", "e0919"]
     },
     teacher: {
       emoji: "🎓",
@@ -717,7 +717,7 @@
       tagline: "「我知道的，都想教給你。」",
       desc: "你享受把複雜的事情講到別人聽懂的那一刻。備課、設計關卡、想破頭要怎麼讓小朋友玩得開心又學得到東西——這些對你不是負擔，是成就感的來源。",
       traits: ["有耐心", "會規劃", "喜歡分享", "抗壓性強"],
-      recs: ["steam", "kids", "e0906"]
+      recs: ["steam", "e1107", "e0906"]
     },
     listener: {
       emoji: "💗",
@@ -726,7 +726,7 @@
       tagline: "「我在，你慢慢說。」",
       desc: "你是朋友圈裡那個大家都想找的人。你不急著給建議，只是安靜地陪著——而這份安靜，常常比任何話都有力量。崇德想成為學生的第二個家，靠的正是你這種人。",
       traits: ["同理心強", "很好聊", "情緒穩定", "值得信賴"],
-      recs: ["tea", "soul", "allpass"]
+      recs: ["tea", "e1125", "e1007", "allpass"]
     },
     player: {
       emoji: "🎲",
@@ -735,7 +735,7 @@
       tagline: "「哪裡有人，哪裡就有我。」",
       desc: "你是場子的開關。冷場十秒你就受不了，總能找到話題把所有人串在一起。認識新朋友對你來說不是社交壓力，是這學期最期待的事。",
       traits: ["活力滿點", "自來熟", "氣氛製造機", "點子多"],
-      recs: ["e0902", "e0906", "tea", "xmas"]
+      recs: ["e0830", "e0902", "hotpot", "xmas"]
     },
     paws: {
       emoji: "🐾",
@@ -744,26 +744,34 @@
       tagline: "「牠們不會說話，所以我們要在。」",
       desc: "你對弱小的生命特別沒有抵抗力。看到浪浪會忍不住停下腳步，也願意為了牠們花時間做那些不浪漫的事——清籠子、洗毛巾、陪散步。溫柔而且很硬頸。",
       traits: ["有愛心", "細心", "不怕髒", "默默付出"],
-      recs: ["stray", "e0905"]
+      recs: ["e1121", "e1003", "e0905"]
     }
   };
 
   var ORDER = ["chef", "eco", "teacher", "listener", "player", "paws"];
 
   /* ---------- 推薦活動 ---------- */
+  /* 全社活動總表：依行事曆順序排列。
+     結果頁的推薦活動與抽獎表單的勾選清單都從這裡取，改一次兩邊同步。 */
   var EVENTS = {
-    e0902:  { name: "09/02（三）開伙＋桌遊之夜", url: "https://forms.gle/ayeeMPcjQW8kj9kH6" },
-    e0905:  { name: "09/05（六）誼山移山亮晶晶", url: "https://forms.gle/JUWZN9siCupiJamc7" },
-    e0906:  { name: "09/06（日）台科 GPS",      url: "https://forms.gle/BQJiLTzUSM6UZEot9" },
-    tea:    { name: "09/15（二）崇德志工社茶會", url: "https://forms.gle/D88nyieC127Tknpq9" },
-    xmas:   { name: "12/24（四）聖誕期末聚餐" },
-    cook:   { name: "每週三 18:30 溫馨開伙" },
-    hotpot: { name: "12/05（六）黑皮：火鍋趴＋KTV" },
-    kids:   { name: "11/07-08 兒童營隊志工出隊" },
-    steam:  { name: "11/29（日）STEAM 科學營" },
-    soul:   { name: "11/25（三）開伙＋成全社課" },
-    allpass:{ name: "10/24（六）文昌祈福 AllPass" },
-    stray:  { name: "11/29 流浪貓狗之家" }
+    cook:    { name: "每週三 18:30 蔬食開伙" },
+    e0830:   { name: "08/30（日）大學星攻略",              url: "https://www.accupass.com/go/2026cdfreshmen" },
+    e0902:   { name: "09/02（三）桌遊之夜",                url: "https://forms.gle/ayeeMPcjQW8kj9kH6" },
+    e0905:   { name: "09/05（六）誼山移山亮晶晶",          url: "https://forms.gle/JUWZN9siCupiJamc7" },
+    e0906:   { name: "09/06（日）台科 GPS",                url: "https://forms.gle/BQJiLTzUSM6UZEot9" },
+    e0909:   { name: "09/09（三）帶我走吧！提拉米蘇" },
+    tea:     { name: "09/15（二）崇德志工社說明茶會",      url: "https://forms.gle/D88nyieC127Tknpq9" },
+    e0919:   { name: "09/19（六）中秋素烤" },
+    e0923:   { name: "09/23（三）Mr.豆娜之" },
+    e1003:   { name: "10/03-04（六-日）跨校聯合志工迎新與淨灘" },
+    e1007:   { name: "10/07（三）毛茸茸戳戳繡" },
+    allpass: { name: "10/24（六）文昌祈福AllPass" },
+    e1107:   { name: "11/07-08（六-日）光影漫遊創藝營" },
+    e1121:   { name: "11/21（六）鼠鼠志工出任務" },
+    e1125:   { name: "11/25（三）療癒擴香石" },
+    steam:   { name: "11/29（日）STEAM 科學營" },
+    hotpot:  { name: "12/05（六）黑皮：火鍋趴＋KTV" },
+    xmas:    { name: "12/24（四）聖誕期末聚餐" }
   };
 
   /* ---------- 題目 ---------- */
@@ -885,25 +893,9 @@
     }
   ];
 
-  /* ---------- 抽獎表單的活動清單 ---------- */
-  var INTERESTS = [
-    "每週三 18:30 溫馨開伙",
-    "08/30（日）大學星攻略",
-    "09/02（三）桌遊之夜",
-    "09/05（六）誼山移山亮晶晶",
-    "09/06（日）台科 GPS",
-    "09/15（二）崇德志工社茶會",
-    "09/19（六）中秋素烤",
-    "09/23（三）美食DIY",
-    "10/03-04（六-日）志工聯合迎新",
-    "10/07（三）紓壓手作DIY",
-    "10/24（六）文昌祈福AllPass",
-    "11/07-08（六-日）兒童營隊志工出隊",
-    "11/25（三）紓壓手作DIY",
-    "11/29（日）STEAM 科學營",
-    "12/05（六）黑皮：火鍋趴＋KTV",
-    "12/24（四）聖誕期末聚餐"
-  ];
+  /* 抽獎表單的活動清單直接取自 EVENTS，兩邊名稱不會再有機會對不上。
+     要增刪活動只需改 EVENTS，順序也跟著那裡走。 */
+  var INTERESTS = Object.keys(EVENTS).map(function (k) { return EVENTS[k].name; });
 
   /* ============================================================
      狀態
@@ -1234,7 +1226,7 @@
   $("skip").addEventListener("click", function () {
     // 匿名送出測驗結果供活動規劃參考；送不出去也不擋使用者離開
     send(false)["catch"](function () { /* 純統計，失敗就算了 */ });
-    $("done-msg").textContent = "謝謝你的作答！隨時歡迎你來參加我們的活動，9/15（二）崇德志工社茶會見！";
+    $("done-msg").textContent = "謝謝你的作答！隨時歡迎你來參加我們的活動，9/15（二）崇德志工社說明茶會見！";
     show("done");
   });
 
