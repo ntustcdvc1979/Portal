@@ -197,59 +197,130 @@
 
   .link:hover .link__arrow{transform:translateX(.25rem);}
 
-  /* ---------- 人格測驗橫幅 ---------- */
-  .quizbanner{
-    display:flex;
-    align-items:center;
-    gap:1rem;
-    padding:1.25rem 1.35rem;
-    border:2px solid rgba(169,206,59,.55);
-    border-radius:1.25rem;
-    background:linear-gradient(135deg,rgba(242,167,44,.14),rgba(169,206,59,.18));
+  /* ---------- 問卷抽獎主打區 ---------- */
+  .promo{
+    position:relative;
+    isolation:isolate;          /* 讓掃光留在圓角內 */
+    overflow:hidden;
+    display:block;
+    margin-top:2.5rem;
+    padding:1.75rem 1.5rem 1.6rem;
+    border-radius:1.5rem;
+    text-align:center;
     text-decoration:none;
-    color:inherit;
-    box-shadow:0 .35rem 0 rgba(51,51,51,.06);
-    transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-  }
-
-  .quizbanner:hover,
-  .quizbanner:focus-visible{
-    transform:translateY(-.3rem);
-    border-color:var(--green-dark);
-    box-shadow:0 .8rem 1.4rem rgba(51,51,51,.12);
-  }
-
-  .quizbanner:focus-visible{outline:3px solid var(--ink);outline-offset:3px;}
-
-  .quizbanner__emoji{font-size:2.4rem;line-height:1;flex:none;}
-
-  .quizbanner__name{
-    display:block;
-    font-size:1.1rem;
-    font-weight:900;
-  }
-
-  .quizbanner__note{
-    display:block;
-    font-size:.85rem;
-    color:var(--ink-soft);
-  }
-
-  .quizbanner__go{
-    margin-left:auto;
-    flex:none;
-    padding:.5rem 1rem;
-    border-radius:999px;
-    background:var(--green-dark);
     color:#fff;
-    font-size:.9rem;
+    background:linear-gradient(135deg,#F2A72C 0%,#E89416 45%,#9BC534 100%);
+    box-shadow:0 .9rem 1.8rem rgba(217,140,18,.4);
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+
+  .promo:hover,
+  .promo:focus-visible{
+    transform:translateY(-.35rem) scale(1.012);
+    box-shadow:0 1.3rem 2.4rem rgba(217,140,18,.5);
+  }
+
+  .promo:focus-visible{outline:4px solid var(--ink);outline-offset:4px;}
+
+  /* 斜向掃光，隔一陣子閃一次 */
+  .promo::after{
+    content:"";
+    position:absolute;
+    top:-60%;
+    left:-70%;
+    width:38%;
+    height:220%;
+    z-index:-1;
+    transform:rotate(18deg);
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);
+    animation:sweep 4.5s ease-in-out infinite;
+  }
+
+  @keyframes sweep{
+    0%,62%{left:-70%;}
+    100%{left:140%;}
+  }
+
+  .promo__badge{
+    display:inline-block;
+    padding:.25rem .85rem;
+    border-radius:999px;
+    background:rgba(255,255,255,.95);
+    color:#C0410C;
+    font-size:.8rem;
+    font-weight:900;
+    letter-spacing:.08em;
+    box-shadow:0 .2rem .5rem rgba(0,0,0,.12);
+  }
+
+  .promo__gift{
+    display:block;
+    margin:.5rem 0 .1rem;
+    font-size:3.1rem;
+    line-height:1;
+    filter:drop-shadow(0 .25rem .4rem rgba(0,0,0,.2));
+    animation:bounce 2.4s ease-in-out infinite;
+  }
+
+  @keyframes bounce{
+    0%,72%,100%{transform:translateY(0) rotate(0);}
+    80%{transform:translateY(-.5rem) rotate(-9deg);}
+    88%{transform:translateY(0) rotate(7deg);}
+    94%{transform:translateY(-.15rem) rotate(0);}
+  }
+
+  .promo__title{
+    display:block;
+    font-size:clamp(1.7rem,5.6vw,2.3rem);
+    font-weight:900;
+    letter-spacing:.04em;
+    text-shadow:0 .15rem .5rem rgba(0,0,0,.22);
+  }
+
+  .promo__sub{
+    display:block;
+    margin:.5rem auto 0;
+    max-width:26rem;
+    font-size:.98rem;
+    line-height:1.65;
+    text-shadow:0 .1rem .3rem rgba(0,0,0,.18);
+  }
+
+  .promo__sub b{
+    background:rgba(255,255,255,.22);
+    padding:.05rem .4rem;
+    border-radius:.4rem;
     font-weight:900;
     white-space:nowrap;
   }
 
-  @media (max-width:32rem){
-    .quizbanner{flex-wrap:wrap;}
-    .quizbanner__go{margin-left:0;width:100%;text-align:center;}
+  .promo__cta{
+    display:inline-block;
+    margin-top:1.15rem;
+    padding:.85rem 2.4rem;
+    border-radius:999px;
+    background:#fff;
+    color:#C0410C;
+    font-size:1.12rem;
+    font-weight:900;
+    letter-spacing:.06em;
+    box-shadow:0 .35rem .9rem rgba(0,0,0,.2);
+    transition:transform .18s ease;
+  }
+
+  .promo:hover .promo__cta{transform:scale(1.06);}
+
+  .promo__foot{
+    display:block;
+    margin-top:.8rem;
+    font-size:.8rem;
+    font-weight:700;
+    opacity:.9;
+  }
+
+  @media (max-width:30rem){
+    .promo__br{display:none;}
+    .promo__cta{width:100%;padding-left:1rem;padding-right:1rem;}
   }
 
   /* ---------- 活動報名卡 ---------- */
@@ -553,6 +624,19 @@
     <img class="hero__stamp" src="assets/logo2.webp" alt="崇德志工社手繪社徽">
   </header>
 
+  <!-- 首頁最搶眼的入口：問卷抽獎 -->
+  <a class="promo" href="quiz.html">
+    <span class="promo__badge">🎁 限時抽獎</span>
+    <span class="promo__gift" aria-hidden="true">🎉</span>
+    <strong class="promo__title">填問卷，抽好禮！</strong>
+    <span class="promo__sub">
+      十題測出你的志工人格，<br class="promo__br">
+      登記後即可參加 <b>9/15（二）茶會現場抽獎</b>
+    </span>
+    <span class="promo__cta">立即測驗 →</span>
+    <span class="promo__foot">約 2 分鐘・中英雙語・免費參加</span>
+  </a>
+
   <section class="section" aria-labelledby="links-title">
     <div class="section__head">
       <span class="section__dot"></span>
@@ -604,21 +688,6 @@
     </ul>
   </section>
 
-  <section class="section" aria-labelledby="quiz-title">
-    <div class="section__head">
-      <span class="section__dot" style="background:var(--green);box-shadow:0 0 0 .28rem rgba(169,206,59,.25)"></span>
-      <h2 id="quiz-title">志工人格測驗</h2>
-    </div>
-
-    <a class="quizbanner" href="quiz.html">
-      <span class="quizbanner__emoji" aria-hidden="true">🧭</span>
-      <span class="quizbanner__text">
-        <span class="quizbanner__name">你是哪一種志工人格？</span>
-        <span class="quizbanner__note">十題測出最適合你的活動・填資料還能參加 9/15 茶會抽獎</span>
-      </span>
-      <span class="quizbanner__go">開始測驗 →</span>
-    </a>
-  </section>
 
   <section class="section" aria-labelledby="signup-title">
     <div class="section__head">
@@ -648,7 +717,7 @@
       <li data-end="2026-09-02">
         <a class="event" href="https://forms.gle/ayeeMPcjQW8kj9kH6" target="_blank" rel="noopener noreferrer">
           <figure class="event__figure">
-            <img class="event__img" src="assets/sampleDM.webp" alt="開伙與桌遊之夜活動文宣" loading="lazy">
+            <img class="event__img" src="assets/boardgamenight.webp" alt="開伙與桌遊之夜活動文宣" loading="lazy">
             <figcaption class="event__date">09/02（三）</figcaption>
           </figure>
           <div class="event__body">
