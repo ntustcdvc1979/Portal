@@ -212,6 +212,16 @@
 
   .q__nav{margin-top:1.25rem;text-align:center;}
 
+  /* 複選題才會出現的下一題按鈕 */
+  .q__multi{margin-top:1.15rem;text-align:center;}
+
+  .opt.is-picked{
+    border-color:var(--green-dark);
+    background:rgba(169,206,59,.14);
+  }
+
+  .opt.is-picked .opt__key{background:var(--green-dark);color:#fff;}
+
   /* ---------- 結果 ---------- */
   .result__head{
     text-align:center;
@@ -460,8 +470,8 @@
     <img class="intro__logo" src="assets/logo1.webp" alt="台科大崇德志工社社徽">
     <h1 class="intro__title">你是哪一種<em>志工人格</em>？</h1>
     <p class="intro__lede">
-      八題，一分鐘，找出最適合你的崇德打開方式。<br>
-      <span class="lang">8 questions to find your volunteer personality.</span>
+      十題，兩分鐘，找出最適合你的崇德打開方式。<br>
+      <span class="lang">10 questions to find your volunteer personality.</span>
     </p>
     <button class="btn" type="button" id="start">開始測驗 →</button>
     <p class="intro__meta">
@@ -479,6 +489,9 @@
     <div class="card">
       <h2 class="q__title" id="qtitle"></h2>
       <ul class="q__list" id="qlist"></ul>
+      <div class="q__multi" id="qmulti" hidden>
+        <button class="btn" type="button" id="qnext">下一題 →</button>
+      </div>
     </div>
 
     <div class="q__nav">
@@ -725,7 +738,8 @@
         { zh: "準備一堂想分享的課",   en: "Prepare something to teach",    s: { teacher: 3 } },
         { zh: "找朋友聊聊近況",       en: "Catch up with a friend",        s: { listener: 3 } },
         { zh: "揪一場桌遊或 KTV",     en: "Board games or karaoke",        s: { player: 3 } },
-        { zh: "去陪浪浪散步",         en: "Walk shelter dogs",             s: { paws: 3 } }
+        { zh: "去陪浪浪散步",         en: "Walk shelter dogs",             s: { paws: 3 } },
+        { zh: "宅在家追劇補眠",       en: "Stay in, binge shows and sleep", s: { listener: 2, chef: 1 } }
       ]
     },
     {
@@ -737,6 +751,27 @@
         { zh: "負責規劃流程的那個", en: "Plans how things will run",  s: { teacher: 3 } },
         { zh: "負責聽大家說話的那個", en: "Listens to everyone",      s: { listener: 3 } },
         { zh: "負責收尾整理的那個", en: "Cleans up afterwards",       s: { eco: 2, teacher: 1 } }
+      ]
+    },
+    {
+      zh: "你接觸過志工服務嗎？",
+      en: "Have you volunteered before?",
+      opts: [
+        { zh: "有，已經做過不少次",     en: "Yes, quite a few times",        s: { teacher: 2 } },
+        { zh: "有，參加過一兩次",       en: "Yes, once or twice",            s: { eco: 1 } },
+        { zh: "還沒有，想從崇德開始",   en: "Not yet — starting here",       s: { player: 1 } }
+      ]
+    },
+    {
+      zh: "參加過崇德文教基金會辦的活動嗎？",
+      en: "Have you joined any Chong-De Foundation activities?",
+      multi: true,
+      opts: [
+        { zh: "讀經班",       en: "Classics reading class",  s: { listener: 1, teacher: 1 } },
+        { zh: "4Q 成長營",    en: "4Q growth camp",          s: { teacher: 2 } },
+        { zh: "淨灘",         en: "Beach cleanup",           s: { eco: 2 } },
+        { zh: "義診",         en: "Free clinic service",     s: { paws: 1, listener: 1 } },
+        { zh: "都沒有參加過", en: "None of these",           s: {}, none: true }
       ]
     },
     {
@@ -780,16 +815,17 @@
   /* ---------- 抽獎表單的活動清單 ---------- */
   var INTERESTS = [
     "每週三 18:30 溫馨開伙",
+    "08/30（日）大學星攻略",
     "09/02（三）桌遊之夜",
     "09/05（六）誼山移山亮晶晶",
     "09/06（日）台科 GPS",
     "09/15（二）崇德志工社茶會",
     "09/19（六）中秋素烤",
     "09/23（三）美食DIY",
-    "10/03-04 志工聯合迎新",
+    "10/03-04（六-日）志工聯合迎新",
     "10/07（三）紓壓手作DIY",
     "10/24（六）文昌祈福AllPass",
-    "11/07-08 兒童營隊志工出隊",
+    "11/07-08（六-日）兒童營隊志工出隊",
     "11/25（三）紓壓手作DIY",
     "11/29（日）STEAM 科學營",
     "12/05（六）黑皮：火鍋趴＋KTV"
@@ -816,28 +852,62 @@
 
   function renderQuestion() {
     var q = QUESTIONS[current];
+    var last = (current === QUESTIONS.length - 1);
+    var picked = q.multi ? selection() : null;
 
     $("bar").style.width = (current / QUESTIONS.length * 100) + "%";
     $("bartext").textContent = "第 " + (current + 1) + " 題 / 共 " + QUESTIONS.length + " 題";
 
-    $("qtitle").innerHTML = esc(q.zh) + '<span class="lang">' + esc(q.en) + "</span>";
+    $("qtitle").innerHTML = esc(q.zh) + (q.multi ? "（可複選）" : "") +
+                            '<span class="lang">' + esc(q.en) + "</span>";
     $("back").hidden = (current === 0);
+    $("qmulti").hidden = !q.multi;
+    $("qnext").textContent = last ? "看結果 →" : "下一題 →";
 
     var list = $("qlist");
     list.innerHTML = "";
 
     q.opts.forEach(function (o, i) {
-      var li = document.createElement("li");
+      var on = q.multi && picked.indexOf(i) >= 0;
+
       var btn = document.createElement("button");
       btn.type = "button";
-      btn.className = "opt";
+      btn.className = "opt" + (on ? " is-picked" : "");
+      if (q.multi) { btn.setAttribute("aria-pressed", on ? "true" : "false"); }
       btn.innerHTML =
-        '<span class="opt__key" aria-hidden="true">' + KEYS.charAt(i) + "</span>" +
+        '<span class="opt__key" aria-hidden="true">' + (on ? "✓" : KEYS.charAt(i)) + "</span>" +
         "<span>" + esc(o.zh) + '<span class="lang">' + esc(o.en) + "</span></span>";
-      btn.addEventListener("click", function () { pick(i); });
+      btn.addEventListener("click", function () {
+        if (q.multi) { toggle(i); } else { pick(i); }
+      });
+
+      var li = document.createElement("li");
       li.appendChild(btn);
       list.appendChild(li);
     });
+  }
+
+  /** 目前這題已選的索引；只用於複選題 */
+  function selection() {
+    return Array.isArray(answers[current]) ? answers[current] : [];
+  }
+
+  function toggle(i) {
+    var q = QUESTIONS[current];
+    var sel = selection().slice();
+    var at = sel.indexOf(i);
+
+    if (at >= 0) {
+      sel.splice(at, 1);
+    } else if (q.opts[i].none) {
+      sel = [i];                              // 選「都沒有」就清掉其他選項
+    } else {
+      sel = sel.filter(function (x) { return !q.opts[x].none; });
+      sel.push(i);
+    }
+
+    answers[current] = sel;
+    renderQuestion();
   }
 
   function esc(s) {
@@ -848,6 +918,10 @@
 
   function pick(i) {
     answers[current] = i;
+    advance();
+  }
+
+  function advance() {
     if (current < QUESTIONS.length - 1) {
       current++;
       renderQuestion();
@@ -856,14 +930,22 @@
     }
   }
 
+  /** 每題選到的選項索引清單，單選題也統一成陣列方便處理 */
+  function chosen(choice) {
+    if (Array.isArray(choice)) { return choice; }
+    return (choice == null) ? [] : [choice];
+  }
+
   /* ---------- 計分 ---------- */
   function score() {
     var total = {};
     ORDER.forEach(function (k) { total[k] = 0; });
 
     answers.forEach(function (choice, qi) {
-      var s = QUESTIONS[qi].opts[choice].s;
-      for (var k in s) { if (s.hasOwnProperty(k)) { total[k] += s[k]; } }
+      chosen(choice).forEach(function (ci) {
+        var s = QUESTIONS[qi].opts[ci].s;
+        for (var k in s) { if (s.hasOwnProperty(k)) { total[k] += s[k]; } }
+      });
     });
 
     // 同分時依 ORDER 先後決定
@@ -983,7 +1065,9 @@
       interests: picked.join("、"),
       suggest:  $("i-suggest").value.trim(),
       answers:  answers.map(function (choice, qi) {
-        return QUESTIONS[qi].zh + " → " + QUESTIONS[qi].opts[choice].zh;
+        var q = QUESTIONS[qi];
+        var picked = chosen(choice).map(function (ci) { return q.opts[ci].zh; });
+        return q.zh + " → " + (picked.length ? picked.join("、") : "（未選）");
       }).join(" | ")
     };
   }
@@ -1038,6 +1122,12 @@
 
   $("back").addEventListener("click", function () {
     if (current > 0) { current--; renderQuestion(); }
+  });
+
+  $("qnext").addEventListener("click", function () {
+    // 複選題允許不選，但要留下空陣列，計分與紀錄才有東西可讀
+    if (!Array.isArray(answers[current])) { answers[current] = []; }
+    advance();
   });
 
   function restart() {
