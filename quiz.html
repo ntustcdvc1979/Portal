@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-Hant" data-lang="zh">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>志工人格測驗 | 台科大崇德志工社</title>
-<meta name="description" content="八題測出你的志工人格，看看崇德志工社哪個活動最適合你。填寫資料還可參加 9/15 茶會抽獎。">
+<meta name="description" content="十題測出你的志工人格，看看崇德志工社哪個活動最適合你。填寫資料並到 9/15 茶會現場，還能參加抽獎。">
 <link rel="icon" href="assets/logo1.webp">
 <meta name="robots" content="noindex">
 <style>
@@ -22,6 +22,40 @@
   }
 
   *,*::before,*::after{box-sizing:border-box;}
+
+  /* ---------- 中英切換 ----------
+     只顯示目前語言的內容。沒有 JS 時停在預設的中文，內容不會消失。 */
+  [data-lang="zh"] [data-l="en"],
+  [data-lang="en"] [data-l="zh"]{display:none;}
+
+  .langbar{
+    display:flex;
+    justify-content:flex-end;
+    gap:.3rem;
+    margin-bottom:1.25rem;
+  }
+
+  .langbtn{
+    padding:.3rem .9rem;
+    border:2px solid var(--line);
+    border-radius:999px;
+    background:var(--card);
+    color:var(--ink-soft);
+    font-family:inherit;
+    font-size:.82rem;
+    font-weight:800;
+    cursor:pointer;
+    transition:background .16s ease, color .16s ease, border-color .16s ease;
+  }
+
+  .langbtn:hover{border-color:var(--orange);color:var(--ink);}
+  .langbtn:focus-visible{outline:3px solid var(--ink);outline-offset:2px;}
+
+  .langbtn[aria-pressed="true"]{
+    background:var(--ink);
+    border-color:var(--ink);
+    color:#fff;
+  }
 
   body{
     margin:0;
@@ -396,12 +430,18 @@
 
   .draw__inner{padding:1.5rem 1.35rem 1.4rem;}
 
-  .draw__note{
+  .prizes{
     margin:0 0 1.35rem;
-    font-size:.88rem;
-    font-weight:700;
-    color:var(--orange-dark);
+    padding:.9rem 1.05rem;
+    border-radius:.9rem;
+    background:#fff;
+    border:2px dashed var(--orange);
+    font-size:.9rem;
+    line-height:1.7;
+    color:var(--ink);
   }
+
+  .prizes b{color:var(--orange-dark);font-weight:900;}
 
   .btn--big{
     width:100%;
@@ -529,17 +569,29 @@
 <body>
 <main class="wrap">
 
+  <div class="langbar">
+    <button class="langbtn" type="button" data-set-lang="zh" aria-pressed="true">中文</button>
+    <button class="langbtn" type="button" data-set-lang="en" aria-pressed="false">EN</button>
+  </div>
+
   <!-- ===== 開場 ===== -->
   <section class="intro" id="intro">
     <img class="intro__logo" src="assets/logo1.webp" alt="台科大崇德志工社社徽">
-    <h1 class="intro__title">你是哪一種<em>志工人格</em>？</h1>
+    <h1 class="intro__title">
+      <span data-l="zh">你是哪一種<em>志工人格</em>？</span>
+      <span data-l="en">What's Your <em>Volunteer Personality</em>?</span>
+    </h1>
     <p class="intro__lede">
-      十題兩分鐘，找出最適合你的志工人格。<br>
-      <span class="lang">10 questions to find your volunteer personality.</span>
+      <span data-l="zh">十題兩分鐘，找出最適合你的志工人格。</span>
+      <span data-l="en">Ten questions, two minutes, and you'll know which side of Chong-De fits you.</span>
     </p>
-    <button class="btn" type="button" id="start">開始測驗 →</button>
+    <button class="btn" type="button" id="start">
+      <span data-l="zh">開始測驗 →</span>
+      <span data-l="en">Start the Quiz →</span>
+    </button>
     <p class="intro__meta">
-      🎁 測完填寫資料，即可參加 <strong>9/15（二）茶會抽獎</strong>。
+      <span data-l="zh">🎁 測完填寫資料，並<strong>親自到 9/15（二）茶會現場</strong>，就有機會抽中電影票、超商禮券等大獎！</span>
+      <span data-l="en">🎁 Finish the quiz, leave your details, and <strong>come to the tea party on Tue 9/15 in person</strong> for a chance to win movie tickets, store gift cards and more.</span>
     </p>
   </section>
 
@@ -554,19 +606,25 @@
       <h2 class="q__title" id="qtitle"></h2>
       <ul class="q__list" id="qlist"></ul>
       <div class="q__multi" id="qmulti" hidden>
-        <button class="btn" type="button" id="qnext">下一題 →</button>
+        <button class="btn" type="button" id="qnext"></button>
       </div>
     </div>
 
     <div class="q__nav">
-      <button class="btn btn--ghost" type="button" id="back">← 上一題</button>
+      <button class="btn btn--ghost" type="button" id="back">
+        <span data-l="zh">← 上一題</span>
+        <span data-l="en">← Back</span>
+      </button>
     </div>
   </section>
 
   <!-- ===== 結果 ===== -->
   <section id="result" hidden>
     <div class="result__head">
-      <p class="result__eyebrow">你的志工人格是</p>
+      <p class="result__eyebrow">
+        <span data-l="zh">你的志工人格是</span>
+        <span data-l="en">YOUR VOLUNTEER PERSONALITY</span>
+      </p>
       <span class="result__emoji" id="r-emoji" aria-hidden="true"></span>
       <h2 class="result__name" id="r-name"></h2>
       <p class="result__en" id="r-en"></p>
@@ -577,12 +635,21 @@
       <p class="result__desc" id="r-desc"></p>
       <ul class="traits" id="r-traits"></ul>
 
-      <h3 class="rec__title">🎯 這些活動很適合你</h3>
+      <h3 class="rec__title">
+        <span data-l="zh">🎯 這些活動很適合你</span>
+        <span data-l="en">🎯 Events That Suit You</span>
+      </h3>
       <ul class="rec" id="r-rec"></ul>
 
       <div class="result__actions">
-        <button class="btn btn--ghost" type="button" id="retry">再測一次</button>
-        <a class="btn btn--ghost" href="index.html">回首頁看全部活動</a>
+        <button class="btn btn--ghost" type="button" id="retry">
+          <span data-l="zh">再測一次</span>
+          <span data-l="en">Retake</span>
+        </button>
+        <a class="btn btn--ghost" href="index.html">
+          <span data-l="zh">回首頁看全部活動</span>
+          <span data-l="en">All events</span>
+        </a>
       </div>
     </div>
 
@@ -590,52 +657,81 @@
     <form class="draw" id="draw" novalidate>
       <div class="draw__banner">
         <span class="draw__gift" aria-hidden="true">🎁</span>
-        <strong class="draw__title">參加茶會抽獎</strong>
-        <span class="draw__when">9/15（二）崇德志工社說明茶會・現場抽出好禮</span>
+        <strong class="draw__title">
+          <span data-l="zh">參加茶會抽獎</span>
+          <span data-l="en">Enter the Lucky Draw</span>
+        </strong>
+        <span class="draw__when">
+          <span data-l="zh">9/15（二）崇德志工社茶會・現場抽出好禮</span>
+          <span data-l="en">Tue 9/15・Chong-De Tea Party・drawn live on the day</span>
+        </span>
       </div>
 
       <div class="draw__inner">
-      <p class="draw__note">
-        填好下面三欄就完成登記，當天到場就能參加抽獎。
-        <span class="lang">Fill in the three fields below to enter the lucky draw.</span>
+      <p class="prizes">
+        <span data-l="zh">
+          <b>獎品有電影票、超商禮券等大獎！</b><br>
+          填完下面三欄就完成登記，<b>抽獎當天必須本人到茶會現場才能參加</b>，沒有到場視同放棄。
+        </span>
+        <span data-l="en">
+          <b>Prizes include movie tickets and convenience store gift cards.</b><br>
+          Fill in the three fields below to register. <b>You must attend the tea party in person to be eligible</b>; entries are forfeited if you do not show up.
+        </span>
       </p>
 
       <div class="field" id="f-name">
-        <label for="i-name">大名 <span class="req">*</span> <span class="lang">Name</span></label>
+        <label for="i-name">
+          <span data-l="zh">大名 <span class="req">*</span></span>
+          <span data-l="en">Name <span class="req">*</span></span>
+        </label>
         <input type="text" id="i-name" name="name" autocomplete="name" maxlength="40">
       </div>
 
       <div class="field" id="f-dept">
-        <label for="i-dept">系級 <span class="req">*</span> <span class="lang">Major &amp; Year（例如：四資管三）</span></label>
+        <label for="i-dept">
+          <span data-l="zh">系級 <span class="req">*</span> <span class="lang">例如：四資管三</span></span>
+          <span data-l="en">Major &amp; Year <span class="req">*</span> <span class="lang">e.g. IM Junior</span></span>
+        </label>
         <input type="text" id="i-dept" name="dept" maxlength="40">
       </div>
 
       <div class="field" id="f-phone">
-        <label for="i-phone">聯絡電話 <span class="req">*</span> <span class="lang">Phone</span></label>
+        <label for="i-phone">
+          <span data-l="zh">聯絡電話 <span class="req">*</span></span>
+          <span data-l="en">Phone <span class="req">*</span></span>
+        </label>
         <input type="tel" id="i-phone" name="phone" inputmode="tel" autocomplete="tel" maxlength="20" placeholder="09xxxxxxxx">
       </div>
 
       <div class="field">
-        <label for="i-social">LINE ID 或 IG 帳號 <span class="lang">LINE ID / Instagram（選填）</span></label>
+        <label for="i-social">
+          <span data-l="zh">LINE ID 或 IG 帳號 <span class="lang">選填</span></span>
+          <span data-l="en">LINE ID / Instagram <span class="lang">optional</span></span>
+        </label>
         <input type="text" id="i-social" name="social" maxlength="60">
       </div>
 
       <div class="field">
         <fieldset>
-          <legend class="field__legend">有興趣的活動 <span class="lang">Activities you're interested in（可複選、選填）</span></legend>
+          <legend class="field__legend">
+            <span data-l="zh">有興趣的活動 <span class="lang">可複選、選填</span></span>
+            <span data-l="en">Events you're interested in <span class="lang">multiple choice, optional</span></span>
+          </legend>
           <div class="checks" id="i-interests"></div>
         </fieldset>
       </div>
 
       <div class="field">
-        <label for="i-suggest">希望社團未來辦什麼活動？ <span class="lang">Any activity you'd like to see?（選填）</span></label>
+        <label for="i-suggest">
+          <span data-l="zh">希望社團未來辦什麼活動？ <span class="lang">選填</span></span>
+          <span data-l="en">Any event you'd like us to run? <span class="lang">optional</span></span>
+        </label>
         <textarea id="i-suggest" name="suggest" maxlength="500"></textarea>
       </div>
 
       <p class="privacy">
-        🔒 以上個人資訊僅供活動通知、推播與抽獎聯繫使用，不會提供給第三方。<br>
-        即使不參加抽獎，我們仍會<strong>匿名</strong>記錄你的測驗結果與活動偏好，作為未來活動規劃的參考。
-        <span class="lang">Your personal information is used only for activity notifications and the lucky draw. Quiz results are recorded anonymously to help us plan future activities.</span>
+        <span data-l="zh">🔒 以上個人資訊僅供活動通知、推播與抽獎聯繫使用，不會提供給第三方。你的測驗結果與活動偏好會以<strong>匿名</strong>方式記錄，作為未來活動規劃的參考。</span>
+        <span data-l="en">🔒 Your personal details are used only for event notices and contacting draw winners, and are never shared with anyone else. Your quiz result and event preferences are recorded <strong>anonymously</strong> to help us plan future activities.</span>
       </p>
 
       <!-- 蜜罐：真人看不到，機器人會填。有值就丟掉。 -->
@@ -647,13 +743,18 @@
       <div class="field" id="f-consent">
         <label class="check">
           <input type="checkbox" id="i-consent">
-          <span>我同意崇德志工社以上述方式使用我的資料 <span class="req">*</span></span>
+          <span>
+            <span data-l="zh">我同意崇德志工社以上述方式使用我的資料 <span class="req">*</span></span>
+            <span data-l="en">I agree to Chong-De using my details as described above <span class="req">*</span></span>
+          </span>
         </label>
       </div>
 
       <div class="submit-row">
-        <button class="btn btn--big" type="submit" id="send">🎁 送出並參加抽獎</button>
-        <button class="btn btn--ghost" type="button" id="skip">不參加抽獎，只送出測驗結果</button>
+        <button class="btn btn--big" type="submit" id="send">
+          <span data-l="zh">🎁 送出並參加抽獎</span>
+          <span data-l="en">🎁 Enter the Lucky Draw</span>
+        </button>
       </div>
 
       <p class="status" id="status" hidden></p>
@@ -665,22 +766,39 @@
   <section id="done" hidden>
     <div class="card done">
       <span class="done__emoji">🎉</span>
-      <h2 class="done__title">收到你的報名了！</h2>
-      <p id="done-msg">9/15（二）茶會現場抽獎，記得來喔～</p>
+      <h2 class="done__title">
+        <span data-l="zh">收到你的登記了！</span>
+        <span data-l="en">You're Registered!</span>
+      </h2>
+      <p>
+        <span data-l="zh">記得<strong>親自到 9/15（二）茶會現場</strong>，才能參加電影票、超商禮券等大獎的抽獎，茶會見！</span>
+        <span data-l="en">Remember to <strong>come to the tea party on Tue 9/15 in person</strong> to be eligible for the movie tickets, gift cards and other prizes. See you there!</span>
+      </p>
       <div class="result__actions">
-        <a class="btn" href="index.html">看看近期活動</a>
-        <button class="btn btn--ghost" type="button" id="again">再測一次</button>
+        <a class="btn" href="index.html">
+          <span data-l="zh">看看近期活動</span>
+          <span data-l="en">See upcoming events</span>
+        </a>
+        <button class="btn btn--ghost" type="button" id="again">
+          <span data-l="zh">再測一次</span>
+          <span data-l="en">Retake</span>
+        </button>
       </div>
     </div>
   </section>
 
   <p class="foot">
-    台科大崇德志工社 NTUST CDVC ・
-    <a href="index.html">回首頁</a>
+    <span data-l="zh">台科大崇德志工社 NTUST CDVC ・</span>
+    <span data-l="en">NTUST Chong-De Volunteer Club ・</span>
+    <a href="index.html">
+      <span data-l="zh">回首頁</span>
+      <span data-l="en">Home</span>
+    </a>
   </p>
 
 </main>
 
+<script src="assets/lang.js"></script>
 <script>
 (function () {
   "use strict";
@@ -690,61 +808,110 @@
      ============================================================ */
   var ENDPOINT = "https://script.google.com/macros/s/AKfycbzxOPvucQdN7_zX3Ke99665ASxjcRIOPvV4TSfjME6poxK4eIT4Ubotoj30W0nwH4vl/exec";
 
-  /* ---------- 人格類型 ---------- */
+  /* ---------- 人格類型 ----------
+     文字都是 {zh, en} 兩版，L() 依目前語言取用。 */
   var TYPES = {
     chef: {
       emoji: "🍳",
-      zh: "暖心大廚",
-      en: "The Warm Chef",
-      tagline: "「吃飽，才有力氣愛人。」",
-      desc: "你相信最實在的關心是一頓熱飯。在廚房裡你自在得像回家，切菜的節奏就是你的療癒方式；看著大家把盤子清空，比誰稱讚你都開心。崇德的每週開伙就是為你準備的舞台。",
-      traits: ["照顧型", "手很巧", "餵飽全場", "行動派"],
+      name: { zh: "暖心大廚", en: "The Warm Chef" },
+      tagline: {
+        zh: "「吃飽，才有力氣愛人。」",
+        en: "“Love runs on a full stomach.”"
+      },
+      desc: {
+        zh: "你相信最實在的關心是一頓熱飯。在廚房裡你自在得像回家，切菜的節奏就是你的療癒方式；看著大家把盤子清空，比誰稱讚你都開心。崇德的每週開伙就是為你準備的舞台。",
+        en: "You believe the most honest way to care for someone is to feed them. The kitchen feels like home, chopping vegetables is how you unwind, and an empty plate means more to you than any compliment. Chong-De's weekly dinner was made for you."
+      },
+      traits: {
+        zh: ["照顧型", "手很巧", "餵飽全場", "行動派"],
+        en: ["Nurturing", "Handy", "Feeds everyone", "Gets things done"]
+      },
       recs: ["cook", "e0909", "e0923", "xmas"]
     },
     eco: {
       emoji: "🌱",
-      zh: "山海守護者",
-      en: "The Earth Guardian",
-      tagline: "「這片風景，值得被好好留下來。」",
-      desc: "你待在戶外時最有精神，也最見不得美好的地方被弄髒。你不太說大道理，只是默默彎腰把垃圾撿起來——而那個背影，往往就帶動了一整群人。",
-      traits: ["行動勝於言語", "體力好", "環保魂", "耐得住"],
-      recs: ["e0905", "e1003", "e0919"]
+      name: { zh: "山海守護者", en: "The Earth Guardian" },
+      tagline: {
+        zh: "「這片風景，值得被好好留下來。」",
+        en: "“This place is worth keeping.”"
+      },
+      desc: {
+        zh: "你待在戶外時最有精神，也最見不得美好的地方被弄髒。你不太說大道理，只是默默彎腰把垃圾撿起來，而那個背影，往往就帶動了一整群人。",
+        en: "You come alive outdoors, and you cannot stand seeing a beautiful place spoiled. You do not lecture anyone; you just quietly bend down and pick the rubbish up, and that alone tends to pull a whole crowd along with you."
+      },
+      traits: {
+        zh: ["行動勝於言語", "體力好", "環保魂", "耐得住"],
+        en: ["Acts, not talks", "Good stamina", "Green at heart", "Sticks with it"]
+      },
+      recs: ["e0905", "e1003", "cook"]
     },
     teacher: {
       emoji: "🎓",
-      zh: "熱血引路人",
-      en: "The Passionate Mentor",
-      tagline: "「我知道的，都想教給你。」",
-      desc: "你享受把複雜的事情講到別人聽懂的那一刻。備課、設計關卡、想破頭要怎麼讓小朋友玩得開心又學得到東西——這些對你不是負擔，是成就感的來源。",
-      traits: ["有耐心", "會規劃", "喜歡分享", "抗壓性強"],
-      recs: ["steam", "e1107", "e0906"]
+      name: { zh: "熱血小老師", en: "The Camp Teacher" },
+      tagline: {
+        zh: "「我知道的，都想教給你。」",
+        en: "“Everything I know, I want to pass on.”"
+      },
+      desc: {
+        zh: "你享受把複雜的事情講到別人聽懂的那一刻。備課、設計關卡、想破頭要怎麼讓國小國中的孩子玩得開心又學得到東西，這些對你不是負擔，是成就感的來源。",
+        en: "You live for the moment something complicated finally clicks for someone else. Planning lessons, designing activities, racking your brain over how to make primary and junior high kids have fun while actually learning: none of that feels like work to you."
+      },
+      traits: {
+        zh: ["有耐心", "會規劃", "喜歡分享", "抗壓性強"],
+        en: ["Patient", "Organised", "Loves sharing", "Handles pressure"]
+      },
+      recs: ["steam", "e1107", "e1003"]
     },
     listener: {
       emoji: "💗",
-      zh: "溫柔傾聽者",
-      en: "The Gentle Listener",
-      tagline: "「我在，你慢慢說。」",
-      desc: "你是朋友圈裡那個大家都想找的人。你不急著給建議，只是安靜地陪著——而這份安靜，常常比任何話都有力量。崇德想成為學生的第二個家，靠的正是你這種人。",
-      traits: ["同理心強", "很好聊", "情緒穩定", "值得信賴"],
-      recs: ["tea", "e1125", "e1007", "allpass"]
+      name: { zh: "溫柔傾聽者", en: "The Gentle Listener" },
+      tagline: {
+        zh: "「我在，你慢慢說。」",
+        en: "“I'm here. Take your time.”"
+      },
+      desc: {
+        zh: "你是朋友圈裡那個大家都想找的人。你不急著給建議，只是安靜地陪著，而這份安靜，常常比任何話都有力量。崇德想成為學生的第二個家，靠的正是你這種人。",
+        en: "You are the person everyone turns to. You do not rush to give advice; you simply stay, and that quiet company often carries more weight than any words. Chong-De wants to be a second home for students, and that depends on people like you."
+      },
+      traits: {
+        zh: ["同理心強", "很好聊", "情緒穩定", "值得信賴"],
+        en: ["Empathetic", "Easy to talk to", "Steady", "Trustworthy"]
+      },
+      recs: ["e1125", "e1007", "allpass"]
     },
     player: {
       emoji: "🎲",
-      zh: "歡樂揪團王",
-      en: "The Party Starter",
-      tagline: "「哪裡有人，哪裡就有我。」",
-      desc: "你是場子的開關。冷場十秒你就受不了，總能找到話題把所有人串在一起。認識新朋友對你來說不是社交壓力，是這學期最期待的事。",
-      traits: ["活力滿點", "自來熟", "氣氛製造機", "點子多"],
-      recs: ["e0830", "e0902", "hotpot", "xmas"]
+      name: { zh: "歡樂揪團王", en: "The Party Starter" },
+      tagline: {
+        zh: "「哪裡有人，哪裡就有我。」",
+        en: "“Wherever people are, that's where I am.”"
+      },
+      desc: {
+        zh: "你是場子的開關。冷場十秒你就受不了，總能找到話題把所有人串在一起。認識新朋友對你來說不是社交壓力，是這學期最期待的事。",
+        en: "You are the switch that turns a room on. Ten seconds of awkward silence is your limit, and you always find the thread that ties everyone together. Meeting new people is not a chore for you; it is the part of the semester you look forward to most."
+      },
+      traits: {
+        zh: ["活力滿點", "自來熟", "氣氛製造機", "點子多"],
+        en: ["High energy", "Instantly friendly", "Sets the mood", "Full of ideas"]
+      },
+      recs: ["e0830", "e0902", "e0906", "e0919", "hotpot"]
     },
     paws: {
       emoji: "🐾",
-      zh: "毛孩守護者",
-      en: "The Paw Protector",
-      tagline: "「牠們不會說話，所以我們要在。」",
-      desc: "你對弱小的生命特別沒有抵抗力。看到浪浪會忍不住停下腳步，也願意為了牠們花時間做那些不浪漫的事——清籠子、洗毛巾、陪散步。溫柔而且很硬頸。",
-      traits: ["有愛心", "細心", "不怕髒", "默默付出"],
-      recs: ["e1121", "e1003", "e0905"]
+      name: { zh: "毛孩守護者", en: "The Paw Protector" },
+      tagline: {
+        zh: "「牠們不會說話，所以我們要在。」",
+        en: "“They can't speak up, so we show up.”"
+      },
+      desc: {
+        zh: "你對弱小的生命特別沒有抵抗力。看到毛孩會忍不住停下腳步，也願意為了牠們花時間做那些不浪漫的事：清籠子、洗毛巾、陪散步。溫柔而且很硬頸。",
+        en: "You have no defences against small helpless creatures. You stop in your tracks for any furry face, and you will happily spend an afternoon on the unglamorous parts: cleaning cages, washing towels, going for walks. Gentle, and surprisingly tough."
+      },
+      traits: {
+        zh: ["有愛心", "細心", "不怕髒", "默默付出"],
+        en: ["Kind-hearted", "Attentive", "Not afraid to get dirty", "Quietly gives"]
+      },
+      recs: ["e1121", "cook", "e1007"]
     }
   };
 
@@ -754,24 +921,24 @@
   /* 全社活動總表：依行事曆順序排列。
      結果頁的推薦活動與抽獎表單的勾選清單都從這裡取，改一次兩邊同步。 */
   var EVENTS = {
-    cook:    { name: "每週三 18:30 蔬食開伙" },
-    e0830:   { name: "08/30（日）大學星攻略",              url: "https://www.accupass.com/go/2026cdfreshmen" },
-    e0902:   { name: "09/02（三）桌遊之夜",                url: "https://forms.gle/ayeeMPcjQW8kj9kH6" },
-    e0905:   { name: "09/05（六）誼山移山亮晶晶",          url: "https://forms.gle/JUWZN9siCupiJamc7" },
-    e0906:   { name: "09/06（日）台科 GPS",                url: "https://forms.gle/BQJiLTzUSM6UZEot9" },
-    e0909:   { name: "09/09（三）帶我走吧！提拉米蘇" },
-    tea:     { name: "09/15（二）崇德志工社說明茶會",      url: "https://forms.gle/D88nyieC127Tknpq9" },
-    e0919:   { name: "09/19（六）中秋素烤" },
-    e0923:   { name: "09/23（三）Mr.豆娜之" },
-    e1003:   { name: "10/03-04（六-日）跨校聯合志工迎新與淨灘" },
-    e1007:   { name: "10/07（三）毛茸茸戳戳繡" },
-    allpass: { name: "10/24（六）文昌祈福AllPass" },
-    e1107:   { name: "11/07-08（六-日）光影漫遊創藝營" },
-    e1121:   { name: "11/21（六）鼠鼠志工出任務" },
-    e1125:   { name: "11/25（三）療癒擴香石" },
-    steam:   { name: "11/29（日）STEAM 科學營" },
-    hotpot:  { name: "12/05（六）黑皮：火鍋趴＋KTV" },
-    xmas:    { name: "12/24（四）聖誕期末聚餐" }
+    cook:    { name: { zh: "每週三 18:30 蔬食開伙",                  en: "Veggie Dinner, every Wed 18:30" } },
+    e0830:   { name: { zh: "08/30（日）大學星攻略",                  en: "08/30 (Sun) College Star Guide" },        url: "https://www.accupass.com/go/2026cdfreshmen" },
+    e0902:   { name: { zh: "09/02（三）桌遊之夜",                    en: "09/02 (Wed) Board Game Night" },          url: "https://forms.gle/ayeeMPcjQW8kj9kH6" },
+    e0905:   { name: { zh: "09/05（六）誼山移山亮晶晶",              en: "09/05 (Sat) Mountain Cleanup Day" },      url: "https://forms.gle/JUWZN9siCupiJamc7" },
+    e0906:   { name: { zh: "09/06（日）台科 GPS",                    en: "09/06 (Sun) NTUST GPS City Tour" },       url: "https://forms.gle/BQJiLTzUSM6UZEot9" },
+    e0909:   { name: { zh: "09/09（三）帶我走吧！提拉米蘇",          en: "09/09 (Wed) Take-Me-Away Tiramisu" } },
+    tea:     { name: { zh: "09/15（二）崇德志工社茶會",              en: "09/15 (Tue) Chong-De Tea Party" },        url: "https://forms.gle/D88nyieC127Tknpq9" },
+    e0919:   { name: { zh: "09/19（六）中秋素烤派對",                en: "09/19 (Sat) Mid-Autumn Veggie BBQ" } },
+    e0923:   { name: { zh: "09/23（三）甜甜圈的「圈」套，你逃不掉",  en: "09/23 (Wed) Caught in the Donut Loop" } },
+    e1003:   { name: { zh: "10/03-04（六-日）跨校聯合志工迎新與淨灘", en: "10/03-04 (Sat-Sun) Joint Volunteer Orientation & Beach Cleanup" } },
+    e1007:   { name: { zh: "10/07（三）毛茸茸戳戳繡",                en: "10/07 (Wed) Fluffy Punch Needle Craft" } },
+    allpass: { name: { zh: "10/24（六）文昌祈福AllPass",             en: "10/24 (Sat) Exam Blessing Ceremony" } },
+    e1107:   { name: { zh: "11/07-08（六-日）光影漫遊創藝營",        en: "11/07-08 (Sat-Sun) Light & Shadow Arts Camp" } },
+    e1121:   { name: { zh: "11/21（六）鼠鼠志工出任務",              en: "11/21 (Sat) Rodent Rescue Volunteering" } },
+    e1125:   { name: { zh: "11/25（三）療癒擴香石",                  en: "11/25 (Wed) Aroma Stone Workshop" } },
+    steam:   { name: { zh: "11/29（日）STEAM 科學營",                en: "11/29 (Sun) STEAM Science Camp" } },
+    hotpot:  { name: { zh: "12/05（六）黑皮：火鍋趴＋KTV",           en: "12/05 (Sat) Happy: Hotpot Party & Karaoke" } },
+    xmas:    { name: { zh: "12/24（四）聖誕期末聚餐",                en: "12/24 (Thu) Christmas End-of-Term Dinner" } }
   };
 
   /* ---------- 題目 ---------- */
@@ -812,7 +979,7 @@
     },
     {
       zh: "難得空下來的週末，你最想？",
-      en: "A free weekend — what do you do?",
+      en: "A free weekend: what do you do?",
       opts: [
         { zh: "在廚房研究一道新菜",   en: "Try a new recipe",              s: { chef: 3 } },
         { zh: "上山下海走一走",       en: "Go hiking or to the beach",     s: { eco: 3 } },
@@ -840,7 +1007,7 @@
       opts: [
         { zh: "有，已經做過不少次",     en: "Yes, quite a few times",        s: { teacher: 2 } },
         { zh: "有，參加過一兩次",       en: "Yes, once or twice",            s: { eco: 1 } },
-        { zh: "還沒有，想從崇德開始",   en: "Not yet — starting here",       s: { player: 1 } }
+        { zh: "還沒有，想從崇德開始",   en: "Not yet, starting here",       s: { player: 1 } }
       ]
     },
     {
@@ -881,21 +1048,17 @@
     },
     {
       zh: "最後，哪句話最像你？",
-      en: "Finally — which line sounds most like you?",
+      en: "Finally, which line sounds most like you?",
       opts: [
         { zh: "「吃飽才有力氣愛人。」",       en: "Love runs on a full stomach.",      s: { chef: 3 } },
         { zh: "「地球是我家。」",             en: "The earth is my home.",             s: { eco: 3 } },
         { zh: "「我想把知道的都教給你。」",   en: "Let me teach you what I know.",     s: { teacher: 3 } },
-        { zh: "「我在，你說吧。」",           en: "I'm here — talk to me.",            s: { listener: 3 } },
+        { zh: "「我在，你說吧。」",           en: "I'm here, talk to me.",            s: { listener: 3 } },
         { zh: "「哪裡有人，哪裡就有我。」",   en: "Wherever people are, I'm there.",   s: { player: 3 } },
         { zh: "「毛孩也是家人。」",           en: "Animals are family too.",           s: { paws: 3 } }
       ]
     }
   ];
-
-  /* 抽獎表單的活動清單直接取自 EVENTS，兩邊名稱不會再有機會對不上。
-     要增刪活動只需改 EVENTS，順序也跟著那裡走。 */
-  var INTERESTS = Object.keys(EVENTS).map(function (k) { return EVENTS[k].name; });
 
   /* ============================================================
      狀態
@@ -903,6 +1066,9 @@
   var answers = [];   // 每題選到的索引
   var current = 0;
   var resultKey = "";
+
+  // 讓「只有測驗結果」與「登記抽獎」兩筆紀錄在後台對得起來
+  var SESSION = Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 8);
 
   var $ = function (id) { return document.getElementById(id); };
 
@@ -917,19 +1083,53 @@
   // 要夠長，選項變多時才不會出現沒有字母的空圈
   var KEYS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
+  /** 目前語言 */
+  function lang() {
+    return (document.documentElement.getAttribute("data-lang") === "en") ? "en" : "zh";
+  }
+
+  /** 從 {zh, en} 取出目前語言那版；已經是字串就原樣回傳 */
+  function L(v) {
+    if (v == null) { return ""; }
+    return (typeof v === "string") ? v : (v[lang()] || v.zh || "");
+  }
+
+  /* 介面上由腳本產生的字串 */
+  var UI = {
+    progress: { zh: "第 %n 題 / 共 %t 題",       en: "Question %n of %t" },
+    multiHint:{ zh: "（可複選）",                 en: " (choose any)" },
+    next:     { zh: "下一題 →",                   en: "Next →" },
+    finish:   { zh: "看結果 →",                   en: "See result →" },
+    signUp:   { zh: "點我報名 →",                 en: "Sign up →" },
+    sending:  { zh: "送出中…",                    en: "Sending…" },
+    noEndpoint:{ zh: "表單尚未設定收件網址，請聯絡社團幹部。",
+                 en: "The form has no submission address set yet. Please contact the club." },
+    failed:   { zh: "送出失敗，請檢查網路後再試一次，或直接私訊社團 IG @ntustcdvc。",
+                en: "Could not send. Please check your connection and try again, or message us on Instagram @ntustcdvc." },
+    needName: { zh: "請填寫大名",                 en: "Please enter your name" },
+    needDept: { zh: "請填寫系級",                 en: "Please enter your major and year" },
+    needPhone:{ zh: "請填寫聯絡電話",             en: "Please enter your phone number" },
+    badPhone: { zh: "電話格式看起來不太對，請確認一下",
+                en: "That phone number doesn't look right" },
+    needConsent:{ zh: "需要勾選同意才能參加抽獎",
+                  en: "Please tick the box to enter the draw" },
+    unanswered:{ zh: "（未選）",                  en: "(not answered)" }
+  };
+
   function renderQuestion() {
     var q = QUESTIONS[current];
     var last = (current === QUESTIONS.length - 1);
     var picked = q.multi ? selection() : null;
 
     $("bar").style.width = (current / QUESTIONS.length * 100) + "%";
-    $("bartext").textContent = "第 " + (current + 1) + " 題 / 共 " + QUESTIONS.length + " 題";
+    $("bartext").textContent = L(UI.progress)
+      .replace("%n", current + 1)
+      .replace("%t", QUESTIONS.length);
 
-    $("qtitle").innerHTML = esc(q.zh) + (q.multi ? "（可複選）" : "") +
-                            '<span class="lang">' + esc(q.en) + "</span>";
+    $("qtitle").textContent = L(q) + (q.multi ? L(UI.multiHint) : "");
     $("back").hidden = (current === 0);
     $("qmulti").hidden = !q.multi;
-    $("qnext").textContent = last ? "看結果 →" : "下一題 →";
+    $("qnext").textContent = L(last ? UI.finish : UI.next);
 
     var list = $("qlist");
     list.innerHTML = "";
@@ -943,7 +1143,7 @@
       if (q.multi) { btn.setAttribute("aria-pressed", on ? "true" : "false"); }
       btn.innerHTML =
         '<span class="opt__key" aria-hidden="true">' + (on ? "✓" : KEYS.charAt(i)) + "</span>" +
-        "<span>" + esc(o.zh) + '<span class="lang">' + esc(o.en) + "</span></span>";
+        "<span>" + esc(L(o)) + "</span>";
       btn.addEventListener("click", function () {
         if (q.multi) { toggle(i); } else { pick(i); }
       });
@@ -1022,20 +1222,19 @@
   }
 
   /* ---------- 結果 ---------- */
-  function finish() {
-    resultKey = score();
+  function renderResult() {
+    if (!resultKey) { return; }
     var t = TYPES[resultKey];
 
-    $("bar").style.width = "100%";
     $("r-emoji").textContent = t.emoji;
-    $("r-name").textContent = t.zh;
-    $("r-en").textContent = t.en;
-    $("r-tagline").textContent = t.tagline;
-    $("r-desc").textContent = t.desc;
+    $("r-name").textContent = L(t.name);
+    $("r-en").textContent = (lang() === "en") ? "" : t.name.en;
+    $("r-tagline").textContent = L(t.tagline);
+    $("r-desc").textContent = L(t.desc);
 
     var traits = $("r-traits");
     traits.innerHTML = "";
-    t.traits.forEach(function (x) {
+    L(t.traits).forEach(function (x) {
       var li = document.createElement("li");
       li.textContent = x;
       traits.appendChild(li);
@@ -1049,23 +1248,53 @@
       var li = document.createElement("li");
       if (ev.url) {
         li.innerHTML = '<a href="' + esc(ev.url) + '" target="_blank" rel="noopener noreferrer">' +
-                       "<span>" + esc(ev.name) + '</span><span class="tag">點我報名 →</span></a>';
+                       "<span>" + esc(L(ev.name)) + '</span><span class="tag">' + esc(L(UI.signUp)) + "</span></a>";
       } else {
-        li.innerHTML = "<span>" + esc(ev.name) + "</span>";
+        li.innerHTML = "<span>" + esc(L(ev.name)) + "</span>";
       }
       rec.appendChild(li);
     });
+  }
 
+  function finish() {
+    resultKey = score();
+
+    $("bar").style.width = "100%";
+    renderResult();
     show("result");
+
+    // 作答一結束就先匿名留下結果，供活動規劃參考。
+    // 之後若再登記抽獎會另外送一筆，兩筆用 sessionId 對得起來。
+    sendQuietly();
+  }
+
+  /** 只送一次測驗結果，不含任何個人資料，失敗也不打擾使用者 */
+  var quietSent = false;
+  function sendQuietly() {
+    if (quietSent || !ENDPOINT) { return; }
+    quietSent = true;
+    send(false)["catch"](function () { /* 純統計，失敗就算了 */ });
   }
 
   /* ---------- 抽獎表單 ---------- */
   function buildInterests() {
     var box = $("i-interests");
-    INTERESTS.forEach(function (name, i) {
+    var was = {};
+
+    // 換語言會重繪，先記住已勾選的項目
+    Array.prototype.forEach.call(box.querySelectorAll("input"), function (c) {
+      was[c.value] = c.checked;
+    });
+
+    box.innerHTML = "";
+
+    // value 一律存中文，後台欄位才不會因為使用者切成英文就變成另一套名稱
+    Object.keys(EVENTS).forEach(function (key, i) {
+      var ev = EVENTS[key];
       var label = document.createElement("label");
       label.className = "check";
-      label.innerHTML = '<input type="checkbox" value="' + esc(name) + '" id="int' + i + '"><span>' + esc(name) + "</span>";
+      label.innerHTML = '<input type="checkbox" value="' + esc(ev.name.zh) + '" id="int' + i + '"' +
+                        (was[ev.name.zh] ? " checked" : "") + "><span>" + esc(L(ev.name)) + "</span>";
       box.appendChild(label);
     });
   }
@@ -1093,19 +1322,19 @@
     clearBad();
     var ok = true;
 
-    if (!$("i-name").value.trim()) { setBad("f-name", "請填寫大名"); ok = false; }
-    if (!$("i-dept").value.trim()) { setBad("f-dept", "請填寫系級"); ok = false; }
+    if (!$("i-name").value.trim()) { setBad("f-name", L(UI.needName)); ok = false; }
+    if (!$("i-dept").value.trim()) { setBad("f-dept", L(UI.needDept)); ok = false; }
 
     var phone = $("i-phone").value.replace(/[\s()-]/g, "");
     if (!phone) {
-      setBad("f-phone", "請填寫聯絡電話");
+      setBad("f-phone", L(UI.needPhone));
       ok = false;
     } else if (!/^\+?\d{8,15}$/.test(phone)) {
-      setBad("f-phone", "電話格式看起來不太對，請確認一下");
+      setBad("f-phone", L(UI.badPhone));
       ok = false;
     }
 
-    if (!$("i-consent").checked) { setBad("f-consent", "需要勾選同意才能參加抽獎"); ok = false; }
+    if (!$("i-consent").checked) { setBad("f-consent", L(UI.needConsent)); ok = false; }
 
     if (!ok) {
       var first = document.querySelector(".is-bad");
@@ -1129,7 +1358,8 @@
       submittedAt: new Date().toISOString(),
       joinDraw: !!joinDraw,
       typeKey:  resultKey,
-      typeName: TYPES[resultKey].zh + " " + TYPES[resultKey].en,
+      typeName: TYPES[resultKey].name.zh + " " + TYPES[resultKey].name.en,
+      sessionId: SESSION,
       name:     joinDraw ? $("i-name").value.trim()   : "",
       dept:     joinDraw ? $("i-dept").value.trim()   : "",
       phone:    joinDraw ? $("i-phone").value.trim()  : "",
@@ -1138,8 +1368,9 @@
       suggest:  $("i-suggest").value.trim(),
       answers:  answers.map(function (choice, qi) {
         var q = QUESTIONS[qi];
+        // 一律記中文，後台不必處理兩套題目文字
         var picked = chosen(choice).map(function (ci) { return q.opts[ci].zh; });
-        return q.zh + " → " + (picked.length ? picked.join("、") : "（未選）");
+        return q.zh + "：" + (picked.length ? picked.join("、") : "（未選）");
       }).join(" | ")
     };
   }
@@ -1174,19 +1405,19 @@
     if (!validate()) { return; }
 
     if (!ENDPOINT) {
-      status("表單尚未設定收件網址，請聯絡社團幹部。", true);
+      status(L(UI.noEndpoint), true);
       return;
     }
 
     var btn = $("send");
     btn.disabled = true;
-    status("送出中…", false);
+    status(L(UI.sending), false);
 
     send(true)
       .then(function () { show("done"); })
       .catch(function () {
         btn.disabled = false;
-        status("送出失敗，請檢查網路後再試一次，或直接私訊社團 IG @ntustcdvc。", true);
+        status(L(UI.failed), true);
       });
   });
 
@@ -1212,6 +1443,7 @@
     answers = [];
     current = 0;
     resultKey = "";
+    quietSent = false;
     $("draw").reset();
     clearBad();
     $("status").hidden = true;
@@ -1223,11 +1455,11 @@
   $("retry").addEventListener("click", restart);
   $("again").addEventListener("click", restart);
 
-  $("skip").addEventListener("click", function () {
-    // 匿名送出測驗結果供活動規劃參考；送不出去也不擋使用者離開
-    send(false)["catch"](function () { /* 純統計，失敗就算了 */ });
-    $("done-msg").textContent = "謝謝你的作答！隨時歡迎你來參加我們的活動，9/15（二）崇德志工社說明茶會見！";
-    show("done");
+  // 切換語言時把腳本產生的內容重畫一次
+  document.addEventListener("cdvc:lang", function () {
+    if (!$("quiz").hidden) { renderQuestion(); }
+    renderResult();
+    buildInterests();
   });
 
   buildInterests();

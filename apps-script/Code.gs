@@ -1,5 +1,5 @@
 /**
- * 崇德志工社 — 志工人格測驗抽獎收件端
+ * 崇德志工社 志工人格測驗抽獎收件端
  *
  * 部署方式見同資料夾的 README.md。
  * 部署後把 /exec 網址貼到 quiz.html 最上方的 ENDPOINT 常數。
@@ -19,7 +19,8 @@ var HEADERS = [
   '有興趣的活動',
   '未來活動建議',
   '作答內容',
-  '參加抽獎'
+  '參加抽獎',
+  '作答編號'
 ];
 
 /**
@@ -69,7 +70,9 @@ function doPost(e) {
       data.interests  || '',
       data.suggest    || '',
       data.answers    || '',
-      data.joinDraw ? '是' : '否'
+      data.joinDraw ? '是' : '否',
+      // 同一次作答會先留下一筆匿名結果，登記抽獎再送一筆，用這個編號對起來
+      data.sessionId  || ''
     ]);
 
     return json_({ ok: true });
@@ -84,7 +87,7 @@ function doPost(e) {
 
 /**
  * 直接用瀏覽器開啟部署網址時的健康檢查。
- * 刻意不回傳任何報名資料 —— 這支網址是公開的，讀取一律走試算表。
+ * 刻意不回傳任何報名資料，這支網址是公開的，讀取一律走試算表。
  */
 function doGet() {
   return json_({ ok: true, service: 'cdvc-quiz' });
