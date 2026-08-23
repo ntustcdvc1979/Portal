@@ -24,6 +24,16 @@ var HEADERS = [
 ];
 
 /**
+ * 固定欄位後面，每一題各佔一欄，標題由網頁送過來的題目文字產生。
+ * 題目增加時會自動補上新欄位；既有欄位不會改名，順序也不會動。
+ */
+function headersWith_(questions) {
+  return HEADERS.concat((questions || []).map(function (q, i) {
+    return (i + 1) + '. ' + q;
+  }));
+}
+
+/**
  * 每分鐘最多接受幾筆。防的是機器人洗版，不是擋正常使用者；
  * 茶會現場大家同時填也用不到 30 筆／分鐘。
  */
@@ -57,7 +67,8 @@ function doPost(e) {
       return json_({ ok: false, error: bad });
     }
 
-    var sheet = getSheet_();
+    var answerList = Array.isArray(data.answerList) ? data.answerList : [];
+    var sheet = getSheet_(data.questions);
 
     sheet.appendRow([
       data.submittedAt ? new Date(data.submittedAt) : new Date(),
@@ -69,11 +80,12 @@ function doPost(e) {
       data.social     || '',
       data.interests  || '',
       data.suggest    || '',
-      data.answers    || '',
+      // 一欄式的完整作答，只是備份，日常閱讀請看後面一題一欄的部分
+      summarise_(data.questions, answerList),
       data.joinDraw ? '是' : '否',
       // 同一次作答會先留下一筆匿名結果，登記抽獎再送一筆，用這個編號對起來
       data.sessionId  || ''
-    ]);
+    ].concat(answerList));
 
     return json_({ ok: true });
 
@@ -110,11 +122,19 @@ function validate_(data) {
   }
 
   // 避免有人塞超長字串把試算表撐爆（單格上限 5 萬字元）
-  var limits = { name: 40, dept: 40, phone: 20, social: 60, suggest: 500, interests: 500, answers: 2000 };
+  var limits = { name: 40, dept: 40, phone: 20, social: 60, suggest: 500, interests: 500 };
   for (var k in limits) {
     if (limits.hasOwnProperty(k) && trim_(data[k]).length > limits[k]) {
       return k + ' too long';
     }
+  }
+
+  // 題數與每題作答長度也要有上限，否則等於留了一個沒有欄位限制的入口
+  if (data.questions && data.questions.length > 40) { return 'too many questions'; }
+
+  var list = data.answerList || [];
+  for (var i = 0; i < list.length; i++) {
+    if (trim_(list[i]).length > 600) { return 'answer ' + (i + 1) + ' too long'; }
   }
 
   return '';
@@ -133,6 +153,15 @@ function trim_(v) {
   return v == null ? '' : String(v).trim();
 }
 
+/** 把題目與作答併成一格，當作備份用的完整紀錄 */
+function summarise_(questions, answerList) {
+  if (!Array.isArray(questions)) { return ''; }
+
+  return questions.map(function (q, i) {
+    return q + '：' + (answerList[i] || '（未答）');
+  }).join(' | ');
+}
+
 /**
  * 在 Apps Script 編輯器選這個函式按「執行」，執行紀錄會印出
  * 收件試算表的名稱、網址與目前筆數。找不到試算表時也會講清楚原因。
@@ -146,7 +175,7 @@ function checkSetup() {
     return;
   }
 
-  var sheet = getSheet_();
+  var sheet = getSheet_([]);
   var rows = Math.max(0, sheet.getLastRow() - 1);
 
   Logger.log('試算表名稱：' + ss.getName());
@@ -160,7 +189,7 @@ function checkSetup() {
  */
 var SPREADSHEET_ID = '';
 
-function getSheet_() {
+function getSheet_(questions) {
   var ss = SPREADSHEET_ID
     ? SpreadsheetApp.openById(SPREADSHEET_ID)
     : SpreadsheetApp.getActiveSpreadsheet();
@@ -175,15 +204,17 @@ function getSheet_() {
     sheet = ss.insertSheet(SHEET_NAME);
   }
 
+  var headers = headersWith_(questions);
+
   if (sheet.getLastRow() === 0) {
-    sheet.appendRow(HEADERS);
-    sheet.getRange(1, 1, 1, HEADERS.length).setFontWeight('bold');
+    sheet.appendRow(headers);
+    sheet.getRange(1, 1, 1, headers.length).setFontWeight('bold');
     sheet.setFrozenRows(1);
 
-  } else if (sheet.getLastColumn() < HEADERS.length) {
+  } else if (sheet.getLastColumn() < headers.length) {
     // 舊的表少了後來新增的欄位，補上標題就好，既有資料不動
     var from = sheet.getLastColumn() + 1;
-    var missing = HEADERS.slice(from - 1);
+    var missing = headers.slice(from - 1);
     sheet.getRange(1, from, 1, missing.length)
          .setValues([missing])
          .setFontWeight('bold');

@@ -244,6 +244,23 @@
 
   .opt:hover .opt__key{background:var(--orange);color:#fff;}
 
+  /* 自由填答的文字框 */
+  .q__free{
+    width:100%;
+    min-height:6rem;
+    padding:.85rem 1rem;
+    border:2px solid var(--line);
+    border-radius:1rem;
+    background:#FFFDF7;
+    font-family:inherit;
+    font-size:1rem;
+    line-height:1.6;
+    color:inherit;
+    resize:vertical;
+  }
+
+  .q__free:focus{outline:none;border-color:var(--orange);background:#fff;}
+
   .q__nav{margin-top:1.25rem;text-align:center;}
 
   /* 複選題才會出現的下一題按鈕 */
@@ -590,8 +607,8 @@
       <span data-l="en">Start the Quiz →</span>
     </button>
     <p class="intro__meta">
-      <span data-l="zh">🎁 測完填寫資料，就有機會抽中<strong>電影票、超商禮券</strong>等大獎！</span>
-      <span data-l="en">🎁 Finish the quiz, leave your details, and you're in the running for <strong>movie tickets, store gift cards</strong> and more.</span>
+      <span data-l="zh">🎁 測完填寫資料，就有機會抽中<strong>電影票、超商禮券</strong>等大獎，<strong>9/15（二）茶會現場抽出！</strong></span>
+      <span data-l="en">🎁 Finish the quiz, leave your details, and you're in the running for <strong>movie tickets, store gift cards</strong> and more, <strong>drawn at the tea party on Tue 9/15.</strong></span>
     </p>
   </section>
 
@@ -709,24 +726,6 @@
           <span data-l="en">LINE ID / Instagram <span class="lang">optional</span></span>
         </label>
         <input type="text" id="i-social" name="social" maxlength="60">
-      </div>
-
-      <div class="field">
-        <fieldset>
-          <legend class="field__legend">
-            <span data-l="zh">有興趣的活動 <span class="lang">可複選、選填</span></span>
-            <span data-l="en">Events you're interested in <span class="lang">multiple choice, optional</span></span>
-          </legend>
-          <div class="checks" id="i-interests"></div>
-        </fieldset>
-      </div>
-
-      <div class="field">
-        <label for="i-suggest">
-          <span data-l="zh">希望社團未來辦什麼活動？ <span class="lang">選填</span></span>
-          <span data-l="en">Any event you'd like us to run? <span class="lang">optional</span></span>
-        </label>
-        <textarea id="i-suggest" name="suggest" maxlength="500"></textarea>
       </div>
 
       <p class="privacy">
@@ -1057,8 +1056,35 @@
         { zh: "「哪裡有人，哪裡就有我。」",   en: "Wherever people are, I'm there.",   s: { player: 3 } },
         { zh: "「毛孩也是家人。」",           en: "Animals are family too.",           s: { paws: 3 } }
       ]
+    },
+    /* 以下兩題不計分，純粹蒐集大家想參加什麼，作為排活動的依據。
+       選項由 EVENTS 產生，見 buildQuestions()。 */
+    {
+      zh: "有興趣參加哪些活動？",
+      en: "Which events are you interested in?",
+      multi: true,
+      fromEvents: true,
+      opts: []
+    },
+    {
+      zh: "希望社團未來辦什麼活動？",
+      en: "Any event you'd like us to run?",
+      free: true,
+      placeholder: { zh: "想到什麼都可以寫，也可以直接跳過", en: "Anything goes, or just skip it" },
+      opts: []
     }
   ];
+
+  /** 把活動總表灌進「有興趣參加哪些活動」那題的選項 */
+  function buildQuestions() {
+    QUESTIONS.forEach(function (q) {
+      if (!q.fromEvents) { return; }
+      q.opts = Object.keys(EVENTS).map(function (k) {
+        return { zh: EVENTS[k].name.zh, en: EVENTS[k].name.en, s: {} };
+      });
+    });
+  }
+  buildQuestions();
 
   /* ============================================================
      狀態
@@ -1128,11 +1154,25 @@
 
     $("qtitle").textContent = L(q) + (q.multi ? L(UI.multiHint) : "");
     $("back").hidden = (current === 0);
-    $("qmulti").hidden = !q.multi;
+    $("qmulti").hidden = !(q.multi || q.free);
     $("qnext").textContent = L(last ? UI.finish : UI.next);
 
     var list = $("qlist");
     list.innerHTML = "";
+
+    // 自由填答：放一個文字框，按下一題時再收值
+    if (q.free) {
+      var li0 = document.createElement("li");
+      var ta = document.createElement("textarea");
+      ta.className = "q__free";
+      ta.id = "qfree";
+      ta.maxLength = 500;
+      ta.placeholder = L(q.placeholder);
+      ta.value = (typeof answers[current] === "string") ? answers[current] : "";
+      li0.appendChild(ta);
+      list.appendChild(li0);
+      return;
+    }
 
     q.opts.forEach(function (o, i) {
       var on = q.multi && picked.indexOf(i) >= 0;
@@ -1197,10 +1237,12 @@
     }
   }
 
-  /** 每題選到的選項索引清單，單選題也統一成陣列方便處理 */
+  /** 每題選到的選項索引清單，單選題也統一成陣列方便處理。
+      自由填答存的是字串，這裡回空陣列，計分時自然略過。 */
   function chosen(choice) {
     if (Array.isArray(choice)) { return choice; }
-    return (choice == null) ? [] : [choice];
+    if (choice == null || typeof choice === "string") { return []; }
+    return [choice];
   }
 
   /* ---------- 計分 ---------- */
@@ -1242,7 +1284,12 @@
 
     var rec = $("r-rec");
     rec.innerHTML = "";
-    t.recs.forEach(function (key) {
+
+    // EVENTS 本身就是照行事曆排的，依它的順序輸出推薦
+    var order = Object.keys(EVENTS);
+    t.recs.slice().sort(function (a, b) {
+      return order.indexOf(a) - order.indexOf(b);
+    }).forEach(function (key) {
       var ev = EVENTS[key];
       if (!ev) { return; }
       var li = document.createElement("li");
@@ -1277,28 +1324,6 @@
   }
 
   /* ---------- 抽獎表單 ---------- */
-  function buildInterests() {
-    var box = $("i-interests");
-    var was = {};
-
-    // 換語言會重繪，先記住已勾選的項目
-    Array.prototype.forEach.call(box.querySelectorAll("input"), function (c) {
-      was[c.value] = c.checked;
-    });
-
-    box.innerHTML = "";
-
-    // value 一律存中文，後台欄位才不會因為使用者切成英文就變成另一套名稱
-    Object.keys(EVENTS).forEach(function (key, i) {
-      var ev = EVENTS[key];
-      var label = document.createElement("label");
-      label.className = "check";
-      label.innerHTML = '<input type="checkbox" value="' + esc(ev.name.zh) + '" id="int' + i + '"' +
-                        (was[ev.name.zh] ? " checked" : "") + "><span>" + esc(L(ev.name)) + "</span>";
-      box.appendChild(label);
-    });
-  }
-
   function setBad(fieldId, message) {
     var f = $(fieldId);
     f.classList.add("is-bad");
@@ -1347,11 +1372,27 @@
    * joinDraw 為 false 時只送測驗結果與活動偏好，不帶任何個人資料，
    * 讓沒登記抽獎的人也能納入活動規劃的統計。
    */
+  /** 某一題的作答，一律轉成中文字串，後台不必處理兩套題目文字 */
+  function answerText(qi) {
+    var q = QUESTIONS[qi];
+    var choice = answers[qi];
+
+    if (q.free) { return (typeof choice === "string") ? choice : ""; }
+
+    return chosen(choice).map(function (ci) { return q.opts[ci].zh; }).join("、");
+  }
+
+  /** 找出標了某個旗標的題目編號，找不到回 -1 */
+  function questionIndex(flag) {
+    for (var i = 0; i < QUESTIONS.length; i++) {
+      if (QUESTIONS[i][flag]) { return i; }
+    }
+    return -1;
+  }
+
   function collect(joinDraw) {
-    var picked = [];
-    Array.prototype.forEach.call($("i-interests").querySelectorAll("input:checked"), function (c) {
-      picked.push(c.value);
-    });
+    var iInterests = questionIndex("fromEvents");
+    var iSuggest   = questionIndex("free");
 
     return {
       website:  $("i-hp").value,   // 蜜罐，正常一定是空字串
@@ -1364,14 +1405,12 @@
       dept:     joinDraw ? $("i-dept").value.trim()   : "",
       phone:    joinDraw ? $("i-phone").value.trim()  : "",
       social:   joinDraw ? $("i-social").value.trim() : "",
-      interests: picked.join("、"),
-      suggest:  $("i-suggest").value.trim(),
-      answers:  answers.map(function (choice, qi) {
-        var q = QUESTIONS[qi];
-        // 一律記中文，後台不必處理兩套題目文字
-        var picked = chosen(choice).map(function (ci) { return q.opts[ci].zh; });
-        return q.zh + "：" + (picked.length ? picked.join("、") : "（未選）");
-      }).join(" | ")
+      interests: iInterests >= 0 ? answerText(iInterests) : "",
+      suggest:   iSuggest   >= 0 ? answerText(iSuggest)   : "",
+
+      // 題目與作答分開送，後台才能一題一欄
+      questions: QUESTIONS.map(function (q) { return q.zh; }),
+      answerList: QUESTIONS.map(function (q, qi) { return answerText(qi); })
     };
   }
 
@@ -1434,8 +1473,13 @@
   });
 
   $("qnext").addEventListener("click", function () {
-    // 複選題允許不選，但要留下空陣列，計分與紀錄才有東西可讀
-    if (!Array.isArray(answers[current])) { answers[current] = []; }
+    if (QUESTIONS[current].free) {
+      var ta = $("qfree");
+      answers[current] = ta ? ta.value.trim() : "";
+    } else if (!Array.isArray(answers[current])) {
+      // 複選題允許不選，但要留下空陣列，計分與紀錄才有東西可讀
+      answers[current] = [];
+    }
     advance();
   });
 
@@ -1457,12 +1501,13 @@
 
   // 切換語言時把腳本產生的內容重畫一次
   document.addEventListener("cdvc:lang", function () {
-    if (!$("quiz").hidden) { renderQuestion(); }
+    if (!$("quiz").hidden) {
+      // 自由填答的內容在重繪前先收好，免得使用者打的字不見
+      if (QUESTIONS[current].free && $("qfree")) { answers[current] = $("qfree").value; }
+      renderQuestion();
+    }
     renderResult();
-    buildInterests();
   });
-
-  buildInterests();
 })();
 </script>
 </body>
