@@ -133,8 +133,42 @@ function trim_(v) {
   return v == null ? '' : String(v).trim();
 }
 
-function getSheet_() {
+/**
+ * 在 Apps Script 編輯器選這個函式按「執行」，執行紀錄會印出
+ * 收件試算表的名稱、網址與目前筆數。找不到試算表時也會講清楚原因。
+ */
+function checkSetup() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
+
+  if (!ss) {
+    Logger.log('這支腳本沒有綁定任何試算表（可能是用「新增專案」建立的獨立腳本）。');
+    Logger.log('請改從試算表的「擴充功能 → Apps Script」建立，或在下面的 SPREADSHEET_ID 填入試算表 ID。');
+    return;
+  }
+
+  var sheet = getSheet_();
+  var rows = Math.max(0, sheet.getLastRow() - 1);
+
+  Logger.log('試算表名稱：' + ss.getName());
+  Logger.log('試算表網址：' + ss.getUrl());
+  Logger.log('分頁：' + SHEET_NAME + '，目前 ' + rows + ' 筆資料');
+}
+
+/**
+ * 想把資料寫到「別的」試算表時，把它的 ID 填在這裡（網址中 /d/ 與 /edit 之間那段）。
+ * 留空就寫進這支腳本所綁定的試算表。
+ */
+var SPREADSHEET_ID = '';
+
+function getSheet_() {
+  var ss = SPREADSHEET_ID
+    ? SpreadsheetApp.openById(SPREADSHEET_ID)
+    : SpreadsheetApp.getActiveSpreadsheet();
+
+  if (!ss) {
+    throw new Error('找不到試算表：腳本未綁定試算表，且 SPREADSHEET_ID 是空的');
+  }
+
   var sheet = ss.getSheetByName(SHEET_NAME);
 
   if (!sheet) {
