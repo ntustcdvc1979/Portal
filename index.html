@@ -412,27 +412,30 @@
 
   .event:hover .event__img{transform:scale(1.04);}
 
+  /* 日期放在圖片下方而不是壓在圖上，才不會擋到文宣的主視覺 */
   .event__date{
-    position:absolute;
-    top:.75rem;
-    left:.75rem;
-    padding:.25rem .7rem;
+    align-self:flex-start;
+    padding:.2rem .75rem;
     border-radius:999px;
-    background:rgba(51,51,51,.88);
-    color:#fff;
+    background:#F4EFE0;
+    color:var(--ink-soft);
     font-size:.8rem;
     font-weight:800;
     letter-spacing:.03em;
-    backdrop-filter:blur(2px);
   }
+
+  .event:hover .event__date{background:rgba(242,167,44,.22);color:var(--orange-dark);}
 
   .event__body{
     display:flex;
     flex-direction:column;
-    gap:.85rem;
+    align-items:flex-start;
+    gap:.55rem;
     flex:1;
-    padding:1.1rem 1.15rem 1.25rem;
+    padding:1rem 1.15rem 1.25rem;
   }
+
+  .event__cta{align-self:stretch;}
 
   .event__name{
     margin:0;
@@ -777,9 +780,9 @@
         <a class="event" href="https://www.accupass.com/go/2026cdfreshmen" target="_blank" rel="noopener noreferrer">
           <figure class="event__figure">
             <img class="event__img" src="assets/cdfreshman.webp" alt="大學星攻略活動文宣">
-            <figcaption class="event__date">08/30（日）</figcaption>
-          </figure>
+            </figure>
           <div class="event__body">
+            <span class="event__date">08/30（日）</span>
             <h3 class="event__name"><span data-l="zh">大學星攻略</span><span data-l="en">College Star Guide</span></h3>
             <span class="event__cta">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11.5V5.75a1.75 1.75 0 0 1 3.5 0V11h.75V4a1.75 1.75 0 0 1 3.5 0v7h.75V6.5a1.75 1.75 0 0 1 3.5 0v9.25c0 3.45-2.8 6.25-6.25 6.25h-1.9a6.1 6.1 0 0 1-4.62-2.12l-3.3-3.85a1.75 1.75 0 0 1 2.5-2.44L9 15.4v-3.9Z"/></svg>
@@ -793,9 +796,9 @@
         <a class="event" href="https://forms.gle/ayeeMPcjQW8kj9kH6" target="_blank" rel="noopener noreferrer">
           <figure class="event__figure">
             <img class="event__img" src="assets/boardgamenight.webp" alt="桌遊之夜活動文宣" loading="lazy">
-            <figcaption class="event__date">09/02（三）</figcaption>
-          </figure>
+            </figure>
           <div class="event__body">
+            <span class="event__date">09/02（三）</span>
             <h3 class="event__name"><span data-l="zh">桌遊之夜</span><span data-l="en">Board Game Night</span></h3>
             <span class="event__cta">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11.5V5.75a1.75 1.75 0 0 1 3.5 0V11h.75V4a1.75 1.75 0 0 1 3.5 0v7h.75V6.5a1.75 1.75 0 0 1 3.5 0v9.25c0 3.45-2.8 6.25-6.25 6.25h-1.9a6.1 6.1 0 0 1-4.62-2.12l-3.3-3.85a1.75 1.75 0 0 1 2.5-2.44L9 15.4v-3.9Z"/></svg>
@@ -809,9 +812,9 @@
         <a class="event" href="https://forms.gle/JUWZN9siCupiJamc7" target="_blank" rel="noopener noreferrer">
           <figure class="event__figure">
             <img class="event__img" src="assets/mt_cleanup.webp" alt="誼山移山亮晶晶活動文宣" loading="lazy">
-            <figcaption class="event__date">09/05（六）</figcaption>
-          </figure>
+            </figure>
           <div class="event__body">
+            <span class="event__date">09/05（六）</span>
             <h3 class="event__name"><span data-l="zh">誼山移山亮晶晶</span><span data-l="en">Mountain Cleanup Day</span></h3>
             <span class="event__cta">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11.5V5.75a1.75 1.75 0 0 1 3.5 0V11h.75V4a1.75 1.75 0 0 1 3.5 0v7h.75V6.5a1.75 1.75 0 0 1 3.5 0v9.25c0 3.45-2.8 6.25-6.25 6.25h-1.9a6.1 6.1 0 0 1-4.62-2.12l-3.3-3.85a1.75 1.75 0 0 1 2.5-2.44L9 15.4v-3.9Z"/></svg>
@@ -824,10 +827,10 @@
       <li data-end="2026-09-09">
         <a class="event" href="https://forms.gle/xtxUMhorz1DSx8Qh8" target="_blank" rel="noopener noreferrer">
           <figure class="event__figure">
-            <img class="event__img" src="assets/sampleDM.webp" alt="帶我走吧！提拉米蘇活動文宣" loading="lazy">
-            <figcaption class="event__date">09/09（三）</figcaption>
-          </figure>
+            <img class="event__img" src="assets/tiramisu.webp" alt="帶我走吧！提拉米蘇活動文宣" loading="lazy">
+            </figure>
           <div class="event__body">
+            <span class="event__date">09/09（三）</span>
             <h3 class="event__name"><span data-l="zh">帶我走吧！提拉米蘇</span><span data-l="en">Take-Me-Away Tiramisu</span></h3>
             <span class="event__cta">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11.5V5.75a1.75 1.75 0 0 1 3.5 0V11h.75V4a1.75 1.75 0 0 1 3.5 0v7h.75V6.5a1.75 1.75 0 0 1 3.5 0v9.25c0 3.45-2.8 6.25-6.25 6.25h-1.9a6.1 6.1 0 0 1-4.62-2.12l-3.3-3.85a1.75 1.75 0 0 1 2.5-2.44L9 15.4v-3.9Z"/></svg>
@@ -841,9 +844,9 @@
         <a class="event" href="https://forms.gle/v9462wtejh5zLkEKA" target="_blank" rel="noopener noreferrer">
           <figure class="event__figure">
             <img class="event__img" src="assets/sampleDM.webp" alt="中秋素烤派對活動文宣" loading="lazy">
-            <figcaption class="event__date">09/19（六）</figcaption>
-          </figure>
+            </figure>
           <div class="event__body">
+            <span class="event__date">09/19（六）</span>
             <h3 class="event__name"><span data-l="zh">中秋素烤派對</span><span data-l="en">Mid-Autumn Veggie BBQ</span></h3>
             <span class="event__cta">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11.5V5.75a1.75 1.75 0 0 1 3.5 0V11h.75V4a1.75 1.75 0 0 1 3.5 0v7h.75V6.5a1.75 1.75 0 0 1 3.5 0v9.25c0 3.45-2.8 6.25-6.25 6.25h-1.9a6.1 6.1 0 0 1-4.62-2.12l-3.3-3.85a1.75 1.75 0 0 1 2.5-2.44L9 15.4v-3.9Z"/></svg>
@@ -857,9 +860,9 @@
         <a class="event" href="https://forms.gle/TTKKZQCjYmG6YGL57" target="_blank" rel="noopener noreferrer">
           <figure class="event__figure">
             <img class="event__img" src="assets/sampleDM.webp" alt="甜甜圈的「圈」套，你逃不掉活動文宣" loading="lazy">
-            <figcaption class="event__date">09/23（三）</figcaption>
-          </figure>
+            </figure>
           <div class="event__body">
+            <span class="event__date">09/23（三）</span>
             <h3 class="event__name"><span data-l="zh">甜甜圈的「圈」套，你逃不掉</span><span data-l="en">Caught in the Donut Loop</span></h3>
             <span class="event__cta">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11.5V5.75a1.75 1.75 0 0 1 3.5 0V11h.75V4a1.75 1.75 0 0 1 3.5 0v7h.75V6.5a1.75 1.75 0 0 1 3.5 0v9.25c0 3.45-2.8 6.25-6.25 6.25h-1.9a6.1 6.1 0 0 1-4.62-2.12l-3.3-3.85a1.75 1.75 0 0 1 2.5-2.44L9 15.4v-3.9Z"/></svg>
@@ -873,9 +876,9 @@
         <a class="event" href="https://forms.gle/D88nyieC127Tknpq9" target="_blank" rel="noopener noreferrer">
           <figure class="event__figure">
             <img class="event__img" src="assets/sampleDM.webp" alt="崇德志工社茶會活動文宣" loading="lazy">
-            <figcaption class="event__date">09/15（二）</figcaption>
-          </figure>
+            </figure>
           <div class="event__body">
+            <span class="event__date">09/15（二）</span>
             <h3 class="event__name"><span data-l="zh">崇德志工社茶會</span><span data-l="en">Chong-De Tea Party</span></h3>
             <span class="event__cta">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11.5V5.75a1.75 1.75 0 0 1 3.5 0V11h.75V4a1.75 1.75 0 0 1 3.5 0v7h.75V6.5a1.75 1.75 0 0 1 3.5 0v9.25c0 3.45-2.8 6.25-6.25 6.25h-1.9a6.1 6.1 0 0 1-4.62-2.12l-3.3-3.85a1.75 1.75 0 0 1 2.5-2.44L9 15.4v-3.9Z"/></svg>
@@ -889,9 +892,9 @@
         <a class="event" href="https://forms.gle/BQJiLTzUSM6UZEot9" target="_blank" rel="noopener noreferrer">
           <figure class="event__figure">
             <img class="event__img" src="assets/sampleDM.webp" alt="台科 GPS 活動文宣" loading="lazy">
-            <figcaption class="event__date">09/06（日）</figcaption>
-          </figure>
+            </figure>
           <div class="event__body">
+            <span class="event__date">09/06（日）</span>
             <h3 class="event__name"><span data-l="zh">台科 GPS</span><span data-l="en">NTUST GPS</span></h3>
             <span class="event__cta">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11.5V5.75a1.75 1.75 0 0 1 3.5 0V11h.75V4a1.75 1.75 0 0 1 3.5 0v7h.75V6.5a1.75 1.75 0 0 1 3.5 0v9.25c0 3.45-2.8 6.25-6.25 6.25h-1.9a6.1 6.1 0 0 1-4.62-2.12l-3.3-3.85a1.75 1.75 0 0 1 2.5-2.44L9 15.4v-3.9Z"/></svg>
