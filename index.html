@@ -498,7 +498,8 @@
 
   .event--off .event__cta svg{animation:none;}
 
-  .past{margin-top:2.25rem;}
+  /* 現在是行事曆之後的獨立區塊，間距比照其他區塊 */
+  .past{margin-top:3.25rem;}
 
   .past__title{
     display:flex;
@@ -905,11 +906,6 @@
        
     </ul>
 
-    <!-- 由下方腳本填入；沒有已結束的活動時整塊隱藏 -->
-    <div class="past" id="past-wrap" hidden>
-      <h3 class="past__title"><span data-l="zh">已結束的活動</span><span data-l="en">Past Events</span></h3>
-      <ul class="events events--past" id="events-past"></ul>
-    </div>
   </section>
 
   <section class="section" aria-labelledby="calendar-title">
@@ -926,6 +922,12 @@
       </figcaption>
     </figure>
   </section>
+
+  <!-- 由下方腳本填入；沒有已結束的活動時整塊隱藏 -->
+  <div class="past" id="past-wrap" hidden>
+    <h3 class="past__title"><span data-l="zh">已結束的活動</span><span data-l="en">Past Events</span></h3>
+    <ul class="events events--past" id="events-past"></ul>
+  </div>
 
   <footer class="foot">
     <img src="assets/logo2.webp" alt="">
