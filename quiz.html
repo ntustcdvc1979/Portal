@@ -607,8 +607,8 @@
       <span data-l="en">Start the Quiz →</span>
     </button>
     <p class="intro__meta">
-      <span data-l="zh">🎁 測完填寫資料，就有機會抽中<strong>電影票、超商禮券</strong>等大獎，<strong>9/15（二）茶會現場抽出！</strong></span>
-      <span data-l="en">🎁 Finish the quiz, leave your details, and you're in the running for <strong>movie tickets, store gift cards</strong> and more, <strong>drawn at the tea party on Tue 9/15.</strong></span>
+      <span data-l="zh">測完會告訴你最適合參加崇德哪些活動，也順便讓我們知道你想參加什麼。</span>
+      <span data-l="en">You'll find out which Chong-De activities suit you best, and we'll learn what you'd like to join.</span>
     </p>
   </section>
 
@@ -670,8 +670,10 @@
       </div>
     </div>
 
-    <!-- 抽獎 -->
-    <form class="draw" id="draw" novalidate>
+    <!-- 抽獎：9/15 茶會抽獎已結束，整塊先藏起來。
+         要重新開放就把下面這行的 hidden 拿掉，並把開場白的獎品說明改回去。
+         保留在 DOM 裡是為了讓腳本的事件綁定不用改。 -->
+    <form class="draw" id="draw" novalidate hidden>
       <div class="draw__banner">
         <span class="draw__gift" aria-hidden="true">🎁</span>
         <strong class="draw__title">
