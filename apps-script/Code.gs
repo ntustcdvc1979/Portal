@@ -62,6 +62,11 @@ function doPost(e) {
       return json_({ ok: false, error: 'rate limited' });
     }
 
+    // 文昌祈福報名有自己的分頁與檢查，不跟測驗資料混在一起
+    if (data.form === 'wenchang') {
+      return saveWenchang_(data);
+    }
+
     var bad = validate_(data);
     if (bad) {
       return json_({ ok: false, error: bad });
@@ -181,6 +186,10 @@ function checkSetup() {
   Logger.log('試算表名稱：' + ss.getName());
   Logger.log('試算表網址：' + ss.getUrl());
   Logger.log('分頁：' + SHEET_NAME + '，目前 ' + rows + ' 筆資料');
+
+  var wc = ss.getSheetByName(WENCHANG_SHEET);
+  Logger.log('分頁：' + WENCHANG_SHEET + '，' +
+             (wc ? '目前 ' + Math.max(0, wc.getLastRow() - 1) + ' 筆報名' : '尚未有人報名（第一筆送出時會自動建立）'));
 }
 
 /**
@@ -190,6 +199,11 @@ function checkSetup() {
 var SPREADSHEET_ID = '';
 
 function getSheet_(questions) {
+  return sheetNamed_(SHEET_NAME, headersWith_(questions));
+}
+
+/** 取得指定名稱的分頁，不存在就建立；標題列不足時只補後面缺的欄位 */
+function sheetNamed_(name, headers) {
   var ss = SPREADSHEET_ID
     ? SpreadsheetApp.openById(SPREADSHEET_ID)
     : SpreadsheetApp.getActiveSpreadsheet();
@@ -198,13 +212,11 @@ function getSheet_(questions) {
     throw new Error('找不到試算表：腳本未綁定試算表，且 SPREADSHEET_ID 是空的');
   }
 
-  var sheet = ss.getSheetByName(SHEET_NAME);
+  var sheet = ss.getSheetByName(name);
 
   if (!sheet) {
-    sheet = ss.insertSheet(SHEET_NAME);
+    sheet = ss.insertSheet(name);
   }
-
-  var headers = headersWith_(questions);
 
   if (sheet.getLastRow() === 0) {
     sheet.appendRow(headers);
@@ -221,6 +233,76 @@ function getSheet_(questions) {
   }
 
   return sheet;
+}
+
+/* ============================================================
+   文昌祈福報名（wenchang.html）
+   ============================================================ */
+
+var WENCHANG_SHEET = '文昌祈福';
+
+// 新欄位一律加在最後面，理由同上方 HEADERS
+var WENCHANG_HEADERS = [
+  '送出時間',
+  '姓名',
+  '性別',
+  '功德費選項',
+  '功德費金額',
+  '場次',
+  '希望時間'
+];
+
+var WENCHANG_GENDERS = ['男', '女', '其他'];
+var WENCHANG_FEES = ['100', '200', '隨喜'];
+var WENCHANG_OTHER_TIME = '預約其他時間';
+
+function saveWenchang_(data) {
+  var bad = validateWenchang_(data);
+  if (bad) {
+    return json_({ ok: false, error: bad });
+  }
+
+  sheetNamed_(WENCHANG_SHEET, WENCHANG_HEADERS).appendRow([
+    data.submittedAt ? new Date(data.submittedAt) : new Date(),
+    trim_(data.name),
+    trim_(data.gender),
+    trim_(data.feeOption),
+    Number(data.fee),
+    trim_(data.session),
+    trim_(data.preferred)
+  ]);
+
+  return json_({ ok: true });
+}
+
+function validateWenchang_(data) {
+  if (!trim_(data.name)) { return 'name required'; }
+  if (WENCHANG_GENDERS.indexOf(trim_(data.gender)) < 0) { return 'gender invalid'; }
+  if (WENCHANG_FEES.indexOf(trim_(data.feeOption)) < 0) { return 'fee option invalid'; }
+
+  var fee = Number(data.fee);
+  if (!isFinite(fee) || fee < 0 || fee > 1000000 || Math.floor(fee) !== fee) {
+    return 'fee invalid';
+  }
+
+  // 選了固定金額，金額就必須一致，免得有人改請求送進不相符的數字
+  if (data.feeOption !== '隨喜' && String(fee) !== data.feeOption) {
+    return 'fee does not match option';
+  }
+
+  if (!trim_(data.session)) { return 'session required'; }
+  if (data.session === WENCHANG_OTHER_TIME && !trim_(data.preferred)) {
+    return 'preferred time required';
+  }
+
+  var limits = { name: 40, session: 80, preferred: 120 };
+  for (var k in limits) {
+    if (limits.hasOwnProperty(k) && trim_(data[k]).length > limits[k]) {
+      return k + ' too long';
+    }
+  }
+
+  return '';
 }
 
 function json_(obj) {

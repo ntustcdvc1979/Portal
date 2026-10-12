@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" data-lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>文昌祈福 | 台科大崇德志工社</title>
+<meta name="description" content="期中考前，讓心先靜下來。台科大崇德志工社文昌祈福，含文昌祈福卡、吃素一天與古禮體驗。">
+<meta property="og:title" content="文昌祈福 | 台科大崇德志工社">
+<meta property="og:description" content="期中考前，讓心先靜下來。文昌祈福卡、吃素一天與古禮體驗，線上報名。">
+<meta property="og:image" content="assets/logo1.webp">
+<link rel="icon" href="assets/logo1.webp">
+<meta name="robots" content="noindex">
+<style>
+  :root{
+    --orange:#F2A72C;
+    --orange-dark:#D98C12;
+    --green:#A9CE3B;
+    --green-dark:#82A821;
+    --ink:#333333;
+    --ink-soft:#6b6b66;
+    --cream:#FFFCF2;
+    --card:#ffffff;
+    --line:#EDE6D4;
+    --err:#C4453B;
+    --vermilion:#B8452E;
+  }
+
+  *,*::before,*::after{box-sizing:border-box;}
+
+  /* ---------- 中英切換 ----------
+     只顯示目前語言的內容。沒有 JS 時停在預設的中文，內容不會消失。 */
+  [data-lang="zh"] [data-l="en"],
+  [data-lang="en"] [data-l="zh"]{display:none;}
+
+  [hidden]{display:none!important;}
+
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    line-height:1.8;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    z-index:-1;
+    background:
+      radial-gradient(52rem 32rem at 12% -8%, rgba(242,167,44,.20), transparent 62%),
+      radial-gradient(46rem 30rem at 92% 6%, rgba(169,206,59,.18), transparent 62%);
+  }
+
+  .wrap{
+    width:100%;
+    max-width:44rem;
+    margin:0 auto;
+    padding:2.5rem 1.25rem 4rem;
+  }
+
+  .langbar{
+    display:flex;
+    justify-content:flex-end;
+    gap:.3rem;
+    margin-bottom:1.25rem;
+  }
+
+  .langbtn{
+    padding:.3rem .9rem;
+    border:2px solid var(--line);
+    border-radius:999px;
+    background:var(--card);
+    color:var(--ink-soft);
+    font-family:inherit;
+    font-size:.82rem;
+    font-weight:800;
+    cursor:pointer;
+  }
+
+  .langbtn:hover{border-color:var(--orange);color:var(--ink);}
+  .langbtn:focus-visible{outline:3px solid var(--ink);outline-offset:2px;}
+  .langbtn[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff;}
+
+  /* ---------- 頁首 ---------- */
+  .hero{text-align:center;margin-bottom:2.5rem;}
+
+  .hero__logo{
+    width:min(8rem,34vw);
+    height:auto;
+    display:block;
+    margin:0 auto .5rem;
+  }
+
+  .hero__eyebrow{
+    margin:0;
+    font-size:.85rem;
+    font-weight:800;
+    letter-spacing:.14em;
+    color:var(--ink-soft);
+  }
+
+  /* 文昌兩字用朱紅印章感，其餘維持社團配色 */
+  .hero__title{
+    display:inline-block;
+    margin:.6rem 0 .4rem;
+    padding:.15rem 1.1rem .25rem;
+    border:3px solid var(--vermilion);
+    border-radius:.6rem;
+    color:var(--vermilion);
+    font-size:clamp(2.1rem,7vw,3rem);
+    font-weight:900;
+    letter-spacing:.3em;
+    text-indent:.3em;
+    line-height:1.4;
+    transform:rotate(-1.5deg);
+  }
+
+  [data-lang="en"] .hero__title{letter-spacing:.04em;text-indent:0;}
+
+  .hero__sub{
+    margin:.4rem auto 0;
+    max-width:30rem;
+    font-size:1.08rem;
+    font-weight:800;
+  }
+
+  /* ---------- 內文區塊 ---------- */
+  .block{
+    background:var(--card);
+    border:2px solid var(--line);
+    border-radius:1.5rem;
+    padding:1.5rem 1.6rem;
+    margin-bottom:1.25rem;
+    box-shadow:0 .35rem 0 rgba(51,51,51,.06);
+  }
+
+  .block h2{
+    display:flex;
+    align-items:center;
+    gap:.6rem;
+    margin:0 0 .75rem;
+    font-size:1.2rem;
+    font-weight:900;
+  }
+
+  .block h2::before{
+    content:"";
+    flex:none;
+    width:.75rem;
+    height:.75rem;
+    border-radius:50%;
+    background:var(--orange);
+    box-shadow:0 0 0 .25rem rgba(242,167,44,.22);
+  }
+
+  .block p{margin:0 0 .75rem;}
+  .block p:last-child{margin-bottom:0;}
+
+  /* ---------- 活動當天 ---------- */
+  .steps{
+    list-style:none;
+    margin:1rem 0 0;
+    padding:0;
+    display:grid;
+    gap:.85rem;
+  }
+
+  .step{
+    display:flex;
+    gap:.9rem;
+    padding:1rem 1.1rem;
+    border-radius:1rem;
+    background:#FFFAF0;
+    border:2px solid rgba(242,167,44,.28);
+  }
+
+  .step__icon{
+    flex:none;
+    width:2.6rem;
+    height:2.6rem;
+    display:grid;
+    place-items:center;
+    border-radius:.8rem;
+    background:#fff;
+    font-size:1.4rem;
+    box-shadow:0 .15rem .4rem rgba(51,51,51,.08);
+  }
+
+  .step h3{margin:0 0 .2rem;font-size:1.02rem;font-weight:900;}
+  .step p{margin:0;font-size:.95rem;color:var(--ink-soft);}
+
+  /* ---------- 推薦 ---------- */
+  .callout{
+    margin:1.75rem 0 2.25rem;
+    padding:1.25rem 1.4rem;
+    border-radius:1.25rem;
+    background:linear-gradient(135deg,rgba(242,167,44,.16),rgba(169,206,59,.18));
+    border:2px solid rgba(169,206,59,.5);
+    font-weight:700;
+    text-align:center;
+  }
+
+  /* ---------- 報名表 ---------- */
+  .form{
+    background:var(--card);
+    border:3px solid var(--orange);
+    border-radius:1.5rem;
+    overflow:hidden;
+    box-shadow:0 .6rem 1.4rem rgba(217,140,18,.18);
+  }
+
+  .form__head{
+    padding:1.15rem 1.4rem;
+    background:linear-gradient(135deg,var(--orange),var(--orange-dark));
+    color:#fff;
+    text-align:center;
+  }
+
+  .form__head h2{margin:0;font-size:1.35rem;font-weight:900;letter-spacing:.06em;}
+  .form__body{padding:1.5rem 1.4rem 1.4rem;}
+
+  .field{margin-bottom:1.3rem;}
+  fieldset.field{border:none;padding:0;margin:0 0 1.3rem;min-width:0;}
+
+  .label,
+  .field legend{
+    display:block;
+    padding:0;
+    margin-bottom:.45rem;
+    font-size:.95rem;
+    font-weight:900;
+  }
+
+  .req{color:var(--err);}
+
+  .input{
+    width:100%;
+    padding:.7rem .9rem;
+    border:2px solid var(--line);
+    border-radius:.85rem;
+    background:#FFFDF7;
+    font-family:inherit;
+    font-size:1rem;
+    color:inherit;
+  }
+
+  .input:focus{outline:none;border-color:var(--orange);background:#fff;}
+
+  .choices{display:grid;gap:.5rem;}
+  .choices--row{grid-template-columns:repeat(auto-fit,minmax(7rem,1fr));}
+
+  .choice{
+    display:flex;
+    align-items:flex-start;
+    gap:.6rem;
+    padding:.65rem .85rem;
+    border:2px solid var(--line);
+    border-radius:.9rem;
+    cursor:pointer;
+    transition:border-color .15s ease, background .15s ease;
+  }
+
+  .choice:hover{border-color:var(--orange);}
+
+  .choice input{
+    flex:none;
+    width:1.1rem;
+    height:1.1rem;
+    margin-top:.3rem;
+    accent-color:var(--orange-dark);
+  }
+
+  .choice:has(input:checked){border-color:var(--orange-dark);background:#FFF6E2;}
+
+  .choice--off{cursor:not-allowed;opacity:.55;}
+  .choice--off:hover{border-color:var(--line);}
+
+  .choice__main{display:block;font-weight:800;}
+  .choice__sub{display:block;font-size:.85rem;color:var(--ink-soft);}
+
+  .extra{margin-top:.6rem;}
+
+  .err{
+    display:block;
+    margin-top:.35rem;
+    font-size:.84rem;
+    font-weight:800;
+    color:var(--err);
+  }
+
+  .field.is-bad .input,
+  .field.is-bad .choice{border-color:var(--err);}
+
+  .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;}
+
+  .privacy{
+    margin:0 0 1.2rem;
+    padding:.8rem 1rem;
+    border-radius:.85rem;
+    background:#F8F4E8;
+    font-size:.84rem;
+    color:var(--ink-soft);
+  }
+
+  .btn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:100%;
+    padding:.95rem 1.6rem;
+    border:none;
+    border-radius:999px;
+    background:linear-gradient(135deg,var(--orange),var(--orange-dark));
+    color:#fff;
+    font-family:inherit;
+    font-size:1.1rem;
+    font-weight:900;
+    letter-spacing:.06em;
+    cursor:pointer;
+    box-shadow:0 .3rem .7rem rgba(217,140,18,.35);
+  }
+
+  .btn:hover{filter:brightness(1.05);}
+  .btn:focus-visible{outline:3px solid var(--ink);outline-offset:3px;}
+  .btn[disabled]{opacity:.6;cursor:progress;}
+
+  .status{margin:.9rem 0 0;font-weight:800;text-align:center;}
+  .status--bad{color:var(--err);}
+
+  .done{padding:2rem 1.4rem;text-align:center;}
+  .done__icon{font-size:3rem;display:block;line-height:1.2;}
+  .done h2{margin:.4rem 0 .4rem;font-size:1.45rem;font-weight:900;}
+  .done p{margin:0;color:var(--ink-soft);}
+
+  .foot{
+    margin-top:2.5rem;
+    text-align:center;
+    font-size:.82rem;
+    color:var(--ink-soft);
+  }
+
+  .foot a{color:var(--green-dark);font-weight:700;}
+
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none!important;animation:none!important;}
+  }
+</style>
+</head>
+<body>
+<main class="wrap">
+
+  <div class="langbar">
+    <button class="langbtn" type="button" data-set-lang="zh" aria-pressed="true">中文</button>
+    <button class="langbtn" type="button" data-set-lang="en" aria-pressed="false">EN</button>
+  </div>
+
+  <header class="hero">
+    <img class="hero__logo" src="assets/logo1.webp" alt="台科大崇德志工社社徽">
+    <p class="hero__eyebrow">
+      <span data-l="zh">台科大崇德志工社</span>
+      <span data-l="en">NTUST CHONG-DE VOLUNTEER CLUB</span>
+    </p>
+    <h1 class="hero__title">
+      <span data-l="zh">文昌祈福</span>
+      <span data-l="en">Wen Chang Blessing</span>
+    </h1>
+    <p class="hero__sub">
+      <span data-l="zh">期中考前，讓心先靜下來</span>
+      <span data-l="en">A Mindfulness &amp; Cultural Experience</span>
+    </p>
+  </header>
+
+  <!-- 中文版對大一、英文版對國際學生，各說各的開場 -->
+  <section class="block">
+    <h2>
+      <span data-l="zh">給剛進大學的你</span>
+      <span data-l="en">Welcome to Taiwan</span>
+    </h2>
+    <div data-l="zh">
+      <p>大家能考上技職龍頭，代表大家的實力絕對都是頂尖的！</p>
+      <p>不過大家剛進大學，再過不久就要面臨第一次的期中考、還有寫不完的作業跟報告。大學的考試跟高中職不一樣，很多時候不是你死背就好，而是考驗當下的邏輯思考跟專注力。</p>
+    </div>
+    <div data-l="en">
+      <p>For our international exchange students, welcome to Taiwan! Adapting to a new country and academic life can sometimes be challenging and overwhelming.</p>
+      <p>In traditional Chinese culture, there is a profound concept known as 'Wen Chang' (文昌), which symbolizes wisdom, focus, and inner clarity. We warmly invite you to join us for a unique Mindfulness &amp; Cultural Experience, where you can immerse yourself in ancient traditions, relax your mind, and find inner peace amid your busy student life.</p>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2>
+      <span data-l="zh">什麼是文昌？</span>
+      <span data-l="en">What Is Wen Chang?</span>
+    </h2>
+    <div data-l="zh">
+      <p>相信大家都有經驗，大腦卡關、心很浮躁的時候，明明坐在書桌前三小時，公式怎麼算都算不通。</p>
+      <p>在我們中華傳統文化裡，有一個專門掌管「學業」的正能量，叫做「文昌」。大家常聽到的「文昌祈福」，最核心的目的不是求運氣，而是幫我們的心平靜下來，開啟專注潛能。</p>
+      <p>我們社團接下來會舉辦文昌祈福，打開我們的潛能，用更有效的方式提升專注力，上台報告前也能減少緊張感。</p>
+    </div>
+    <div data-l="en">
+      <p>You have probably been there: your mind feels stuck and restless, you have been at your desk for three hours, and the problem still will not work out.</p>
+      <p>Traditional Chinese culture has a positive force devoted to learning, called Wen Chang. A Wen Chang blessing is not really about asking for luck. At its heart, it is about calming the mind and unlocking your ability to focus.</p>
+      <p>Our club is holding a Wen Chang blessing to help you tap into that potential, build focus more effectively, and feel less nervous before presentations.</p>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2>
+      <span data-l="zh">活動當天</span>
+      <span data-l="en">On the Day</span>
+    </h2>
+    <p>
+      <span data-l="zh">活動當天除了會讓大家寫文昌祈福卡之外，我們還會有以下文化體驗：</span>
+      <span data-l="en">Besides writing your own Wen Chang blessing card, you will take part in:</span>
+    </p>
+
+    <ol class="steps">
+      <li class="step">
+        <span class="step__icon" aria-hidden="true">🥬</span>
+        <div>
+          <h3><span data-l="zh">吃素一天</span><span data-l="en">A Day of Vegetarian Eating</span></h3>
+          <p>
+            <span data-l="zh">當天體驗齋戒吃素，幫身體做個淨化，晚上就用最乾淨、輕鬆的狀態來感受當下的平靜。</span>
+            <span data-l="en">Eat vegetarian for the day as a light cleanse, so that by evening you can take in the calm feeling clear and relaxed.</span>
+          </p>
+        </div>
+      </li>
+      <li class="step">
+        <span class="step__icon" aria-hidden="true">🙏</span>
+        <div>
+          <h3><span data-l="zh">古禮體驗</span><span data-l="en">Traditional Ceremony</span></h3>
+          <p>
+            <span data-l="zh">現場會帶領大家體驗傳承了兩千多年、如同祭孔大典般莊嚴的古禮。大家平常生活和讀書步調快、心中很雜，透過古禮的沉靜動作，能讓自己慢下來，體驗一種古代讀書人極致的專注與謙卑。</span>
+            <span data-l="en">We will guide you through a ceremony handed down for more than two thousand years, as solemn as the rites honouring Confucius. Daily life and study move fast and the mind gets crowded; the ceremony's quiet, deliberate movements help you slow down and feel the deep focus and humility of scholars of old.</span>
+          </p>
+        </div>
+      </li>
+      <li class="step">
+        <span class="step__icon" aria-hidden="true">📜</span>
+        <div>
+          <h3><span data-l="zh">功德費</span><span data-l="en">Offering Fee</span></h3>
+          <p>
+            <span data-l="zh">用來登記「智慧名冊」跟準備當天的水果供品，一生只要一次，代表對自己開啟這趟智慧體驗的重視。</span>
+            <span data-l="en">Covers your entry in the "Wisdom Register" and the fruit offerings for the day. It is needed only once in a lifetime, and marks your commitment to beginning this journey.</span>
+          </p>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <p class="callout">
+    <span data-l="zh">大家要在大學面對期中考，這場非常有質感的文化體驗，能幫大家的心定下來、加持學業，真的蠻建議大家可以去體驗看看！</span>
+    <span data-l="en">With midterms coming up, this thoughtful cultural experience can help settle your mind and support your studies. We really recommend giving it a try!</span>
+  </p>
+
+  <!-- ===== 報名 ===== -->
+  <section class="form" aria-labelledby="form-title">
+    <div class="form__head">
+      <h2 id="form-title">
+        <span data-l="zh">線上報名</span>
+        <span data-l="en">Register</span>
+      </h2>
+    </div>
+
+    <form class="form__body" id="signup" novalidate>
+      <div class="field" id="f-name">
+        <label class="label" for="i-name">
+          <span data-l="zh">姓名 <span class="req">*</span></span>
+          <span data-l="en">Name <span class="req">*</span></span>
+        </label>
+        <input class="input" type="text" id="i-name" name="name" autocomplete="name" maxlength="40">
+      </div>
+
+      <fieldset class="field" id="f-gender">
+        <legend>
+          <span data-l="zh">性別 <span class="req">*</span></span>
+          <span data-l="en">Gender <span class="req">*</span></span>
+        </legend>
+        <div class="choices choices--row">
+          <label class="choice"><input type="radio" name="gender" value="男">
+            <span class="choice__main"><span data-l="zh">男</span><span data-l="en">Male</span></span></label>
+          <label class="choice"><input type="radio" name="gender" value="女">
+            <span class="choice__main"><span data-l="zh">女</span><span data-l="en">Female</span></span></label>
+          <label class="choice"><input type="radio" name="gender" value="其他">
+            <span class="choice__main"><span data-l="zh">其他</span><span data-l="en">Other</span></span></label>
+        </div>
+      </fieldset>
+
+      <fieldset class="field" id="f-fee">
+        <legend>
+          <span data-l="zh">功德費 <span class="req">*</span></span>
+          <span data-l="en">Offering fee <span class="req">*</span></span>
+        </legend>
+        <div class="choices choices--row">
+          <label class="choice"><input type="radio" name="fee" value="100">
+            <span class="choice__main">NT$100</span></label>
+          <label class="choice"><input type="radio" name="fee" value="200">
+            <span class="choice__main">NT$200</span></label>
+          <label class="choice"><input type="radio" name="fee" value="隨喜">
+            <span class="choice__main"><span data-l="zh">隨喜</span><span data-l="en">As you wish</span></span></label>
+        </div>
+        <div class="extra" id="fee-extra" hidden>
+          <label class="label" for="i-fee">
+            <span data-l="zh">隨喜金額（新台幣）</span>
+            <span data-l="en">Amount (NT$)</span>
+          </label>
+          <input class="input" type="number" id="i-fee" inputmode="numeric" min="0" step="1">
+        </div>
+      </fieldset>
+
+      <!-- data-date 是場次當天；日期過了會自動停用 -->
+      <fieldset class="field" id="f-session">
+        <legend>
+          <span data-l="zh">選擇場次 <span class="req">*</span></span>
+          <span data-l="en">Session <span class="req">*</span></span>
+        </legend>
+        <div class="choices">
+          <label class="choice" data-date="2026-10-24"><input type="radio" name="session" value="10/24（六）13:00-18:00 台北崇慧">
+            <span>
+              <span class="choice__main"><span data-l="zh">10/24（六）13:00-18:00</span><span data-l="en">Sat 10/24, 13:00-18:00</span></span>
+              <span class="choice__sub"><span data-l="zh">台北崇慧</span><span data-l="en">Chong-Hui, Taipei (台北崇慧)</span></span>
+            </span></label>
+          <label class="choice" data-date="2026-10-31"><input type="radio" name="session" value="10/31（六）10:30-12:00 基隆星河繪">
+            <span>
+              <span class="choice__main"><span data-l="zh">10/31（六）10:30-12:00</span><span data-l="en">Sat 10/31, 10:30-12:00</span></span>
+              <span class="choice__sub"><span data-l="zh">基隆星河繪</span><span data-l="en">Xinghehui, Keelung (基隆星河繪)</span></span>
+            </span></label>
+          <label class="choice"><input type="radio" name="session" value="預約其他時間">
+            <span>
+              <span class="choice__main"><span data-l="zh">預約其他時間</span><span data-l="en">Request another time</span></span>
+            </span></label>
+        </div>
+        <div class="extra" id="session-extra" hidden>
+          <label class="label" for="i-preferred">
+            <span data-l="zh">希望的日期與時間</span>
+            <span data-l="en">Preferred date and time</span>
+          </label>
+          <input class="input" type="text" id="i-preferred" maxlength="120">
+        </div>
+      </fieldset>
+
+      <!-- 蜜罐：真人看不到，機器人會填。有值就丟掉。 -->
+      <div class="hp" aria-hidden="true">
+        <label for="i-hp">Website</label>
+        <input type="text" id="i-hp" tabindex="-1" autocomplete="off">
+      </div>
+
+      <p class="privacy">
+        <span data-l="zh">🔒 以上資料僅供本次活動報名使用，不會提供給第三方。</span>
+        <span data-l="en">🔒 Your details are used only for this registration and are never shared with anyone else.</span>
+      </p>
+
+      <button class="btn" type="submit" id="send">
+        <span data-l="zh">送出報名</span>
+        <span data-l="en">Register</span>
+      </button>
+      <p class="status" id="status" hidden></p>
+    </form>
+
+    <div class="done" id="done" hidden>
+      <span class="done__icon" aria-hidden="true">🙏</span>
+      <h2><span data-l="zh">報名完成！</span><span data-l="en">You're Registered!</span></h2>
+      <p>
+        <span data-l="zh">謝謝你報名文昌祈福，期待在現場見到你。</span>
+        <span data-l="en">Thank you for signing up for the Wen Chang blessing. We look forward to seeing you there.</span>
+      </p>
+    </div>
+  </section>
+
+  <p class="foot">
+    <span data-l="zh">台科大崇德志工社 NTUST CDVC ・</span>
+    <span data-l="en">NTUST Chong-De Volunteer Club ・</span>
+    <a href="index.html"><span data-l="zh">回首頁</span><span data-l="en">Home</span></a>
+  </p>
+
+</main>
+
+<script src="assets/lang.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  // 與 quiz.html 共用同一支 Apps Script，腳本會依 form 欄位分到「文昌祈福」分頁
+  var ENDPOINT = "https://script.google.com/macros/s/AKfycbwA-V_ZG7TNwjokMSGqVqrtRvhE5lIUUfZl9fzwsY0wOFvLQBoYkjcFoC0_IIf5Ogqn/exec";
+
+  var OTHER_TIME = "預約其他時間";
+
+  var UI = {
+    needName:     { zh: "請填寫姓名",             en: "Please enter your name" },
+    needGender:   { zh: "請選擇性別",             en: "Please choose a gender" },
+    needFee:      { zh: "請選擇功德費",           en: "Please choose an offering fee" },
+    badFee:       { zh: "請填寫隨喜金額（整數）", en: "Please enter a whole-number amount" },
+    needSession:  { zh: "請選擇場次",             en: "Please choose a session" },
+    needTime:     { zh: "請填寫希望的日期與時間", en: "Please enter your preferred date and time" },
+    sending:      { zh: "送出中…",                en: "Sending…" },
+    failed:       { zh: "送出失敗，請檢查網路後再試一次，或直接私訊社團 IG @ntustcdvc。",
+                    en: "Could not send. Please check your connection and try again, or message us on Instagram @ntustcdvc." },
+    ended:        { zh: "（已結束）",             en: " (ended)" }
+  };
+
+  var $ = function (id) { return document.getElementById(id); };
+  var form = $("signup");
+
+  function L(v) {
+    return (document.documentElement.getAttribute("data-lang") === "en") ? v.en : v.zh;
+  }
+
+  function picked(name) {
+    var el = form.querySelector('input[name="' + name + '"]:checked');
+    return el ? el.value : "";
+  }
+
+  /* ---------- 過了日期的場次自動停用 ---------- */
+  var today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  Array.prototype.forEach.call(form.querySelectorAll(".choice[data-date]"), function (label) {
+    if (new Date(label.getAttribute("data-date") + "T00:00:00") >= today) { return; }
+
+    var input = label.querySelector("input");
+    input.disabled = true;
+    label.classList.add("choice--off");
+
+    var main = label.querySelector(".choice__main");
+    var zh = main.querySelector('[data-l="zh"]');
+    var en = main.querySelector('[data-l="en"]');
+    if (zh) { zh.textContent += UI.ended.zh; }
+    if (en) { en.textContent += UI.ended.en; }
+  });
+
+  /* ---------- 選了隨喜／其他時間才出現補充欄位 ---------- */
+  function syncExtras() {
+    $("fee-extra").hidden = (picked("fee") !== "隨喜");
+    $("session-extra").hidden = (picked("session") !== OTHER_TIME);
+  }
+
+  form.addEventListener("change", syncExtras);
+
+  /* ---------- 驗證 ---------- */
+  function setBad(fieldId, msg) {
+    var f = $(fieldId);
+    f.classList.add("is-bad");
+    if (!f.querySelector(".err")) {
+      var e = document.createElement("span");
+      e.className = "err";
+      e.textContent = msg;
+      f.appendChild(e);
+    }
+  }
+
+  function clearBad() {
+    Array.prototype.forEach.call(form.querySelectorAll(".is-bad"), function (f) {
+      f.classList.remove("is-bad");
+      var e = f.querySelector(".err");
+      if (e) { e.parentNode.removeChild(e); }
+    });
+  }
+
+  /** 回傳實際金額；隨喜但沒填好時回 null */
+  function feeAmount() {
+    var option = picked("fee");
+    if (option !== "隨喜") { return option ? Number(option) : null; }
+
+    var raw = $("i-fee").value.trim();
+    if (!/^\d+$/.test(raw)) { return null; }
+    return Number(raw);
+  }
+
+  function validate(quiet) {
+    clearBad();
+    var ok = true;
+
+    if (!$("i-name").value.trim()) { setBad("f-name", L(UI.needName)); ok = false; }
+    if (!picked("gender")) { setBad("f-gender", L(UI.needGender)); ok = false; }
+
+    if (!picked("fee")) {
+      setBad("f-fee", L(UI.needFee)); ok = false;
+    } else if (feeAmount() === null) {
+      setBad("f-fee", L(UI.badFee)); ok = false;
+    }
+
+    if (!picked("session")) {
+      setBad("f-session", L(UI.needSession)); ok = false;
+    } else if (picked("session") === OTHER_TIME && !$("i-preferred").value.trim()) {
+      setBad("f-session", L(UI.needTime)); ok = false;
+    }
+
+    if (!ok && !quiet) {
+      var first = form.querySelector(".is-bad");
+      if (first) { first.scrollIntoView({ block: "center" }); }
+    }
+    return ok;
+  }
+
+  /* ---------- 送出 ---------- */
+  function status(msg, bad) {
+    var el = $("status");
+    el.hidden = false;
+    el.textContent = msg;
+    el.className = "status" + (bad ? " status--bad" : "");
+  }
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (!validate()) { return; }
+
+    var btn = $("send");
+    btn.disabled = true;
+    status(L(UI.sending), false);
+
+    // 一律送中文值，後台不必處理兩套選項文字
+    var payload = {
+      form: "wenchang",
+      website: $("i-hp").value,
+      submittedAt: new Date().toISOString(),
+      name: $("i-name").value.trim(),
+      gender: picked("gender"),
+      feeOption: picked("fee"),
+      fee: feeAmount(),
+      session: picked("session"),
+      preferred: picked("session") === OTHER_TIME ? $("i-preferred").value.trim() : ""
+    };
+
+    // text/plain 屬於 CORS 安全清單，可避開 Apps Script 不支援的 preflight
+    fetch(ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload)
+    })
+      .then(function (res) { return res.ok ? res.text() : Promise.reject(new Error(res.status)); })
+      .then(function (text) {
+        // Apps Script 就算拒絕也是回 200，成敗要看內容
+        var body = {};
+        try { body = JSON.parse(text); } catch (err) { /* 非 JSON 一律當失敗 */ }
+        if (!body.ok) { return Promise.reject(new Error(body.error || "bad response")); }
+
+        form.hidden = true;
+        $("done").hidden = false;
+        $("done").scrollIntoView({ block: "center" });
+      })
+      .catch(function () {
+        btn.disabled = false;
+        status(L(UI.failed), true);
+      });
+  });
+
+  // 換語言時，已顯示的錯誤訊息跟著換
+  document.addEventListener("cdvc:lang", function () {
+    if (form.querySelector(".is-bad")) { validate(true); }
+    if (!$("status").hidden && !$("send").disabled) { status(L(UI.failed), true); }
+  });
+})();
+</script>
+</body>
+</html>
