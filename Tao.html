@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>三段體驗・共 90 分鐘 | 台科大崇德志工社</title>
+<title>中華文化體驗 | 台科大崇德志工社</title>
 <meta name="description" content="三段體驗、共 90 分鐘：開釋道義、獻供與求道、三寶心法運用與解析。台科大崇德志工社線上報名。">
-<meta property="og:title" content="三段體驗・共 90 分鐘 | 台科大崇德志工社">
+<meta property="og:title" content="中華文化體驗 | 台科大崇德志工社">
 <meta property="og:description" content="三段體驗、共 90 分鐘：開釋道義、獻供與求道、三寶心法運用與解析。">
 <meta property="og:image" content="assets/tao.webp">
 <link rel="icon" href="assets/logo1.webp">
@@ -159,70 +159,75 @@
     padding:1.5rem 0;
   }
 
-  /* --p 由腳本依捲動位置設定（0 到 1）；沒有腳本時維持 1，內容照常顯示 */
-  .stage__card{
+  /* 捲動淡入：三段圖文、注意事項、報名表共用。
+     --p 由腳本依捲動位置設定（0 到 1）；沒有腳本時維持 1，內容照常顯示 */
+  .stage__card,
+  .reveal{
     --p:1;
-    width:100%;
     opacity:var(--p);
-    transform:translateY(calc((1 - var(--p)) * 2.5rem)) scale(calc(.94 + .06 * var(--p)));
+    transform:translateY(calc((1 - var(--p)) * 2.5rem)) scale(calc(.96 + .04 * var(--p)));
   }
 
-  .fx .stage__card{will-change:opacity,transform;}
+  .stage__card{width:100%;}
 
+  .fx .stage__card,
+  .fx .reveal{will-change:opacity,transform;}
+
+  /* 圖片依原比例、寬度占滿；手機上連左右留白都吃掉，貼齊螢幕邊緣 */
   .stage__fig{
-    position:relative;
-    margin:0;
-    aspect-ratio:1/1;
-    border-radius:1.5rem;
+    margin:0 -1.1rem;
     overflow:hidden;
     background:#2B1D18;
-    box-shadow:0 1rem 2rem rgba(51,35,20,.22);
   }
 
-  .stage__fig img{display:block;width:100%;height:100%;object-fit:cover;}
+  .stage__fig img{display:block;width:100%;height:auto;}
 
-  /* 直式長圖（Tao.png）不裁切：依原比例完整顯示，高度最多七成畫面，置中 */
-  .stage__fig--tall{
-    aspect-ratio:auto;
-    width:fit-content;
-    max-width:100%;
-    margin:0 auto;
-    background:transparent;
+  /* 螢幕寬到欄位不再貼邊時（平板、電腦，= .wrap 的 max-width），改回欄內滿版加圓角 */
+  @media (min-width:30rem){
+    .stage__fig{
+      margin:0;
+      border-radius:1.5rem;
+      box-shadow:0 1rem 2rem rgba(51,35,20,.22);
+    }
   }
 
-  .stage__fig--tall img{
-    width:auto;
-    max-width:100%;
-    height:auto;
-    max-height:70vh;
-    max-height:70svh;
+  /* 「30分鐘」放在文字左邊，做成金色圓章，呼應背景的金光 */
+  .stage__text{
+    display:flex;
+    align-items:flex-start;
+    gap:1rem;
+    padding:1.25rem .1rem 0;
   }
 
-  /* 圖上的標題只放「30分鐘」；放右上角，避開 Tao.png 左上的人物 */
   .stage__badge{
-    position:absolute;
-    top:1rem;
-    right:1rem;
-    padding:.25rem .8rem;
-    border:2px solid rgba(255,255,255,.9);
-    border-radius:.5rem;
-    background:rgba(184,69,46,.92);
-    color:#fff;
-    font-size:1.05rem;
-    font-weight:900;
-    letter-spacing:.08em;
-    transform:rotate(-2deg);
-    box-shadow:0 .25rem .6rem rgba(0,0,0,.25);
+    flex:none;
+    width:4.4rem;
+    height:4.4rem;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    border:2px solid rgba(255,250,232,.95);
+    background:radial-gradient(circle at 35% 30%, #FFF1C4 0%, #F1C766 45%, #C08A2E 100%);
+    color:#4A3008;
+    line-height:1;
+    box-shadow:
+      0 0 0 3px rgba(201,154,62,.45),
+      0 .4rem 1.1rem rgba(214,160,60,.5);
   }
 
-  .stage__text{padding:1.15rem .2rem 0;}
+  .stage__badge b{font-size:1.55rem;font-weight:900;letter-spacing:.02em;}
+  .stage__badge small{margin-top:.2rem;font-size:.72rem;font-weight:800;letter-spacing:.12em;}
 
-  .stage__name{margin:0 0 .45rem;font-size:1.45rem;font-weight:900;line-height:1.4;}
+  .stage__body{flex:1;min-width:0;}
 
   .stage__desc{margin:0;font-size:1rem;}
 
   .stage__items{list-style:none;margin:0;padding:0;display:grid;gap:.55rem;}
   .stage__items b{color:var(--vermilion);font-weight:900;}
+
+  .field__note{margin:-.2rem 0 .6rem;font-size:.84rem;color:var(--ink-soft);line-height:1.6;}
 
   /* ---------- 注意事項 ---------- */
   .notes{
@@ -375,8 +380,8 @@
       <span data-l="en">NTUST CHONG-DE VOLUNTEER CLUB</span>
     </p>
     <h1 class="hero__title">
-      <span data-l="zh">三段體驗・共 90 分鐘</span>
-      <span data-l="en">Three Parts, 90 Minutes</span>
+      <span data-l="zh">中華文化體驗</span>
+      <span data-l="en">Chinese Cultural Experience</span>
     </h1>
     <a class="hero__cue" href="#stage-1">
       <span data-l="zh">往下滑看活動內容</span>
@@ -388,15 +393,17 @@
   <!-- ===== 三段體驗：捲到哪一段，那一段的圖就淡入 ===== -->
   <section class="stage" id="stage-1">
     <div class="stage__card">
-      <figure class="stage__fig stage__fig--tall">
+      <figure class="stage__fig">
         <img src="assets/tao.webp" alt="老子、孔子與佛陀在雲端，一道金光沿著山谷延伸到跪拜的年輕人身前" width="941" height="1672">
-        <figcaption class="stage__badge"><span data-l="zh">30分鐘</span><span data-l="en">30 min</span></figcaption>
       </figure>
       <div class="stage__text">
-        <p class="stage__desc">
-          <span data-l="zh">深入淺出介紹孔子（儒）、老子（道）、釋迦牟尼佛（釋）等歷代聖賢傳承千年的內在智慧。</span>
-          <span data-l="en">An accessible introduction to the inner wisdom handed down for millennia by sages such as Confucius (Confucianism), Laozi (Taoism) and Shakyamuni Buddha (Buddhism).</span>
-        </p>
+        <span class="stage__badge"><b>30</b><small data-l="zh">分鐘</small><small data-l="en">min</small></span>
+        <div class="stage__body">
+          <p class="stage__desc">
+            <span data-l="zh">深入淺出介紹孔子（儒）、老子（道）、釋迦牟尼佛（釋）等歷代聖賢傳承千年的內在智慧。</span>
+            <span data-l="en">An accessible introduction to the inner wisdom handed down for millennia by sages such as Confucius (Confucianism), Laozi (Taoism) and Shakyamuni Buddha (Buddhism).</span>
+          </p>
+        </div>
       </div>
     </div>
   </section>
@@ -404,20 +411,22 @@
   <section class="stage" id="stage-2">
     <div class="stage__card">
       <figure class="stage__fig">
-        <img src="assets/wc_offering.webp" alt="擺著蠟燭、水果與香爐的供桌" width="1080" height="1080" loading="lazy">
-        <figcaption class="stage__badge"><span data-l="zh">30分鐘</span><span data-l="en">30 min</span></figcaption>
+        <img src="assets/offering.webp" alt="身穿灰色長袍的人在金色神像前的供桌獻供" width="941" height="941" loading="lazy">
       </figure>
       <div class="stage__text">
-        <ul class="stage__items">
-          <li>
-            <span data-l="zh"><b>獻供古禮：</b>體驗如祭孔大典般莊嚴肅穆的傳統獻供儀式。</span>
-            <span data-l="en"><b>Traditional offering rite:</b> take part in a solemn offering ceremony in the manner of the rites honouring Confucius.</span>
-          </li>
-          <li>
-            <span data-l="zh"><b>沉浸式定心：</b>透過沉靜的跪拜動作與專注體驗，開啟自身潛力的三樣寶藏。</span>
-            <span data-l="en"><b>Immersive stillness:</b> through quiet kneeling bows and focused attention, open the three treasures of your own potential.</span>
-          </li>
-        </ul>
+        <span class="stage__badge"><b>30</b><small data-l="zh">分鐘</small><small data-l="en">min</small></span>
+        <div class="stage__body">
+          <ul class="stage__items">
+            <li>
+              <span data-l="zh"><b>獻供古禮：</b>體驗如祭孔大典般莊嚴肅穆的傳統獻供儀式。</span>
+              <span data-l="en"><b>Traditional offering rite:</b> take part in a solemn offering ceremony in the manner of the rites honouring Confucius.</span>
+            </li>
+            <li>
+              <span data-l="zh"><b>沉浸式定心：</b>透過沉靜的跪拜動作與專注體驗，開啟自身潛力的三樣寶藏。</span>
+              <span data-l="en"><b>Immersive stillness:</b> through quiet kneeling bows and focused attention, open the three treasures of your own potential.</span>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </section>
@@ -425,21 +434,27 @@
   <section class="stage" id="stage-3">
     <div class="stage__card">
       <figure class="stage__fig">
-        <img src="assets/wc_treasures.webp" alt="三顆寶石在蓮花上方發光" width="1080" height="1080" loading="lazy">
-        <figcaption class="stage__badge"><span data-l="zh">30分鐘</span><span data-l="en">30 min</span></figcaption>
+        <img src="assets/three_treasures.webp" alt="學生在書桌前閉眼合掌，身後浮現老子、孔子與佛陀的金色光影" width="940" height="1672" loading="lazy">
       </figure>
       <div class="stage__text">
-        <p class="stage__desc">
-          <span data-l="zh">講解剛才求得的三樣智慧寶藏，並分享在日常生活、面對期中／末考壓力與挑戰時，如何實際運用它們來定心與提升專注力。</span>
-          <span data-l="en">We explain the three treasures of wisdom you have just received, and share how to put them to use in daily life and under the pressure of midterms and finals, to steady your mind and sharpen your focus.</span>
-        </p>
+        <span class="stage__badge"><b>30</b><small data-l="zh">分鐘</small><small data-l="en">min</small></span>
+        <div class="stage__body">
+          <p class="stage__desc">
+            <span data-l="zh">講解剛才求得的三樣智慧寶藏，並分享在日常生活、面對期中／末考壓力與挑戰時，如何實際運用它們來定心與提升專注力。</span>
+            <span data-l="en">We explain the three treasures of wisdom you have just received, and share how to put them to use in daily life and under the pressure of midterms and finals, to steady your mind and sharpen your focus.</span>
+          </p>
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="notes" aria-labelledby="notes-title">
+  <section class="notes reveal" aria-labelledby="notes-title">
     <h2 id="notes-title"><span data-l="zh">📌 注意事項</span><span data-l="en">📌 Good to Know</span></h2>
     <ul>
+      <li>
+        <span data-l="zh"><b>飲食：</b>體驗當天需吃素一日，透過天然蔬食幫身體做個淨化。</span>
+        <span data-l="en"><b>Food:</b> you will eat vegetarian for the whole day of the experience, letting natural plant-based food give your body a gentle cleanse.</span>
+      </li>
       <li>
         <span data-l="zh"><b>穿著建議：</b>現場儀式氣氛莊嚴，請穿著整潔便服（避免短褲、拖鞋）。</span>
         <span data-l="en"><b>What to wear:</b> the ceremony is formal in tone, so please wear neat casual clothing (no shorts or flip-flops).</span>
@@ -452,7 +467,7 @@
   </section>
 
   <!-- ===== 報名 ===== -->
-  <section class="form" aria-labelledby="form-title">
+  <section class="form reveal" aria-labelledby="form-title">
     <div class="form__head">
       <h2 id="form-title"><span data-l="zh">線上報名</span><span data-l="en">Register</span></h2>
     </div>
@@ -484,6 +499,10 @@
           <span data-l="zh">功德費 <span class="req">*</span></span>
           <span data-l="en">Offering fee <span class="req">*</span></span>
         </legend>
+        <p class="field__note">
+          <span data-l="zh">用於準備當天的水果供品，代表對自己開啟這趟智慧體驗的重視。</span>
+          <span data-l="en">Covers the fruit offerings for the day, and marks your commitment to beginning this journey of wisdom.</span>
+        </p>
         <div class="choices choices--3">
           <label class="choice"><input type="radio" name="fee" value="100">
             <span class="choice__main">$100</span></label>
@@ -576,7 +595,7 @@
 (function () {
   "use strict";
 
-  var cards = Array.prototype.slice.call(document.querySelectorAll(".stage__card"));
+  var cards = Array.prototype.slice.call(document.querySelectorAll(".stage__card, .reveal"));
   if (!cards.length) { return; }
   if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) { return; }
 
@@ -593,8 +612,11 @@
 
     cards.forEach(function (card) {
       var r = card.getBoundingClientRect();
+      // 量測點：一般區塊取中心；比畫面高很多的區塊（如報名表）取頂端往下 30% 視窗高，
+      // 否則它的上半部已經在畫面上了，中心卻還在很下面，整塊會一直是淡的
+      var anchor = r.top + Math.min(r.height / 2, vh * 0.3);
       // 在中央上方（已經看過）時 d 為負，下面的公式會得到 1，維持清楚
-      var d = (r.top + r.height / 2 - mid) / vh;
+      var d = (anchor - mid) / vh;
       var p = 1 - (d - FULL) / (GONE - FULL);
       p = Math.max(0, Math.min(1, p));
       card.style.setProperty("--p", p.toFixed(3));
