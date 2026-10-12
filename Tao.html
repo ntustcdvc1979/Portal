@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>文昌祈福 | 台科大崇德志工社</title>
+<title>三段體驗・共 90 分鐘 | 台科大崇德志工社</title>
 <meta name="description" content="三段體驗、共 90 分鐘：開釋道義、獻供與求道、三寶心法運用與解析。台科大崇德志工社線上報名。">
-<meta property="og:title" content="文昌祈福 | 台科大崇德志工社">
+<meta property="og:title" content="三段體驗・共 90 分鐘 | 台科大崇德志工社">
 <meta property="og:description" content="三段體驗、共 90 分鐘：開釋道義、獻供與求道、三寶心法運用與解析。">
-<meta property="og:image" content="assets/wc_offering.webp">
+<meta property="og:image" content="assets/tao.webp">
 <link rel="icon" href="assets/logo1.webp">
 <meta name="robots" content="noindex">
 <style>
@@ -37,21 +37,37 @@
 
   body{
     margin:0;
-    background:var(--cream);
+    background:#FBF4E2;
     color:var(--ink);
     font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
     line-height:1.8;
     -webkit-font-smoothing:antialiased;
   }
 
+  /* 背景取自 Tao.png 的氛圍：雲霧、金光、遠山。
+     底層是重度模糊的原圖，上面蓋一層霧白讓文字讀得清楚；固定不隨捲動，
+     用偽元素而不是 background-attachment:fixed，因為 iOS Safari 不支援後者。 */
   body::before{
     content:"";
     position:fixed;
     inset:0;
-    z-index:-1;
+    z-index:-2;
     background:
-      radial-gradient(52rem 32rem at 12% -8%, rgba(242,167,44,.20), transparent 62%),
-      radial-gradient(46rem 30rem at 92% 6%, rgba(169,206,59,.16), transparent 62%);
+      linear-gradient(180deg, rgba(255,251,240,.58) 0%, rgba(255,248,232,.70) 55%, rgba(255,250,238,.82) 100%),
+      url("assets/tao-bg.webp") center top / cover no-repeat;
+  }
+
+  /* 金色光暈與雲霧亮面 */
+  body::after{
+    content:"";
+    position:fixed;
+    inset:0;
+    z-index:-1;
+    pointer-events:none;
+    background:
+      radial-gradient(34rem 26rem at 50% -6%, rgba(255,214,120,.55), transparent 66%),
+      radial-gradient(26rem 22rem at 100% 100%, rgba(255,226,160,.32), transparent 70%),
+      radial-gradient(22rem 18rem at 0% 70%, rgba(255,255,255,.5), transparent 70%);
   }
 
   .wrap{
@@ -100,24 +116,27 @@
     color:var(--ink-soft);
   }
 
+  /* 主標題配合背景的金光，用暖褐字加柔光，底下一道金線 */
   .hero__title{
-    display:inline-block;
-    margin:.7rem 0 .5rem;
-    padding:.15rem 1rem .25rem;
-    border:3px solid var(--vermilion);
-    border-radius:.6rem;
-    color:var(--vermilion);
-    font-size:clamp(2.1rem,10vw,2.9rem);
+    margin:.9rem 0 .2rem;
+    color:#5A3E12;
+    font-size:clamp(1.7rem,7.5vw,2.2rem);
     font-weight:900;
-    letter-spacing:.3em;
-    text-indent:.3em;
-    line-height:1.4;
-    transform:rotate(-1.5deg);
+    letter-spacing:.12em;
+    line-height:1.45;
+    text-shadow:0 0 1.2rem rgba(255,230,160,.95);
   }
 
-  [data-lang="en"] .hero__title{letter-spacing:.03em;text-indent:0;font-size:clamp(1.8rem,8vw,2.4rem);}
+  .hero__title::after{
+    content:"";
+    display:block;
+    width:5.5rem;
+    height:2px;
+    margin:.75rem auto 0;
+    background:linear-gradient(90deg,transparent,#C99A3E,transparent);
+  }
 
-  .hero__sub{margin:.3rem 0 0;font-size:1.05rem;font-weight:800;}
+  [data-lang="en"] .hero__title{letter-spacing:.02em;}
 
   .hero__cue{
     margin-top:2.2rem;
@@ -162,11 +181,28 @@
 
   .stage__fig img{display:block;width:100%;height:100%;object-fit:cover;}
 
-  /* 圖上的標題只放「30分鐘」 */
+  /* 直式長圖（Tao.png）不裁切：依原比例完整顯示，高度最多七成畫面，置中 */
+  .stage__fig--tall{
+    aspect-ratio:auto;
+    width:fit-content;
+    max-width:100%;
+    margin:0 auto;
+    background:transparent;
+  }
+
+  .stage__fig--tall img{
+    width:auto;
+    max-width:100%;
+    height:auto;
+    max-height:70vh;
+    max-height:70svh;
+  }
+
+  /* 圖上的標題只放「30分鐘」；放右上角，避開 Tao.png 左上的人物 */
   .stage__badge{
     position:absolute;
     top:1rem;
-    left:1rem;
+    right:1rem;
     padding:.25rem .8rem;
     border:2px solid rgba(255,255,255,.9);
     border-radius:.5rem;
@@ -339,13 +375,9 @@
       <span data-l="en">NTUST CHONG-DE VOLUNTEER CLUB</span>
     </p>
     <h1 class="hero__title">
-      <span data-l="zh">文昌祈福</span>
-      <span data-l="en">Wen Chang Blessing</span>
-    </h1>
-    <p class="hero__sub">
       <span data-l="zh">三段體驗・共 90 分鐘</span>
-      <span data-l="en">Three parts・90 minutes</span>
-    </p>
+      <span data-l="en">Three Parts, 90 Minutes</span>
+    </h1>
     <a class="hero__cue" href="#stage-1">
       <span data-l="zh">往下滑看活動內容</span>
       <span data-l="en">Scroll to see what's involved</span>
@@ -356,12 +388,11 @@
   <!-- ===== 三段體驗：捲到哪一段，那一段的圖就淡入 ===== -->
   <section class="stage" id="stage-1">
     <div class="stage__card">
-      <figure class="stage__fig">
-        <img src="assets/wc_teaching.webp" alt="三道智慧之光照在展開的卷軸上" width="1080" height="1080">
+      <figure class="stage__fig stage__fig--tall">
+        <img src="assets/tao.webp" alt="老子、孔子與佛陀在雲端，一道金光沿著山谷延伸到跪拜的年輕人身前" width="941" height="1672">
         <figcaption class="stage__badge"><span data-l="zh">30分鐘</span><span data-l="en">30 min</span></figcaption>
       </figure>
       <div class="stage__text">
-        <h2 class="stage__name"><span data-l="zh">開釋道義</span><span data-l="en">Teachings of the Sages</span></h2>
         <p class="stage__desc">
           <span data-l="zh">深入淺出介紹孔子（儒）、老子（道）、釋迦牟尼佛（釋）等歷代聖賢傳承千年的內在智慧。</span>
           <span data-l="en">An accessible introduction to the inner wisdom handed down for millennia by sages such as Confucius (Confucianism), Laozi (Taoism) and Shakyamuni Buddha (Buddhism).</span>
@@ -377,7 +408,6 @@
         <figcaption class="stage__badge"><span data-l="zh">30分鐘</span><span data-l="en">30 min</span></figcaption>
       </figure>
       <div class="stage__text">
-        <h2 class="stage__name"><span data-l="zh">獻供與求道</span><span data-l="en">Offering &amp; Receiving the Tao</span></h2>
         <ul class="stage__items">
           <li>
             <span data-l="zh"><b>獻供古禮：</b>體驗如祭孔大典般莊嚴肅穆的傳統獻供儀式。</span>
@@ -399,7 +429,6 @@
         <figcaption class="stage__badge"><span data-l="zh">30分鐘</span><span data-l="en">30 min</span></figcaption>
       </figure>
       <div class="stage__text">
-        <h2 class="stage__name"><span data-l="zh">三寶心法運用與解析</span><span data-l="en">Applying the Three Treasures</span></h2>
         <p class="stage__desc">
           <span data-l="zh">講解剛才求得的三樣智慧寶藏，並分享在日常生活、面對期中／末考壓力與挑戰時，如何實際運用它們來定心與提升專注力。</span>
           <span data-l="en">We explain the three treasures of wisdom you have just received, and share how to put them to use in daily life and under the pressure of midterms and finals, to steady your mind and sharpen your focus.</span>
@@ -540,7 +569,9 @@
 <script src="assets/lang.js"></script>
 <script src="assets/config.js"></script>
 
-<!-- 捲動淡入：每段依「離畫面中央多遠」決定透明度，越靠近越清楚，離太遠就淡掉 -->
+<!-- 捲動淡入：只看「卡片還在畫面中央下方多遠」。
+     往下滑時，下一段由淡轉清；已經滑過、跑到中央上方的段落一律保持清楚，不會再淡掉。
+     往上滑時，剛離開的那段會落回中央下方，離遠了就淡出。 -->
 <script>
 (function () {
   "use strict";
@@ -551,8 +582,8 @@
 
   document.documentElement.classList.add("fx");
 
-  var FULL = 0.12;   // 卡片中心離畫面中央 12% 視窗高以內：完全清楚
-  var GONE = 0.55;   // 超過 55% 視窗高：完全淡出
+  var FULL = 0.12;   // 卡片中心在畫面中央下方 12% 視窗高以內：完全清楚
+  var GONE = 0.55;   // 低於中央超過 55% 視窗高：完全淡出
   var queued = false;
 
   function update() {
@@ -562,7 +593,8 @@
 
     cards.forEach(function (card) {
       var r = card.getBoundingClientRect();
-      var d = Math.abs(r.top + r.height / 2 - mid) / vh;
+      // 在中央上方（已經看過）時 d 為負，下面的公式會得到 1，維持清楚
+      var d = (r.top + r.height / 2 - mid) / vh;
       var p = 1 - (d - FULL) / (GONE - FULL);
       p = Math.max(0, Math.min(1, p));
       card.style.setProperty("--p", p.toFixed(3));
