@@ -1,0 +1,59 @@
+# 部署網站到 GitHub Pages。
+#
+# Apps Script 收件網址不放在 repo 裡，而是存在 repository secret APPS_SCRIPT_URL，
+# 部署時才寫進 assets/config.js。要讓這個流程生效需要先做兩件事（只做一次）：
+#   1. Settings → Secrets and variables → Actions → New repository secret
+#      Name: APPS_SCRIPT_URL   Secret: Apps Script 的 /exec 網址
+#   2. Settings → Pages → Build and deployment → Source 改成「GitHub Actions」
+
+name: Deploy site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Write runtime config from secret
+        env:
+          APPS_SCRIPT_URL: ${{ secrets.APPS_SCRIPT_URL }}
+        run: |
+          # 格式不對就直接失敗，免得上線一個收不到資料的表單
+          if ! printf '%s' "$APPS_SCRIPT_URL" | grep -Eq '^https://script\.google\.com/macros/s/[A-Za-z0-9_-]+/exec$'; then
+            echo "::error::APPS_SCRIPT_URL secret is missing or not an Apps Script /exec URL"
+            exit 1
+          fi
+          printf 'window.CDVC_CONFIG = { endpoint: "%s" };\n' "$APPS_SCRIPT_URL" > assets/config.js
+
+      - name: Collect site files
+        run: |
+          mkdir _site
+          cp *.html _site/
+          cp -r assets _site/
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -800,14 +800,16 @@
 </main>
 
 <script src="assets/lang.js"></script>
+<script src="assets/config.js"></script>
 <script>
 (function () {
   "use strict";
 
   /* ============================================================
-     設定：貼上 Google Apps Script 部署後的 /exec 網址
+     收件網址來自 assets/config.js（不進 git），範本見 config.example.js。
+     沒有設定時表單會顯示「尚未設定收件網址」，不會亂送。
      ============================================================ */
-  var ENDPOINT = "https://script.google.com/macros/s/AKfycbwA-V_ZG7TNwjokMSGqVqrtRvhE5lIUUfZl9fzwsY0wOFvLQBoYkjcFoC0_IIf5Ogqn/exec";
+  var ENDPOINT = (window.CDVC_CONFIG && window.CDVC_CONFIG.endpoint) || "";
 
   /* ---------- 人格類型 ----------
      文字都是 {zh, en} 兩版，L() 依目前語言取用。 */

@@ -2,19 +2,18 @@
 <html lang="zh-Hant" data-lang="zh">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>文昌祈福 | 台科大崇德志工社</title>
-<meta name="description" content="期中考前，讓心先靜下來。台科大崇德志工社文昌祈福，含文昌祈福卡、吃素一天與古禮體驗。">
+<meta name="description" content="三段體驗、共 90 分鐘：開釋道義、獻供與求道、三寶心法運用與解析。台科大崇德志工社線上報名。">
 <meta property="og:title" content="文昌祈福 | 台科大崇德志工社">
-<meta property="og:description" content="期中考前，讓心先靜下來。文昌祈福卡、吃素一天與古禮體驗，線上報名。">
-<meta property="og:image" content="assets/logo1.webp">
+<meta property="og:description" content="三段體驗、共 90 分鐘：開釋道義、獻供與求道、三寶心法運用與解析。">
+<meta property="og:image" content="assets/wc_offering.webp">
 <link rel="icon" href="assets/logo1.webp">
 <meta name="robots" content="noindex">
 <style>
   :root{
     --orange:#F2A72C;
     --orange-dark:#D98C12;
-    --green:#A9CE3B;
     --green-dark:#82A821;
     --ink:#333333;
     --ink-soft:#6b6b66;
@@ -34,6 +33,8 @@
 
   [hidden]{display:none!important;}
 
+  html{scroll-behavior:smooth;}
+
   body{
     margin:0;
     background:var(--cream);
@@ -50,22 +51,17 @@
     z-index:-1;
     background:
       radial-gradient(52rem 32rem at 12% -8%, rgba(242,167,44,.20), transparent 62%),
-      radial-gradient(46rem 30rem at 92% 6%, rgba(169,206,59,.18), transparent 62%);
+      radial-gradient(46rem 30rem at 92% 6%, rgba(169,206,59,.16), transparent 62%);
   }
 
   .wrap{
     width:100%;
-    max-width:44rem;
+    max-width:30rem;              /* 以直式手機為主，大螢幕也維持窄欄 */
     margin:0 auto;
-    padding:2.5rem 1.25rem 4rem;
+    padding:1.25rem 1.1rem 4rem;
   }
 
-  .langbar{
-    display:flex;
-    justify-content:flex-end;
-    gap:.3rem;
-    margin-bottom:1.25rem;
-  }
+  .langbar{display:flex;justify-content:flex-end;gap:.3rem;}
 
   .langbtn{
     padding:.3rem .9rem;
@@ -83,33 +79,35 @@
   .langbtn:focus-visible{outline:3px solid var(--ink);outline-offset:2px;}
   .langbtn[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff;}
 
-  /* ---------- 頁首 ---------- */
-  .hero{text-align:center;margin-bottom:2.5rem;}
-
-  .hero__logo{
-    width:min(8rem,34vw);
-    height:auto;
-    display:block;
-    margin:0 auto .5rem;
+  /* ---------- 頁首：佔大半個手機畫面，下面接三段 ---------- */
+  .hero{
+    min-height:78vh;
+    min-height:78svh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
   }
+
+  .hero__logo{width:6.5rem;height:auto;display:block;margin:0 auto .4rem;}
 
   .hero__eyebrow{
     margin:0;
-    font-size:.85rem;
+    font-size:.82rem;
     font-weight:800;
     letter-spacing:.14em;
     color:var(--ink-soft);
   }
 
-  /* 文昌兩字用朱紅印章感，其餘維持社團配色 */
   .hero__title{
     display:inline-block;
-    margin:.6rem 0 .4rem;
-    padding:.15rem 1.1rem .25rem;
+    margin:.7rem 0 .5rem;
+    padding:.15rem 1rem .25rem;
     border:3px solid var(--vermilion);
     border-radius:.6rem;
     color:var(--vermilion);
-    font-size:clamp(2.1rem,7vw,3rem);
+    font-size:clamp(2.1rem,10vw,2.9rem);
     font-weight:900;
     letter-spacing:.3em;
     text-indent:.3em;
@@ -117,90 +115,91 @@
     transform:rotate(-1.5deg);
   }
 
-  [data-lang="en"] .hero__title{letter-spacing:.04em;text-indent:0;}
+  [data-lang="en"] .hero__title{letter-spacing:.03em;text-indent:0;font-size:clamp(1.8rem,8vw,2.4rem);}
 
-  .hero__sub{
-    margin:.4rem auto 0;
-    max-width:30rem;
-    font-size:1.08rem;
-    font-weight:800;
+  .hero__sub{margin:.3rem 0 0;font-size:1.05rem;font-weight:800;}
+
+  .hero__cue{
+    margin-top:2.2rem;
+    font-size:.85rem;
+    font-weight:700;
+    color:var(--ink-soft);
+    text-decoration:none;
   }
 
-  /* ---------- 內文區塊 ---------- */
-  .block{
-    background:var(--card);
-    border:2px solid var(--line);
-    border-radius:1.5rem;
-    padding:1.5rem 1.6rem;
-    margin-bottom:1.25rem;
-    box-shadow:0 .35rem 0 rgba(51,51,51,.06);
-  }
+  .hero__cue span[aria-hidden]{display:block;font-size:1.3rem;line-height:1;animation:nudge 1.8s ease-in-out infinite;}
 
-  .block h2{
+  @keyframes nudge{0%,100%{transform:translateY(0);}50%{transform:translateY(.35rem);}}
+
+  /* ---------- 三段體驗：每段約一個手機畫面高 ---------- */
+  .stage{
+    min-height:100vh;
+    min-height:100svh;
     display:flex;
     align-items:center;
-    gap:.6rem;
-    margin:0 0 .75rem;
-    font-size:1.2rem;
+    padding:1.5rem 0;
+  }
+
+  /* --p 由腳本依捲動位置設定（0 到 1）；沒有腳本時維持 1，內容照常顯示 */
+  .stage__card{
+    --p:1;
+    width:100%;
+    opacity:var(--p);
+    transform:translateY(calc((1 - var(--p)) * 2.5rem)) scale(calc(.94 + .06 * var(--p)));
+  }
+
+  .fx .stage__card{will-change:opacity,transform;}
+
+  .stage__fig{
+    position:relative;
+    margin:0;
+    aspect-ratio:1/1;
+    border-radius:1.5rem;
+    overflow:hidden;
+    background:#2B1D18;
+    box-shadow:0 1rem 2rem rgba(51,35,20,.22);
+  }
+
+  .stage__fig img{display:block;width:100%;height:100%;object-fit:cover;}
+
+  /* 圖上的標題只放「30分鐘」 */
+  .stage__badge{
+    position:absolute;
+    top:1rem;
+    left:1rem;
+    padding:.25rem .8rem;
+    border:2px solid rgba(255,255,255,.9);
+    border-radius:.5rem;
+    background:rgba(184,69,46,.92);
+    color:#fff;
+    font-size:1.05rem;
     font-weight:900;
+    letter-spacing:.08em;
+    transform:rotate(-2deg);
+    box-shadow:0 .25rem .6rem rgba(0,0,0,.25);
   }
 
-  .block h2::before{
-    content:"";
-    flex:none;
-    width:.75rem;
-    height:.75rem;
-    border-radius:50%;
-    background:var(--orange);
-    box-shadow:0 0 0 .25rem rgba(242,167,44,.22);
-  }
+  .stage__text{padding:1.15rem .2rem 0;}
 
-  .block p{margin:0 0 .75rem;}
-  .block p:last-child{margin-bottom:0;}
+  .stage__name{margin:0 0 .45rem;font-size:1.45rem;font-weight:900;line-height:1.4;}
 
-  /* ---------- 活動當天 ---------- */
-  .steps{
-    list-style:none;
-    margin:1rem 0 0;
-    padding:0;
-    display:grid;
-    gap:.85rem;
-  }
+  .stage__desc{margin:0;font-size:1rem;}
 
-  .step{
-    display:flex;
-    gap:.9rem;
-    padding:1rem 1.1rem;
-    border-radius:1rem;
-    background:#FFFAF0;
-    border:2px solid rgba(242,167,44,.28);
-  }
+  .stage__items{list-style:none;margin:0;padding:0;display:grid;gap:.55rem;}
+  .stage__items b{color:var(--vermilion);font-weight:900;}
 
-  .step__icon{
-    flex:none;
-    width:2.6rem;
-    height:2.6rem;
-    display:grid;
-    place-items:center;
-    border-radius:.8rem;
-    background:#fff;
-    font-size:1.4rem;
-    box-shadow:0 .15rem .4rem rgba(51,51,51,.08);
-  }
-
-  .step h3{margin:0 0 .2rem;font-size:1.02rem;font-weight:900;}
-  .step p{margin:0;font-size:.95rem;color:var(--ink-soft);}
-
-  /* ---------- 推薦 ---------- */
-  .callout{
-    margin:1.75rem 0 2.25rem;
-    padding:1.25rem 1.4rem;
+  /* ---------- 注意事項 ---------- */
+  .notes{
+    margin:1rem 0 2rem;
+    padding:1.25rem 1.3rem;
+    background:var(--card);
+    border:2px solid var(--line);
     border-radius:1.25rem;
-    background:linear-gradient(135deg,rgba(242,167,44,.16),rgba(169,206,59,.18));
-    border:2px solid rgba(169,206,59,.5);
-    font-weight:700;
-    text-align:center;
   }
+
+  .notes h2{margin:0 0 .6rem;font-size:1.15rem;font-weight:900;}
+  .notes ul{list-style:none;margin:0;padding:0;display:grid;gap:.6rem;}
+  .notes b{font-weight:900;}
 
   /* ---------- 報名表 ---------- */
   .form{
@@ -212,50 +211,45 @@
   }
 
   .form__head{
-    padding:1.15rem 1.4rem;
+    padding:1.1rem 1.25rem;
     background:linear-gradient(135deg,var(--orange),var(--orange-dark));
     color:#fff;
     text-align:center;
   }
 
   .form__head h2{margin:0;font-size:1.35rem;font-weight:900;letter-spacing:.06em;}
-  .form__body{padding:1.5rem 1.4rem 1.4rem;}
+  .form__body{padding:1.4rem 1.2rem 1.3rem;}
 
   .field{margin-bottom:1.3rem;}
   fieldset.field{border:none;padding:0;margin:0 0 1.3rem;min-width:0;}
 
   .label,
-  .field legend{
-    display:block;
-    padding:0;
-    margin-bottom:.45rem;
-    font-size:.95rem;
-    font-weight:900;
-  }
+  .field legend{display:block;padding:0;margin-bottom:.45rem;font-size:.95rem;font-weight:900;}
 
   .req{color:var(--err);}
 
   .input{
     width:100%;
-    padding:.7rem .9rem;
+    padding:.75rem .9rem;
     border:2px solid var(--line);
     border-radius:.85rem;
     background:#FFFDF7;
     font-family:inherit;
-    font-size:1rem;
+    font-size:1rem;              /* 16px 以上，iOS 點輸入框才不會自動放大 */
     color:inherit;
   }
 
   .input:focus{outline:none;border-color:var(--orange);background:#fff;}
 
   .choices{display:grid;gap:.5rem;}
-  .choices--row{grid-template-columns:repeat(auto-fit,minmax(7rem,1fr));}
+  .choices--2{grid-template-columns:1fr 1fr;}
+  .choices--3{grid-template-columns:repeat(3,1fr);}
 
   .choice{
     display:flex;
     align-items:flex-start;
-    gap:.6rem;
-    padding:.65rem .85rem;
+    gap:.55rem;
+    padding:.7rem .8rem;
     border:2px solid var(--line);
     border-radius:.9rem;
     cursor:pointer;
@@ -264,14 +258,7 @@
 
   .choice:hover{border-color:var(--orange);}
 
-  .choice input{
-    flex:none;
-    width:1.1rem;
-    height:1.1rem;
-    margin-top:.3rem;
-    accent-color:var(--orange-dark);
-  }
-
+  .choice input{flex:none;width:1.1rem;height:1.1rem;margin-top:.3rem;accent-color:var(--orange-dark);}
   .choice:has(input:checked){border-color:var(--orange-dark);background:#FFF6E2;}
 
   .choice--off{cursor:not-allowed;opacity:.55;}
@@ -282,13 +269,7 @@
 
   .extra{margin-top:.6rem;}
 
-  .err{
-    display:block;
-    margin-top:.35rem;
-    font-size:.84rem;
-    font-weight:800;
-    color:var(--err);
-  }
+  .err{display:block;margin-top:.35rem;font-size:.84rem;font-weight:800;color:var(--err);}
 
   .field.is-bad .input,
   .field.is-bad .choice{border-color:var(--err);}
@@ -329,21 +310,16 @@
   .status{margin:.9rem 0 0;font-weight:800;text-align:center;}
   .status--bad{color:var(--err);}
 
-  .done{padding:2rem 1.4rem;text-align:center;}
+  .done{padding:2rem 1.3rem;text-align:center;}
   .done__icon{font-size:3rem;display:block;line-height:1.2;}
-  .done h2{margin:.4rem 0 .4rem;font-size:1.45rem;font-weight:900;}
+  .done h2{margin:.4rem 0;font-size:1.45rem;font-weight:900;}
   .done p{margin:0;color:var(--ink-soft);}
 
-  .foot{
-    margin-top:2.5rem;
-    text-align:center;
-    font-size:.82rem;
-    color:var(--ink-soft);
-  }
-
+  .foot{margin-top:2.5rem;text-align:center;font-size:.82rem;color:var(--ink-soft);}
   .foot a{color:var(--green-dark);font-weight:700;}
 
   @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto;}
     *{transition:none!important;animation:none!important;}
   }
 </style>
@@ -367,100 +343,89 @@
       <span data-l="en">Wen Chang Blessing</span>
     </h1>
     <p class="hero__sub">
-      <span data-l="zh">期中考前，讓心先靜下來</span>
-      <span data-l="en">A Mindfulness &amp; Cultural Experience</span>
+      <span data-l="zh">三段體驗・共 90 分鐘</span>
+      <span data-l="en">Three parts・90 minutes</span>
     </p>
+    <a class="hero__cue" href="#stage-1">
+      <span data-l="zh">往下滑看活動內容</span>
+      <span data-l="en">Scroll to see what's involved</span>
+      <span aria-hidden="true">↓</span>
+    </a>
   </header>
 
-  <!-- 中文版對大一、英文版對國際學生，各說各的開場 -->
-  <section class="block">
-    <h2>
-      <span data-l="zh">給剛進大學的你</span>
-      <span data-l="en">Welcome to Taiwan</span>
-    </h2>
-    <div data-l="zh">
-      <p>大家能考上技職龍頭，代表大家的實力絕對都是頂尖的！</p>
-      <p>不過大家剛進大學，再過不久就要面臨第一次的期中考、還有寫不完的作業跟報告。大學的考試跟高中職不一樣，很多時候不是你死背就好，而是考驗當下的邏輯思考跟專注力。</p>
-    </div>
-    <div data-l="en">
-      <p>For our international exchange students, welcome to Taiwan! Adapting to a new country and academic life can sometimes be challenging and overwhelming.</p>
-      <p>In traditional Chinese culture, there is a profound concept known as 'Wen Chang' (文昌), which symbolizes wisdom, focus, and inner clarity. We warmly invite you to join us for a unique Mindfulness &amp; Cultural Experience, where you can immerse yourself in ancient traditions, relax your mind, and find inner peace amid your busy student life.</p>
-    </div>
-  </section>
-
-  <section class="block">
-    <h2>
-      <span data-l="zh">什麼是文昌？</span>
-      <span data-l="en">What Is Wen Chang?</span>
-    </h2>
-    <div data-l="zh">
-      <p>相信大家都有經驗，大腦卡關、心很浮躁的時候，明明坐在書桌前三小時，公式怎麼算都算不通。</p>
-      <p>在我們中華傳統文化裡，有一個專門掌管「學業」的正能量，叫做「文昌」。大家常聽到的「文昌祈福」，最核心的目的不是求運氣，而是幫我們的心平靜下來，開啟專注潛能。</p>
-      <p>我們社團接下來會舉辦文昌祈福，打開我們的潛能，用更有效的方式提升專注力，上台報告前也能減少緊張感。</p>
-    </div>
-    <div data-l="en">
-      <p>You have probably been there: your mind feels stuck and restless, you have been at your desk for three hours, and the problem still will not work out.</p>
-      <p>Traditional Chinese culture has a positive force devoted to learning, called Wen Chang. A Wen Chang blessing is not really about asking for luck. At its heart, it is about calming the mind and unlocking your ability to focus.</p>
-      <p>Our club is holding a Wen Chang blessing to help you tap into that potential, build focus more effectively, and feel less nervous before presentations.</p>
+  <!-- ===== 三段體驗：捲到哪一段，那一段的圖就淡入 ===== -->
+  <section class="stage" id="stage-1">
+    <div class="stage__card">
+      <figure class="stage__fig">
+        <img src="assets/wc_teaching.webp" alt="三道智慧之光照在展開的卷軸上" width="1080" height="1080">
+        <figcaption class="stage__badge"><span data-l="zh">30分鐘</span><span data-l="en">30 min</span></figcaption>
+      </figure>
+      <div class="stage__text">
+        <h2 class="stage__name"><span data-l="zh">開釋道義</span><span data-l="en">Teachings of the Sages</span></h2>
+        <p class="stage__desc">
+          <span data-l="zh">深入淺出介紹孔子（儒）、老子（道）、釋迦牟尼佛（釋）等歷代聖賢傳承千年的內在智慧。</span>
+          <span data-l="en">An accessible introduction to the inner wisdom handed down for millennia by sages such as Confucius (Confucianism), Laozi (Taoism) and Shakyamuni Buddha (Buddhism).</span>
+        </p>
+      </div>
     </div>
   </section>
 
-  <section class="block">
-    <h2>
-      <span data-l="zh">活動當天</span>
-      <span data-l="en">On the Day</span>
-    </h2>
-    <p>
-      <span data-l="zh">活動當天除了會讓大家寫文昌祈福卡之外，我們還會有以下文化體驗：</span>
-      <span data-l="en">Besides writing your own Wen Chang blessing card, you will take part in:</span>
-    </p>
-
-    <ol class="steps">
-      <li class="step">
-        <span class="step__icon" aria-hidden="true">🥬</span>
-        <div>
-          <h3><span data-l="zh">吃素一天</span><span data-l="en">A Day of Vegetarian Eating</span></h3>
-          <p>
-            <span data-l="zh">當天體驗齋戒吃素，幫身體做個淨化，晚上就用最乾淨、輕鬆的狀態來感受當下的平靜。</span>
-            <span data-l="en">Eat vegetarian for the day as a light cleanse, so that by evening you can take in the calm feeling clear and relaxed.</span>
-          </p>
-        </div>
-      </li>
-      <li class="step">
-        <span class="step__icon" aria-hidden="true">🙏</span>
-        <div>
-          <h3><span data-l="zh">古禮體驗</span><span data-l="en">Traditional Ceremony</span></h3>
-          <p>
-            <span data-l="zh">現場會帶領大家體驗傳承了兩千多年、如同祭孔大典般莊嚴的古禮。大家平常生活和讀書步調快、心中很雜，透過古禮的沉靜動作，能讓自己慢下來，體驗一種古代讀書人極致的專注與謙卑。</span>
-            <span data-l="en">We will guide you through a ceremony handed down for more than two thousand years, as solemn as the rites honouring Confucius. Daily life and study move fast and the mind gets crowded; the ceremony's quiet, deliberate movements help you slow down and feel the deep focus and humility of scholars of old.</span>
-          </p>
-        </div>
-      </li>
-      <li class="step">
-        <span class="step__icon" aria-hidden="true">📜</span>
-        <div>
-          <h3><span data-l="zh">功德費</span><span data-l="en">Offering Fee</span></h3>
-          <p>
-            <span data-l="zh">用來登記「智慧名冊」跟準備當天的水果供品，一生只要一次，代表對自己開啟這趟智慧體驗的重視。</span>
-            <span data-l="en">Covers your entry in the "Wisdom Register" and the fruit offerings for the day. It is needed only once in a lifetime, and marks your commitment to beginning this journey.</span>
-          </p>
-        </div>
-      </li>
-    </ol>
+  <section class="stage" id="stage-2">
+    <div class="stage__card">
+      <figure class="stage__fig">
+        <img src="assets/wc_offering.webp" alt="擺著蠟燭、水果與香爐的供桌" width="1080" height="1080" loading="lazy">
+        <figcaption class="stage__badge"><span data-l="zh">30分鐘</span><span data-l="en">30 min</span></figcaption>
+      </figure>
+      <div class="stage__text">
+        <h2 class="stage__name"><span data-l="zh">獻供與求道</span><span data-l="en">Offering &amp; Receiving the Tao</span></h2>
+        <ul class="stage__items">
+          <li>
+            <span data-l="zh"><b>獻供古禮：</b>體驗如祭孔大典般莊嚴肅穆的傳統獻供儀式。</span>
+            <span data-l="en"><b>Traditional offering rite:</b> take part in a solemn offering ceremony in the manner of the rites honouring Confucius.</span>
+          </li>
+          <li>
+            <span data-l="zh"><b>沉浸式定心：</b>透過沉靜的跪拜動作與專注體驗，開啟自身潛力的三樣寶藏。</span>
+            <span data-l="en"><b>Immersive stillness:</b> through quiet kneeling bows and focused attention, open the three treasures of your own potential.</span>
+          </li>
+        </ul>
+      </div>
+    </div>
   </section>
 
-  <p class="callout">
-    <span data-l="zh">大家要在大學面對期中考，這場非常有質感的文化體驗，能幫大家的心定下來、加持學業，真的蠻建議大家可以去體驗看看！</span>
-    <span data-l="en">With midterms coming up, this thoughtful cultural experience can help settle your mind and support your studies. We really recommend giving it a try!</span>
-  </p>
+  <section class="stage" id="stage-3">
+    <div class="stage__card">
+      <figure class="stage__fig">
+        <img src="assets/wc_treasures.webp" alt="三顆寶石在蓮花上方發光" width="1080" height="1080" loading="lazy">
+        <figcaption class="stage__badge"><span data-l="zh">30分鐘</span><span data-l="en">30 min</span></figcaption>
+      </figure>
+      <div class="stage__text">
+        <h2 class="stage__name"><span data-l="zh">三寶心法運用與解析</span><span data-l="en">Applying the Three Treasures</span></h2>
+        <p class="stage__desc">
+          <span data-l="zh">講解剛才求得的三樣智慧寶藏，並分享在日常生活、面對期中／末考壓力與挑戰時，如何實際運用它們來定心與提升專注力。</span>
+          <span data-l="en">We explain the three treasures of wisdom you have just received, and share how to put them to use in daily life and under the pressure of midterms and finals, to steady your mind and sharpen your focus.</span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="notes" aria-labelledby="notes-title">
+    <h2 id="notes-title"><span data-l="zh">📌 注意事項</span><span data-l="en">📌 Good to Know</span></h2>
+    <ul>
+      <li>
+        <span data-l="zh"><b>穿著建議：</b>現場儀式氣氛莊嚴，請穿著整潔便服（避免短褲、拖鞋）。</span>
+        <span data-l="en"><b>What to wear:</b> the ceremony is formal in tone, so please wear neat casual clothing (no shorts or flip-flops).</span>
+      </li>
+      <li>
+        <span data-l="zh"><b>信仰尊重：</b>本活動為中華傳統文化與心境祈福體驗，尊重個人原有宗教信仰，請安心參加。</span>
+        <span data-l="en"><b>Respect for your beliefs:</b> this is an experience of traditional Chinese culture and a blessing for peace of mind. Your own religious beliefs are respected, so please feel at ease joining.</span>
+      </li>
+    </ul>
+  </section>
 
   <!-- ===== 報名 ===== -->
   <section class="form" aria-labelledby="form-title">
     <div class="form__head">
-      <h2 id="form-title">
-        <span data-l="zh">線上報名</span>
-        <span data-l="en">Register</span>
-      </h2>
+      <h2 id="form-title"><span data-l="zh">線上報名</span><span data-l="en">Register</span></h2>
     </div>
 
     <form class="form__body" id="signup" novalidate>
@@ -475,15 +440,13 @@
       <fieldset class="field" id="f-gender">
         <legend>
           <span data-l="zh">性別 <span class="req">*</span></span>
-          <span data-l="en">Gender <span class="req">*</span></span>
+          <span data-l="en">Sex <span class="req">*</span></span>
         </legend>
-        <div class="choices choices--row">
-          <label class="choice"><input type="radio" name="gender" value="男">
-            <span class="choice__main"><span data-l="zh">男</span><span data-l="en">Male</span></span></label>
-          <label class="choice"><input type="radio" name="gender" value="女">
-            <span class="choice__main"><span data-l="zh">女</span><span data-l="en">Female</span></span></label>
-          <label class="choice"><input type="radio" name="gender" value="其他">
-            <span class="choice__main"><span data-l="zh">其他</span><span data-l="en">Other</span></span></label>
+        <div class="choices choices--2">
+          <label class="choice"><input type="radio" name="gender" value="生理男">
+            <span class="choice__main"><span data-l="zh">生理男</span><span data-l="en">Male</span></span></label>
+          <label class="choice"><input type="radio" name="gender" value="生理女">
+            <span class="choice__main"><span data-l="zh">生理女</span><span data-l="en">Female</span></span></label>
         </div>
       </fieldset>
 
@@ -492,13 +455,13 @@
           <span data-l="zh">功德費 <span class="req">*</span></span>
           <span data-l="en">Offering fee <span class="req">*</span></span>
         </legend>
-        <div class="choices choices--row">
+        <div class="choices choices--3">
           <label class="choice"><input type="radio" name="fee" value="100">
-            <span class="choice__main">NT$100</span></label>
+            <span class="choice__main">$100</span></label>
           <label class="choice"><input type="radio" name="fee" value="200">
-            <span class="choice__main">NT$200</span></label>
+            <span class="choice__main">$200</span></label>
           <label class="choice"><input type="radio" name="fee" value="隨喜">
-            <span class="choice__main"><span data-l="zh">隨喜</span><span data-l="en">As you wish</span></span></label>
+            <span class="choice__main"><span data-l="zh">隨喜</span><span data-l="en">Any</span></span></label>
         </div>
         <div class="extra" id="fee-extra" hidden>
           <label class="label" for="i-fee">
@@ -527,9 +490,7 @@
               <span class="choice__sub"><span data-l="zh">基隆星河繪</span><span data-l="en">Xinghehui, Keelung (基隆星河繪)</span></span>
             </span></label>
           <label class="choice"><input type="radio" name="session" value="預約其他時間">
-            <span>
-              <span class="choice__main"><span data-l="zh">預約其他時間</span><span data-l="en">Request another time</span></span>
-            </span></label>
+            <span class="choice__main"><span data-l="zh">預約其他時間</span><span data-l="en">Request another time</span></span></label>
         </div>
         <div class="extra" id="session-extra" hidden>
           <label class="label" for="i-preferred">
@@ -562,8 +523,8 @@
       <span class="done__icon" aria-hidden="true">🙏</span>
       <h2><span data-l="zh">報名完成！</span><span data-l="en">You're Registered!</span></h2>
       <p>
-        <span data-l="zh">謝謝你報名文昌祈福，期待在現場見到你。</span>
-        <span data-l="en">Thank you for signing up for the Wen Chang blessing. We look forward to seeing you there.</span>
+        <span data-l="zh">謝謝你的報名，期待在現場見到你。</span>
+        <span data-l="en">Thank you for signing up. We look forward to seeing you there.</span>
       </p>
     </div>
   </section>
@@ -577,30 +538,75 @@
 </main>
 
 <script src="assets/lang.js"></script>
+<script src="assets/config.js"></script>
+
+<!-- 捲動淡入：每段依「離畫面中央多遠」決定透明度，越靠近越清楚，離太遠就淡掉 -->
 <script>
 (function () {
   "use strict";
 
-  // 與 quiz.html 共用同一支 Apps Script，腳本會依 form 欄位分到「文昌祈福」分頁
-  var ENDPOINT = "https://script.google.com/macros/s/AKfycbwA-V_ZG7TNwjokMSGqVqrtRvhE5lIUUfZl9fzwsY0wOFvLQBoYkjcFoC0_IIf5Ogqn/exec";
+  var cards = Array.prototype.slice.call(document.querySelectorAll(".stage__card"));
+  if (!cards.length) { return; }
+  if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) { return; }
+
+  document.documentElement.classList.add("fx");
+
+  var FULL = 0.12;   // 卡片中心離畫面中央 12% 視窗高以內：完全清楚
+  var GONE = 0.55;   // 超過 55% 視窗高：完全淡出
+  var queued = false;
+
+  function update() {
+    queued = false;
+    var vh = window.innerHeight || document.documentElement.clientHeight;
+    var mid = vh / 2;
+
+    cards.forEach(function (card) {
+      var r = card.getBoundingClientRect();
+      var d = Math.abs(r.top + r.height / 2 - mid) / vh;
+      var p = 1 - (d - FULL) / (GONE - FULL);
+      p = Math.max(0, Math.min(1, p));
+      card.style.setProperty("--p", p.toFixed(3));
+    });
+  }
+
+  function request() {
+    if (!queued) { queued = true; window.requestAnimationFrame(update); }
+  }
+
+  window.addEventListener("scroll", request, { passive: true });
+  window.addEventListener("resize", request);
+  update();
+})();
+</script>
+
+<!-- 報名表 -->
+<script>
+(function () {
+  "use strict";
+
+  // 收件網址來自 assets/config.js（不進 git），範本見 config.example.js
+  var ENDPOINT = (window.CDVC_CONFIG && window.CDVC_CONFIG.endpoint) || "";
 
   var OTHER_TIME = "預約其他時間";
 
   var UI = {
-    needName:     { zh: "請填寫姓名",             en: "Please enter your name" },
-    needGender:   { zh: "請選擇性別",             en: "Please choose a gender" },
-    needFee:      { zh: "請選擇功德費",           en: "Please choose an offering fee" },
-    badFee:       { zh: "請填寫隨喜金額（整數）", en: "Please enter a whole-number amount" },
-    needSession:  { zh: "請選擇場次",             en: "Please choose a session" },
-    needTime:     { zh: "請填寫希望的日期與時間", en: "Please enter your preferred date and time" },
-    sending:      { zh: "送出中…",                en: "Sending…" },
-    failed:       { zh: "送出失敗，請檢查網路後再試一次，或直接私訊社團 IG @ntustcdvc。",
-                    en: "Could not send. Please check your connection and try again, or message us on Instagram @ntustcdvc." },
-    ended:        { zh: "（已結束）",             en: " (ended)" }
+    needName:    { zh: "請填寫姓名",             en: "Please enter your name" },
+    needGender:  { zh: "請選擇性別",             en: "Please choose your sex" },
+    needFee:     { zh: "請選擇功德費",           en: "Please choose an offering fee" },
+    badFee:      { zh: "請填寫隨喜金額（整數）", en: "Please enter a whole-number amount" },
+    needSession: { zh: "請選擇場次",             en: "Please choose a session" },
+    needTime:    { zh: "請填寫希望的日期與時間", en: "Please enter your preferred date and time" },
+    sending:     { zh: "送出中…",                en: "Sending…" },
+    noEndpoint:  { zh: "報名表尚未設定收件網址，請直接私訊社團 IG @ntustcdvc。",
+                   en: "Registration isn't set up yet. Please message us on Instagram @ntustcdvc." },
+    failed:      { zh: "送出失敗，請檢查網路後再試一次，或直接私訊社團 IG @ntustcdvc。",
+                   en: "Could not send. Please check your connection and try again, or message us on Instagram @ntustcdvc." },
+    ended:       { zh: "（已結束）",             en: " (ended)" }
   };
 
   var $ = function (id) { return document.getElementById(id); };
   var form = $("signup");
+  var lastStatus = null;
 
   function L(v) {
     return (document.documentElement.getAttribute("data-lang") === "en") ? v.en : v.zh;
@@ -620,6 +626,7 @@
 
     var input = label.querySelector("input");
     input.disabled = true;
+    input.checked = false;
     label.classList.add("choice--off");
 
     var main = label.querySelector(".choice__main");
@@ -694,20 +701,26 @@
   }
 
   /* ---------- 送出 ---------- */
-  function status(msg, bad) {
+  function status(key, bad) {
     var el = $("status");
+    lastStatus = { key: key, bad: bad };
     el.hidden = false;
-    el.textContent = msg;
+    el.textContent = L(UI[key]);
     el.className = "status" + (bad ? " status--bad" : "");
   }
 
   form.addEventListener("submit", function (e) {
     e.preventDefault();
-    if (!validate()) { return; }
+    if (!validate(false)) { return; }
+
+    if (!ENDPOINT) {
+      status("noEndpoint", true);
+      return;
+    }
 
     var btn = $("send");
     btn.disabled = true;
-    status(L(UI.sending), false);
+    status("sending", false);
 
     // 一律送中文值，後台不必處理兩套選項文字
     var payload = {
@@ -741,14 +754,14 @@
       })
       .catch(function () {
         btn.disabled = false;
-        status(L(UI.failed), true);
+        status("failed", true);
       });
   });
 
-  // 換語言時，已顯示的錯誤訊息跟著換
+  // 換語言時，畫面上的錯誤與狀態訊息跟著換
   document.addEventListener("cdvc:lang", function () {
     if (form.querySelector(".is-bad")) { validate(true); }
-    if (!$("status").hidden && !$("send").disabled) { status(L(UI.failed), true); }
+    if (lastStatus && !$("status").hidden) { status(lastStatus.key, lastStatus.bad); }
   });
 })();
 </script>

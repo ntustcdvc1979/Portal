@@ -27,19 +27,21 @@
 
 ## 4. 接上網頁
 
-打開 [`../quiz.html`](../quiz.html)，找到最上面這一行，把網址貼進引號裡：
+**網址不要寫進任何會 commit 的檔案。** 兩個頁面都從 `assets/config.js` 讀取收件網址，
+這個檔案列在 `.gitignore`，不會被推上 git。
 
-```js
-var ENDPOINT = "";
-```
+**線上網站**（一次性設定）：
 
-改成：
+1. GitHub repo → **Settings → Secrets and variables → Actions → New repository secret**
+   - Name：`APPS_SCRIPT_URL`
+   - Secret：`/exec` 網址
+2. **Settings → Pages → Build and deployment → Source** 改成 **GitHub Actions**
 
-```js
-var ENDPOINT = "https://script.google.com/macros/s/AKfy..../exec";
-```
+之後每次推上 `main`，[`.github/workflows/pages.yml`](../.github/workflows/pages.yml)
+會在部署時把 secret 寫成 `config.js`。換網址時只要更新 secret，再到 Actions 頁按
+**Run workflow** 重新部署即可，不用改程式碼。
 
-存檔後 commit 推上去就完成了。
+**本機測試**：把 `assets/config.example.js` 複製成 `assets/config.js`，填入網址。
 
 ## 5. 測試
 
@@ -50,13 +52,12 @@ var ENDPOINT = "https://script.google.com/macros/s/AKfy..../exec";
 
 記得把測試那列刪掉再正式宣傳。
 
-## 這個網址可以公開嗎？
+## 這個網址藏得起來嗎？
 
-**可以，而且沒有藏起來的辦法。**
+**可以不進 git，但沒辦法不公開。**
 
-網站是純前端的靜態頁，瀏覽器要送出資料就必須知道這個網址，所以它一定會出現在
-`quiz.html` 的原始碼裡，任何人按 F12 都看得到。從 git 移掉、或用 CI secret 注入，
-產出的網頁照樣會露出來，那些做法只是把它藏得比較深，實際上沒有變安全。
+上面的作法讓網址不出現在 repo 與 git 歷史裡。但網站是純前端的靜態頁，瀏覽器要送出資料
+就必須知道這個網址，所以部署後的 `assets/config.js` 一定看得到，任何人按 F12 都查得到。
 
 真正該防的是「有人拿這個網址亂灌資料」，所以 `Code.gs` 已經內建：
 
@@ -76,13 +77,16 @@ var ENDPOINT = "https://script.google.com/macros/s/AKfy..../exec";
 
 ### 萬一真的被灌爆
 
-到 **部署 → 管理部署作業 → 封存**，舊網址立刻失效。再建一個新部署、把新網址貼回
-`quiz.html` 就好，等於換鎖。
+到 **部署 → 管理部署作業 → 封存**，舊網址立刻失效。再建一個新部署、把新網址更新到
+`APPS_SCRIPT_URL` secret 並重新部署網站就好，等於換鎖。
+
+git 歷史裡留有幾個早期部署的網址（那時網址還直接寫在 `quiz.html`）。改寫 git 歷史
+清不掉別人已經抓走的副本，**把那些舊部署封存掉才真正有效**。
 
 ## 文昌祈福報名
 
 `wenchang.html` 跟測驗共用同一支腳本與同一個網址，但報名會寫進另一個分頁
-**「文昌祈福」**（第一筆送出時自動建立），欄位是：送出時間、姓名、性別、
+**「文昌祈福」**（第一筆送出時自動建立），欄位是：送出時間、姓名、性別（生理男／生理女）、
 功德費選項、功德費金額、場次、希望時間。測驗資料仍在「報名資料」分頁，兩邊不會混在一起。
 
 這段是後來加的，**更新 `Code.gs` 後記得重新部署**（版本選「新版本」），否則文昌祈福的報名會被當成測驗資料而被拒收。

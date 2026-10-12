@@ -252,7 +252,7 @@ var WENCHANG_HEADERS = [
   '希望時間'
 ];
 
-var WENCHANG_GENDERS = ['男', '女', '其他'];
+var WENCHANG_GENDERS = ['生理男', '生理女'];
 var WENCHANG_FEES = ['100', '200', '隨喜'];
 var WENCHANG_OTHER_TIME = '預約其他時間';
 
