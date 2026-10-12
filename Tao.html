@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>中華文化體驗 | 台科大崇德志工社</title>
+<title>中華傳統文化體驗 | 台科大崇德志工社</title>
 <meta name="description" content="三段體驗、共 90 分鐘：開釋道義、獻供與求道、三寶心法運用與解析。台科大崇德志工社線上報名。">
-<meta property="og:title" content="中華文化體驗 | 台科大崇德志工社">
+<meta property="og:title" content="中華傳統文化體驗 | 台科大崇德志工社">
 <meta property="og:description" content="三段體驗、共 90 分鐘：開釋道義、獻供與求道、三寶心法運用與解析。">
 <meta property="og:image" content="assets/tao.webp">
 <link rel="icon" href="assets/logo1.webp">
@@ -151,13 +151,8 @@
   @keyframes nudge{0%,100%{transform:translateY(0);}50%{transform:translateY(.35rem);}}
 
   /* ---------- 三段體驗：每段約一個手機畫面高 ---------- */
-  .stage{
-    min-height:100vh;
-    min-height:100svh;
-    display:flex;
-    align-items:center;
-    padding:1.5rem 0;
-  }
+  /* 段與段之間只留固定間距；不再撐滿整個畫面，免得較矮的段落上下多出大片空白 */
+  .stage + .stage{margin-top:2.25rem;}
 
   /* 捲動淡入：三段圖文、注意事項、報名表共用。
      --p 由腳本依捲動位置設定（0 到 1）；沒有腳本時維持 1，內容照常顯示 */
@@ -231,7 +226,7 @@
 
   /* ---------- 注意事項 ---------- */
   .notes{
-    margin:1rem 0 2rem;
+    margin:2.25rem 0 2rem;
     padding:1.25rem 1.3rem;
     background:var(--card);
     border:2px solid var(--line);
@@ -380,8 +375,8 @@
       <span data-l="en">NTUST CHONG-DE VOLUNTEER CLUB</span>
     </p>
     <h1 class="hero__title">
-      <span data-l="zh">中華文化體驗</span>
-      <span data-l="en">Chinese Cultural Experience</span>
+      <span data-l="zh">中華傳統文化體驗</span>
+      <span data-l="en">Traditional Chinese Cultural Experience</span>
     </h1>
     <a class="hero__cue" href="#stage-1">
       <span data-l="zh">往下滑看活動內容</span>
@@ -422,8 +417,8 @@
               <span data-l="en"><b>Traditional offering rite:</b> take part in a solemn offering ceremony in the manner of the rites honouring Confucius.</span>
             </li>
             <li>
-              <span data-l="zh"><b>沉浸式定心：</b>透過沉靜的跪拜動作與專注體驗，開啟自身潛力的三樣寶藏。</span>
-              <span data-l="en"><b>Immersive stillness:</b> through quiet kneeling bows and focused attention, open the three treasures of your own potential.</span>
+              <span data-l="zh"><b>沉靜式體驗：</b>透過跪拜動作與專注體驗，開啟自身潛力的三樣寶藏。</span>
+              <span data-l="en"><b>A quiet experience:</b> through kneeling bows and focused attention, open the three treasures of your own potential.</span>
             </li>
           </ul>
         </div>
@@ -460,8 +455,8 @@
         <span data-l="en"><b>What to wear:</b> the ceremony is formal in tone, so please wear neat casual clothing (no shorts or flip-flops).</span>
       </li>
       <li>
-        <span data-l="zh"><b>信仰尊重：</b>本活動為中華傳統文化與心境祈福體驗，尊重個人原有宗教信仰，請安心參加。</span>
-        <span data-l="en"><b>Respect for your beliefs:</b> this is an experience of traditional Chinese culture and a blessing for peace of mind. Your own religious beliefs are respected, so please feel at ease joining.</span>
+        <span data-l="zh"><b>信仰尊重：</b>本活動為中華傳統文化體驗，尊重個人原有宗教信仰，請安心參加。</span>
+        <span data-l="en"><b>Respect for your beliefs:</b> this is an experience of traditional Chinese culture. Your own religious beliefs are respected, so please feel at ease joining.</span>
       </li>
     </ul>
   </section>
