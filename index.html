@@ -775,7 +775,8 @@
     </div>
 
     <!-- data-end：活動結束日；過了就自動移到「已結束的活動」
-         data-deadline：報名截止時刻，過了就把卡片改成不可點 -->
+         data-deadline：報名截止時刻，過了就把卡片改成不可點
+         data-full：手動標示額滿，卡片改成不可點的「額滿」 -->
     <ul class="events" id="events-live">
       <li data-end="2026-08-30" data-deadline="2026-08-25T23:59">
         <a class="event" href="https://www.accupass.com/go/2026cdfreshmen" target="_blank" rel="noopener noreferrer">
@@ -969,7 +970,7 @@
         </a>
       </li>
 
-      <li data-end="2026-11-08">
+      <li data-end="2026-11-08" data-full>
         <a class="event" href="https://forms.gle/KiKXjb48xrS6rZkU6" target="_blank" rel="noopener noreferrer">
           <figure class="event__figure">
             <img class="event__img" src="assets/light.webp" alt="光影漫遊創藝營志工招募活動文宣" loading="lazy">
@@ -1098,6 +1099,12 @@
     if (end < midnight) {
       disable(li, "活動已結束", "Event ended");
       past.appendChild(li);
+      return;
+    }
+
+    // 手動標示額滿：在 <li> 加上 data-full 即可
+    if (li.hasAttribute("data-full")) {
+      disable(li, "額滿", "Full");
       return;
     }
 
