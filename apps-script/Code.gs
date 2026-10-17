@@ -318,18 +318,19 @@ function validateWenchang_(data) {
 }
 
 /* ============================================================
-   活動名額（正取／備取）
+   活動名額
    ------------------------------------------------------------
    幹部在試算表「活動名額」分頁維護每個活動的表單與名額：
-     活動名稱｜報名連結（網站上的 forms.gle）｜表單編輯網址｜正取名額｜備取名額
-   - 首頁用 doGet?action=quota 讀人數，按鈕顯示「剩 N 名／報名備取／額滿」。
+     活動名稱｜報名連結（網站上的 forms.gle）｜表單編輯網址｜名額
+   - 首頁用 doGet?action=quota 讀人數，按鈕顯示「剩 N 名」或「額滿」。
    - 每份 Google 表單掛一個送出觸發器（installQuotaTriggers 建立），
-     有人送出時算出他的順位、寄信通知正取或備取、記到「錄取名單」，
-     正取＋備取都滿了就自動關閉表單。
+     有人送出時算出他的順位、寄信通知是否報名成功、記到「錄取名單」，
+     名額滿了就自動關閉表單。不設備取：額滿就是額滿。
    ============================================================ */
 
 var QUOTA_SHEET = '活動名額';
-var QUOTA_HEADERS = ['活動名稱', '報名連結（網站上的 forms.gle）', '表單編輯網址', '正取名額', '備取名額'];
+// 舊版的表有第 5 欄「備取名額」，現在不再讀取；第 4 欄一律當作名額
+var QUOTA_HEADERS = ['活動名稱', '報名連結（網站上的 forms.gle）', '表單編輯網址', '名額'];
 
 var ROSTER_SHEET = '錄取名單';
 var ROSTER_HEADERS = ['送出時間', '活動名稱', '順位', '結果', '姓名', 'Email', '通知'];
@@ -349,11 +350,10 @@ function quotaRows_() {
         name: trim_(r[0]),
         link: normaliseLink_(r[1]),
         editUrl: trim_(r[2]),
-        accepted: Math.max(0, Math.floor(Number(r[3]) || 0)),
-        waitlist: Math.max(0, Math.floor(Number(r[4]) || 0))
+        quota: Math.max(0, Math.floor(Number(r[3]) || 0))
       };
     })
-    .filter(function (r) { return r.link && r.editUrl && r.accepted > 0; });
+    .filter(function (r) { return r.link && r.editUrl && r.quota > 0; });
 }
 
 /** 網址統一去掉結尾斜線與查詢字串，比對網站上的連結時才不會因為小差異對不上 */
@@ -363,14 +363,11 @@ function normaliseLink_(v) {
 
 /** 由目前回覆數判斷狀態 */
 function quotaState_(row, count) {
-  var cap = row.accepted + row.waitlist;
   return {
-    accepted: row.accepted,
-    waitlist: row.waitlist,
+    quota: row.quota,
     count: count,
-    acceptedLeft: Math.max(0, row.accepted - count),
-    waitlistLeft: Math.max(0, Math.min(row.waitlist, cap - count)),
-    full: count >= cap
+    left: Math.max(0, row.quota - count),
+    full: count >= row.quota
   };
 }
 
@@ -420,31 +417,24 @@ function onQuotaFormSubmit(e) {
       if (responses[i].getId() === response.getId()) { rank = i + 1; break; }
     }
 
-    var result, place = 0;
-    if (rank <= row.accepted) {
-      result = '正取';
-    } else if (rank <= row.accepted + row.waitlist) {
-      result = '備取';
-      place = rank - row.accepted;
-    } else {
-      result = '額滿未錄取';
-    }
+    // 名額內就是報名成功；超過的（表單關閉前同時送出的人）就是額滿
+    var result = (rank <= row.quota) ? '報名成功' : '額滿未錄取';
 
     var who = respondent_(response);
-    var notice = notifyRespondent_(row, who, result, place);
+    var notice = notifyRespondent_(row, who, result);
 
     sheetNamed_(ROSTER_SHEET, ROSTER_HEADERS).appendRow([
       response.getTimestamp(),
       row.name,
       rank,
-      result === '備取' ? '備取第 ' + place + ' 順位' : result,
+      result,
       who.name,
       who.email,
       notice
     ]);
 
-    // 正取＋備取都滿了：關閉表單，直接拿到連結的人也報不進來
-    if (responses.length >= row.accepted + row.waitlist && form.isAcceptingResponses()) {
+    // 名額滿了：關閉表單，直接拿到連結的人也報不進來
+    if (responses.length >= row.quota && form.isAcceptingResponses()) {
       form.setAcceptingResponses(false);
       form.setCustomClosedFormMessage(FULL_MESSAGE);
     }
@@ -490,23 +480,19 @@ function respondent_(response) {
   return who;
 }
 
-function notifyRespondent_(row, who, result, place) {
+function notifyRespondent_(row, who, result) {
   if (!who.email) { return '未寄出（表單沒有收集 Email）'; }
 
   var hello = (who.name ? who.name + ' 你好，' : '你好，');
   var subject, body;
 
-  if (result === '正取') {
-    subject = '【崇德志工社】' + row.name + '：報名成功（正取）';
-    body = hello + '\n\n你已正取「' + row.name + '」，期待在活動見到你！\n' +
-           '如果之後無法參加，請盡早私訊社團 IG @ntustcdvc，讓名額給備取的同學。';
-  } else if (result === '備取') {
-    subject = '【崇德志工社】' + row.name + '：備取第 ' + place + ' 順位';
-    body = hello + '\n\n「' + row.name + '」正取名額已滿，你目前是備取第 ' + place + ' 順位。\n' +
-           '有正取同學釋出名額時，我們會依順位通知你。';
+  if (result === '報名成功') {
+    subject = '【崇德志工社】' + row.name + '：報名成功';
+    body = hello + '\n\n你已成功報名「' + row.name + '」，期待在活動見到你！\n' +
+           '如果之後無法參加，請盡早私訊社團 IG @ntustcdvc，讓名額留給其他同學。';
   } else {
     subject = '【崇德志工社】' + row.name + '：名額已滿';
-    body = hello + '\n\n很抱歉，「' + row.name + '」的正取與備取名額都已額滿，這次無法錄取。\n' +
+    body = hello + '\n\n很抱歉，「' + row.name + '」名額已滿，這次無法錄取。\n' +
            '歡迎追蹤社團 IG @ntustcdvc，留意下次活動！';
   }
 
