@@ -103,10 +103,22 @@ function doPost(e) {
 }
 
 /**
- * 直接用瀏覽器開啟部署網址時的健康檢查。
- * 刻意不回傳任何報名資料，這支網址是公開的，讀取一律走試算表。
+ * GET 請求。
+ * - 預設：健康檢查。
+ * - ?action=quota：回傳各活動的名額與目前報名人數，給首頁顯示「剩幾名／額滿」。
+ * 只回傳數字，不回傳任何個人資料；這支網址是公開的，報名內容一律只在試算表裡看。
  */
-function doGet() {
+function doGet(e) {
+  var action = e && e.parameter ? e.parameter.action : '';
+
+  if (action === 'quota') {
+    try {
+      return json_({ ok: true, events: quotaSummaryCached_() });
+    } catch (err) {
+      return json_({ ok: false, error: String(err) });
+    }
+  }
+
   return json_({ ok: true, service: 'cdvc-quiz' });
 }
 
@@ -303,6 +315,241 @@ function validateWenchang_(data) {
   }
 
   return '';
+}
+
+/* ============================================================
+   活動名額（正取／備取）
+   ------------------------------------------------------------
+   幹部在試算表「活動名額」分頁維護每個活動的表單與名額：
+     活動名稱｜報名連結（網站上的 forms.gle）｜表單編輯網址｜正取名額｜備取名額
+   - 首頁用 doGet?action=quota 讀人數，按鈕顯示「剩 N 名／報名備取／額滿」。
+   - 每份 Google 表單掛一個送出觸發器（installQuotaTriggers 建立），
+     有人送出時算出他的順位、寄信通知正取或備取、記到「錄取名單」，
+     正取＋備取都滿了就自動關閉表單。
+   ============================================================ */
+
+var QUOTA_SHEET = '活動名額';
+var QUOTA_HEADERS = ['活動名稱', '報名連結（網站上的 forms.gle）', '表單編輯網址', '正取名額', '備取名額'];
+
+var ROSTER_SHEET = '錄取名單';
+var ROSTER_HEADERS = ['送出時間', '活動名稱', '順位', '結果', '姓名', 'Email', '通知'];
+
+var QUOTA_CACHE_SECONDS = 60;
+var FULL_MESSAGE = '本活動名額已滿，感謝你的關注！歡迎追蹤崇德志工社 IG @ntustcdvc 留意下次活動。';
+
+/** 讀「活動名額」分頁；沒有這個分頁時建立空白表頭，回傳空清單 */
+function quotaRows_() {
+  var sheet = sheetNamed_(QUOTA_SHEET, QUOTA_HEADERS);
+  var last = sheet.getLastRow();
+  if (last < 2) { return []; }
+
+  return sheet.getRange(2, 1, last - 1, QUOTA_HEADERS.length).getValues()
+    .map(function (r) {
+      return {
+        name: trim_(r[0]),
+        link: normaliseLink_(r[1]),
+        editUrl: trim_(r[2]),
+        accepted: Math.max(0, Math.floor(Number(r[3]) || 0)),
+        waitlist: Math.max(0, Math.floor(Number(r[4]) || 0))
+      };
+    })
+    .filter(function (r) { return r.link && r.editUrl && r.accepted > 0; });
+}
+
+/** 網址統一去掉結尾斜線與查詢字串，比對網站上的連結時才不會因為小差異對不上 */
+function normaliseLink_(v) {
+  return trim_(v).replace(/[?#].*$/, '').replace(/\/+$/, '');
+}
+
+/** 由目前回覆數判斷狀態 */
+function quotaState_(row, count) {
+  var cap = row.accepted + row.waitlist;
+  return {
+    accepted: row.accepted,
+    waitlist: row.waitlist,
+    count: count,
+    acceptedLeft: Math.max(0, row.accepted - count),
+    waitlistLeft: Math.max(0, Math.min(row.waitlist, cap - count)),
+    full: count >= cap
+  };
+}
+
+function quotaSummary_() {
+  var out = {};
+  quotaRows_().forEach(function (row) {
+    try {
+      var form = FormApp.openByUrl(row.editUrl);
+      out[row.link] = quotaState_(row, form.getResponses().length);
+    } catch (err) {
+      // 單一表單打不開（網址錯、沒權限）不影響其他活動
+      out[row.link] = { error: 'cannot open form' };
+    }
+  });
+  return out;
+}
+
+/** 首頁每次載入都會呼叫，結果快取一分鐘，避免一直開表單耗用配額 */
+function quotaSummaryCached_() {
+  var cache = CacheService.getScriptCache();
+  var hit = cache.get('quota-summary');
+  if (hit) { return JSON.parse(hit); }
+
+  var data = quotaSummary_();
+  cache.put('quota-summary', JSON.stringify(data), QUOTA_CACHE_SECONDS);
+  return data;
+}
+
+/**
+ * 表單送出觸發器（由 installQuotaTriggers 掛到每份表單上）。
+ * 函式名稱不能以底線結尾，否則觸發器呼叫不到。
+ */
+function onQuotaFormSubmit(e) {
+  var lock = LockService.getScriptLock();
+  lock.waitLock(30000);
+
+  try {
+    var form = e.source;
+    var response = e.response;
+    var row = rowForForm_(form);
+    if (!row) { return; }
+
+    // 依送出時間排序後，這筆是第幾個；同時送出也不會搶到同一個順位
+    var responses = form.getResponses();
+    var rank = 1;
+    for (var i = 0; i < responses.length; i++) {
+      if (responses[i].getId() === response.getId()) { rank = i + 1; break; }
+    }
+
+    var result, place = 0;
+    if (rank <= row.accepted) {
+      result = '正取';
+    } else if (rank <= row.accepted + row.waitlist) {
+      result = '備取';
+      place = rank - row.accepted;
+    } else {
+      result = '額滿未錄取';
+    }
+
+    var who = respondent_(response);
+    var notice = notifyRespondent_(row, who, result, place);
+
+    sheetNamed_(ROSTER_SHEET, ROSTER_HEADERS).appendRow([
+      response.getTimestamp(),
+      row.name,
+      rank,
+      result === '備取' ? '備取第 ' + place + ' 順位' : result,
+      who.name,
+      who.email,
+      notice
+    ]);
+
+    // 正取＋備取都滿了：關閉表單，直接拿到連結的人也報不進來
+    if (responses.length >= row.accepted + row.waitlist && form.isAcceptingResponses()) {
+      form.setAcceptingResponses(false);
+      form.setCustomClosedFormMessage(FULL_MESSAGE);
+    }
+
+    CacheService.getScriptCache().remove('quota-summary');
+
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+/**
+ * 編輯網址長這樣：https://docs.google.com/forms/d/<表單ID>/edit
+ * 分享出去的填答網址是 /forms/d/e/<另一組ID>/viewform，那組 ID 打不開表單，所以排除。
+ */
+function formIdFromUrl_(url) {
+  var m = String(url).match(/\/forms\/d\/(?!e\/)([A-Za-z0-9_-]+)/);
+  return m ? m[1] : '';
+}
+
+function rowForForm_(form) {
+  var id = form.getId();
+  var rows = quotaRows_();
+  for (var i = 0; i < rows.length; i++) {
+    if (formIdFromUrl_(rows[i].editUrl) === id) { return rows[i]; }
+  }
+  return null;
+}
+
+/** 從回覆中找出姓名與 Email：Email 以表單「收集電子郵件地址」為準，否則找題目名稱 */
+function respondent_(response) {
+  var who = { name: '', email: '' };
+
+  try { who.email = trim_(response.getRespondentEmail()); } catch (err) { /* 表單沒收集 */ }
+
+  response.getItemResponses().forEach(function (ir) {
+    var title = trim_(ir.getItem().getTitle());
+    var answer = trim_(ir.getResponse());
+    if (!who.name && /姓名|名字|大名|name/i.test(title)) { who.name = answer; }
+    if (!who.email && /e-?mail|信箱|電子郵件/i.test(title) && /@/.test(answer)) { who.email = answer; }
+  });
+
+  return who;
+}
+
+function notifyRespondent_(row, who, result, place) {
+  if (!who.email) { return '未寄出（表單沒有收集 Email）'; }
+
+  var hello = (who.name ? who.name + ' 你好，' : '你好，');
+  var subject, body;
+
+  if (result === '正取') {
+    subject = '【崇德志工社】' + row.name + '：報名成功（正取）';
+    body = hello + '\n\n你已正取「' + row.name + '」，期待在活動見到你！\n' +
+           '如果之後無法參加，請盡早私訊社團 IG @ntustcdvc，讓名額給備取的同學。';
+  } else if (result === '備取') {
+    subject = '【崇德志工社】' + row.name + '：備取第 ' + place + ' 順位';
+    body = hello + '\n\n「' + row.name + '」正取名額已滿，你目前是備取第 ' + place + ' 順位。\n' +
+           '有正取同學釋出名額時，我們會依順位通知你。';
+  } else {
+    subject = '【崇德志工社】' + row.name + '：名額已滿';
+    body = hello + '\n\n很抱歉，「' + row.name + '」的正取與備取名額都已額滿，這次無法錄取。\n' +
+           '歡迎追蹤社團 IG @ntustcdvc，留意下次活動！';
+  }
+
+  body += '\n\n台科大崇德志工社 NTUST CDVC\n（此信由系統自動寄出）';
+
+  try {
+    MailApp.sendEmail(who.email, subject, body);
+    return '已寄出';
+  } catch (err) {
+    return '寄送失敗：' + String(err).slice(0, 80);
+  }
+}
+
+/**
+ * 在「活動名額」填好之後，在編輯器選這個函式按「執行」一次。
+ * 會替每份表單掛上送出觸發器；重複執行不會重複掛。之後新增活動再執行一次即可。
+ */
+function installQuotaTriggers() {
+  var existing = {};
+  ScriptApp.getProjectTriggers().forEach(function (t) {
+    if (t.getHandlerFunction() === 'onQuotaFormSubmit') { existing[t.getTriggerSourceId()] = true; }
+  });
+
+  quotaRows_().forEach(function (row) {
+    if (!formIdFromUrl_(row.editUrl)) {
+      Logger.log('「表單編輯網址」要貼編輯頁的網址（.../forms/d/<ID>/edit），不是分享出去的填答網址：' + row.name);
+      return;
+    }
+    try {
+      var form = FormApp.openByUrl(row.editUrl);
+      if (existing[form.getId()]) {
+        Logger.log('已有觸發器：' + row.name);
+        return;
+      }
+      ScriptApp.newTrigger('onQuotaFormSubmit').forForm(form).onFormSubmit().create();
+      Logger.log('已掛上觸發器：' + row.name);
+    } catch (err) {
+      Logger.log('打不開表單（檢查編輯網址與權限）：' + row.name + '，' + err);
+    }
+  });
+
+  // 順便建好兩個分頁，讓幹部看得到欄位
+  sheetNamed_(ROSTER_SHEET, ROSTER_HEADERS);
 }
 
 function json_(obj) {

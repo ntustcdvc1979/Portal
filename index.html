@@ -498,6 +498,22 @@
 
   .event--off .event__cta svg{animation:none;}
 
+  /* ---------- 名額 ---------- */
+  .event__quota{
+    font-size:.82rem;
+    font-weight:800;
+    color:var(--green-dark);
+  }
+
+  .event__quota--wait{color:var(--orange-dark);}
+  .event__quota--full{color:var(--ink-soft);}
+
+  /* 正取滿了、改收備取：按鈕換成較沉穩的顏色，和正常報名區分 */
+  .event__cta--wait{
+    background:linear-gradient(135deg,#C9A15A,#9C7630);
+    box-shadow:0 .25rem .6rem rgba(156,118,48,.35);
+  }
+
   /* 現在是行事曆之後的獨立區塊，間距比照其他區塊 */
   .past{margin-top:3.25rem;}
 
@@ -1055,6 +1071,7 @@
 </div>
 
 <script src="assets/lang.js"></script>
+<script src="assets/config.js"></script>
 <script>
 /* 依日期把過期活動移到「已結束的活動」，並把截止報名的卡片停用。
    沒有 JS 的話全部活動仍會照原樣列出，不會空白。 */
@@ -1121,6 +1138,85 @@
   sortBy(past, -1);
 
   wrap.hidden = (past.children.length === 0);
+})();
+
+/* 名額：向 Apps Script 查各活動目前報名人數（名額設定在試算表「活動名額」分頁），
+   依結果顯示「正取剩 N 名」、改成「報名備取」，或停用成「額滿」。
+   查不到（沒設定、網路問題、該活動沒設名額）就維持原樣，不影響報名。 */
+(function () {
+  "use strict";
+
+  var endpoint = (window.CDVC_CONFIG && window.CDVC_CONFIG.endpoint) || "";
+  var live = document.getElementById("events-live");
+  if (!endpoint || !live || !window.fetch) { return; }
+
+  function norm(url) {
+    return String(url || "").replace(/[?#].*$/, "").replace(/\/+$/, "");
+  }
+
+  function setCta(li, zh, en) {
+    var cta = li.querySelector(".event__cta");
+    if (!cta) { return; }
+    var z = cta.querySelector('[data-l="zh"]');
+    var e = cta.querySelector('[data-l="en"]');
+    if (z) { z.textContent = zh; }
+    if (e) { e.textContent = en; }
+  }
+
+  function note(li, zh, en, mod) {
+    var cta = li.querySelector(".event__cta");
+    if (!cta) { return; }
+    var el = document.createElement("span");
+    el.className = "event__quota" + (mod ? " event__quota--" + mod : "");
+    el.innerHTML = '<span data-l="zh"></span><span data-l="en"></span>';
+    el.firstChild.textContent = zh;
+    el.lastChild.textContent = en;
+    cta.parentNode.insertBefore(el, cta);
+  }
+
+  function makeFull(li) {
+    var a = li.querySelector(".event");
+    a.classList.add("event--off");
+    a.removeAttribute("href");
+    a.removeAttribute("target");
+    a.removeAttribute("rel");
+    setCta(li, "額滿", "Full");
+    note(li, "正取與備取皆已額滿", "All spots and waitlist places are taken", "full");
+  }
+
+  function apply(events) {
+    Array.prototype.forEach.call(live.children, function (li) {
+      var a = li.querySelector(".event");
+      // 已截止的卡片沒有 href，略過
+      if (!a || !a.getAttribute("href") || a.classList.contains("event--off")) { return; }
+
+      var q = events[norm(a.getAttribute("href"))];
+      if (!q || q.error) { return; }
+
+      if (q.full) {
+        makeFull(li);
+      } else if (q.acceptedLeft > 0) {
+        note(li, "正取剩 " + q.acceptedLeft + " 名", q.acceptedLeft + (q.acceptedLeft === 1 ? " spot" : " spots") + " left");
+      } else {
+        setCta(li, "報名備取", "Join the waitlist");
+        li.querySelector(".event__cta").classList.add("event__cta--wait");
+        note(li, "正取已滿・備取剩 " + q.waitlistLeft + " 名",
+                 "Main spots full・" + q.waitlistLeft + " waitlist " + (q.waitlistLeft === 1 ? "place" : "places") + " left", "wait");
+      }
+    });
+  }
+
+  // 太久沒回應就放棄，維持原本的「點我報名」
+  var ctrl = window.AbortController ? new AbortController() : null;
+  var timer = setTimeout(function () { if (ctrl) { ctrl.abort(); } }, 8000);
+
+  fetch(endpoint + "?action=quota", ctrl ? { signal: ctrl.signal } : {})
+    .then(function (res) { return res.ok ? res.json() : Promise.reject(new Error(res.status)); })
+    .then(function (body) {
+      clearTimeout(timer);
+      if (body && body.ok && body.events) { apply(body.events); }
+    })
+    ["catch"](function () { clearTimeout(timer); });
 })();
 
 (function () {
